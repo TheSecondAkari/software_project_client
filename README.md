@@ -1,5 +1,5 @@
 # client
-
+##需要npm install vant --save //vuex，axios  axios的配置还没有写。 现在就只是新建了项目，还没写
 ## Project setup
 ```
 npm install
