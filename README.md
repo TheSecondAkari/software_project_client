@@ -1,5 +1,5 @@
 # client
-##需要npm install vant --save //vuex，router，axios  
+##需要npm install vant --save //vuex，vue-router，axios  
 ##axios完成了部分(post,get)。 可以调用api
 ## Project setup
 ```
