@@ -92,3 +92,5 @@ new Vue({
   router,
   store
 }).$mount('#app')
+
+export default api;

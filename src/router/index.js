@@ -1,6 +1,6 @@
 const routers = [
     {
-        path: '/',
+        path: '/', //暂且用注册页面，可以改
         meta: {
             title: '首页'
         },
