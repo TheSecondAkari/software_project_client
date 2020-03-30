@@ -7,8 +7,9 @@ const store = new Vuex.Store({
     state: {
         user: {
             id: 0,
-            name: "未登录",
-            username: "",
+            avater:"",
+            name: "",
+            email: "",
         },
         //...
     },
