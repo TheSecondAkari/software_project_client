@@ -24,7 +24,7 @@
       style="width:65%;margin-left:17.5%;margin-top:30%;"
     >登录</van-button>
 
-    <router-link to="/">
+    <router-link to="/Register">
       <p>还没有账号？点击立即注册</p>
     </router-link>
   </div>
@@ -41,13 +41,19 @@ export default {
   },
   methods: {
     async login() {
-      let res = await this.api.post("/auth", {
-        email: this.email,
-        password: this.password
-      });
-      if (res.status >= 200 && res.status < 300) {
-        sessionStorage.setItem("Authorization", res.data.Authorization);
-        this.$notify({ type: "success", message: res.data.errmsg });
+      if (this.email == "" || this.password == "")
+        this.$notify({ type: "warning", message: "请正确输出账号密码" });
+      else {
+        let res = await this.api.post("/auth", {
+          email: this.email,
+          password: this.password
+        });
+        if (res.status >= 200 && res.status < 300) {
+          sessionStorage.setItem("Authorization", res.data.Authorization);
+          this.$notify({ type: "success", message: res.data.errmsg });
+          this.$store.commit("getMyInfo"); //把用户信息存到vuex的state里
+          this.$router.push("/"); //暂定登陆成功跳转到首页
+        }
       }
     }
   }

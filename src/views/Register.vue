@@ -77,12 +77,29 @@ export default {
       if (res.status >= 200 && res.status < 300)
         this.$notify({ type: "success", message: res.data.errmsg });
     },
-    register() {
-      console.log(this.name);
-      console.log(this.email);
-      console.log(this.password);
-      console.log(this.code);
+    async register() {
       console.log(this.avater);
+      if (
+        this.name == "" ||
+        this.avater.length == 0 ||
+        this.email == "" ||
+        this.password == "" ||
+        this.code == ""
+      )
+        this.$notify({ type: "warning", message: "请完善注册所需信息" });
+      else {
+        let res = await this.api.post("/users", {
+          name: this.name,
+          avater: this.avater[0],
+          email: this.email,
+          password: this.password,
+          code: this.code
+        });
+        if (res.status >= 200 && res.status < 300){
+          this.$notify({ type: "success", message: res.data.errmsg });
+          this.$router.push("/login");
+        }
+      }
     }
   }
 };
