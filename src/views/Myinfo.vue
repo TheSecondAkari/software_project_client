@@ -30,15 +30,15 @@
       </div>
     </div>
     <van-grid column-num="5" style="margin-top:5%;">
-      <van-grid-item icon="send-gift-o" text="待发货" />
-      <van-grid-item icon="logistics" text="已发货" />
-      <van-grid-item icon="comment-o" text="待评价" />
-      <van-grid-item icon="refund-o" text="退款中" />
-      <van-grid-item icon="todo-list-o" text="我的订单" />
+      <van-grid-item icon="send-gift-o" text="待发货" to="Myorder_pre" />
+      <van-grid-item icon="logistics" text="已发货" to="Myorder_snd" />
+      <van-grid-item icon="comment-o" text="待评价" to="Myorder_com" />
+      <van-grid-item icon="refund-o" text="退款中" to="Myorder_ref" />
+      <van-grid-item icon="todo-list-o" text="我的订单" to="Myorder" />
     </van-grid>
     <van-cell-group class="more">
-      <van-cell title="收货地址" is-link style="margin-top:5%;padding:4%;" />
-      <van-cell title="我的收藏" is-link style="padding:4%;" />
+      <van-cell title="收货地址" is-link to="Myaddress" style="margin-top:5%;padding:4%;" />
+      <van-cell title="我的收藏" is-link to="Mycollection" style="padding:4%;" />
       <van-cell title="修改密码" is-link style="padding:4%;" />
     </van-cell-group>
     <van-cell-group>
@@ -49,7 +49,7 @@
         <p>登录</p>
       </van-cell>
     </van-cell-group>
-    <van-tabbar class="bottom" v-model="active" active-color="rgb(255, 184, 41)" inactive-color="#000">
+    <van-tabbar class="bottom" v-model="active" active-color="rgb(221, 22, 22)" inactive-color="#000">
       <van-tabbar-item name="Home" icon="wap-home-o">首页</van-tabbar-item>
       <van-tabbar-item name="Class" icon="search">分类</van-tabbar-item>
       <van-tabbar-item name="ShoppingCart" icon="shopping-cart-o">购物车</van-tabbar-item>
@@ -78,7 +78,7 @@ export default {
 }
 .maininfo {
   height: 20%;
-  background-color: rgb(255, 184, 41);
+  background-color: rgb(201, 37, 25);
 }
 .icon {
   margin-left: 5%;
@@ -86,6 +86,7 @@ export default {
 .account {
   margin: 15% 0 5% 25%;
   position: fixed;
+  color: aliceblue;
 }
 .account p {
   margin-bottom: 4%;
