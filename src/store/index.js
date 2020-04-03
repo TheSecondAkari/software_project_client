@@ -22,7 +22,7 @@ const store = new Vuex.Store({
     mutations: {
         async getMyInfo(state) {
             let res = await api.get('/users');
-            state.user = res.data;
+            state.user = res.data.data;
             
             console.log(res.data);//debug
             console.log("asd");   //debug

@@ -51,8 +51,8 @@ export default {
         if (res.status >= 200 && res.status < 300) {
           sessionStorage.setItem("Authorization", res.data.Authorization);
           this.$notify({ type: "success", message: res.data.errmsg });
-          this.$store.commit("getMyInfo"); //把用户信息存到vuex的state里
-          this.$router.push("/"); //暂定登陆成功跳转到首页
+          this.$store.commit("getMyInfo"); //把用户信息存到vuex的state里 //需要注意是否信息还没获取到，就跳转到了个人中心页面，导致部分信息显示错误。
+          this.$router.push("/MyInfo"); //暂定登陆成功跳转到个人中心页面
         }
       }
     }

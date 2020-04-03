@@ -1,8 +1,8 @@
 <template>
   <div id="register">
     <h3>欢迎注册天东易宝</h3>
-    <div class="avater">
-      <van-uploader :after-read="afterRead" v-model="avater" :max-count="1" />
+    <div class="avatar">
+      <van-uploader :after-read="afterRead" v-model="avatar" :max-count="1" />
     </div>
 
     <div class="message">
@@ -62,7 +62,7 @@ export default {
       email: "",
       password: "",
       code: "",
-      avater: []
+      avatar: []
     };
   },
   methods: {
@@ -78,10 +78,10 @@ export default {
         this.$notify({ type: "success", message: res.data.errmsg });
     },
     async register() {
-      console.log(this.avater);
+      console.log(this.avatar);
       if (
         this.name == "" ||
-        this.avater.length == 0 ||
+        this.avatar.length == 0 ||
         this.email == "" ||
         this.password == "" ||
         this.code == ""
@@ -90,7 +90,7 @@ export default {
       else {
         let res = await this.api.post("/users", {
           name: this.name,
-          avater: this.avater[0],
+          avatar: this.avatar[0],
           email: this.email,
           password: this.password,
           code: this.code
@@ -116,7 +116,7 @@ h3 {
   color: rgb(252, 72, 72);
 }
 
-.avater {
+.avatar {
   margin: 0 auto;
   width: 80px;
   height: 80px;
