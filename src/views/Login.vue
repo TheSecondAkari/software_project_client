@@ -21,7 +21,7 @@
       round
       type="info"
       @click="login"
-      style="width:65%;margin-left:17.5%;margin-top:30%;"
+      style="width:65%;margin-left:17.5%;margin-top:50%;"
     >登录</van-button>
 
     <router-link to="/Register">
@@ -51,7 +51,7 @@ export default {
         if (res.status >= 200 && res.status < 300) {
           sessionStorage.setItem("Authorization", res.data.Authorization);
           this.$notify({ type: "success", message: res.data.errmsg });
-          this.$store.commit("getMyInfo"); //把用户信息存到vuex的state里 //需要注意是否信息还没获取到，就跳转到了个人中心页面，导致部分信息显示错误。
+          await this.$store.commit("getMyInfo"); //把用户信息存到vuex的state里 
           this.$router.push("/MyInfo"); //暂定登陆成功跳转到个人中心页面
         }
       }
@@ -79,7 +79,7 @@ h3 {
   border-radius: 4px;
 }
 p {
-  margin-top: 35%;
+  margin-top: 50%;
   font-size: 12px;
   text-align: center;
   color: red;

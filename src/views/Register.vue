@@ -2,7 +2,7 @@
   <div id="register">
     <h3>欢迎注册天东易宝</h3>
     <div class="avatar">
-      <van-uploader :after-read="afterRead" v-model="avatar" :max-count="1" />
+      <van-uploader :after-read="afterRead" v-model="imgs" :max-count="1" />
     </div>
 
     <div class="message">
@@ -62,13 +62,20 @@ export default {
       email: "",
       password: "",
       code: "",
-      avatar: []
+      imgs: [],
+      avatar: ""
     };
   },
   methods: {
-    afterRead(file) {
+    async afterRead(file) {
       // 此时可以自行将文件上传至服务器
-      console.log(file);
+      let fileData = new FormData();
+      fileData.append("file1", file.file);
+      let res = await this.api.post("/pictures", fileData, {
+        "Content-Type": "multipart/form-data"
+      });
+      this.avatar = res.data.url[0];
+      console.log(this.avatar);
     },
     async send_code() {
       let res = await this.api.post("/users/verify", {
@@ -78,10 +85,9 @@ export default {
         this.$notify({ type: "success", message: res.data.errmsg });
     },
     async register() {
-      console.log(this.avatar);
       if (
         this.name == "" ||
-        this.avatar.length == 0 ||
+        this.avatar == "" ||
         this.email == "" ||
         this.password == "" ||
         this.code == ""
@@ -95,7 +101,7 @@ export default {
           password: this.password,
           code: this.code
         });
-        if (res.status >= 200 && res.status < 300){
+        if (res.status >= 200 && res.status < 300) {
           this.$notify({ type: "success", message: res.data.errmsg });
           this.$router.push("/login");
         }
@@ -108,7 +114,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #register {
-  margin-top: 17%;
+  margin-top: 25%;
 }
 
 h3 {

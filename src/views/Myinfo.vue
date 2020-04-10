@@ -7,7 +7,7 @@
         round
         width="60px"
         height="60px"
-        src="https://img.yzcdn.cn/vant/cat.jpeg"
+        :src="this.$store.getters.User.avatar"
         style="float:left;margin-top:20%;"
       />
       <div class="account">

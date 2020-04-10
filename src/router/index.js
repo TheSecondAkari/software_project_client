@@ -74,9 +74,16 @@ const routers = [
     {
         path: '/Mycollection',
         meta: {
-            title: '个人信息'
+            title: '我的收藏'
         },
         component: (resolve) => require(['../views/Mycollection.vue'], resolve),
+    },
+    {
+        path: '/Good',
+        meta: {
+            title: '商品详情'
+        },
+        component: (resolve) => require(['../views/Good.vue'], resolve),
     },
 ];
 
