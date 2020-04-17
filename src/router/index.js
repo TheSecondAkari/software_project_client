@@ -67,7 +67,7 @@ const routers = [
     {
         path: '/Myaddress',
         meta: {
-            title: '个人信息'
+            title: '我的地址'
         },
         component: (resolve) => require(['../views/Myaddress.vue'], resolve),
     },
@@ -84,6 +84,20 @@ const routers = [
             title: '商品详情'
         },
         component: (resolve) => require(['../views/Good.vue'], resolve),
+    },
+    {
+        path: '/Cart',
+        meta: {
+            title: '购物车'
+        },
+        component: (resolve) => require(['../views/Cart.vue'], resolve),
+    },
+    {
+        path: '/Order',
+        meta: {
+            title: '下单页面'
+        },
+        component: (resolve) => require(['../views/Order.vue'], resolve),
     },
 ];
 

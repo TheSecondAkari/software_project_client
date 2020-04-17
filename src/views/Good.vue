@@ -41,7 +41,7 @@
         </van-cell>
         <van-cell class="cell" title="库存" :value="good.stock_num" />
         <van-cell class="cell" title="销量" :value="good.sale_num" />
-        <van-cell title="查看/选择 规格" is-link :value="selected" @click="show1()" />
+        <van-cell title="查看/选择 规格" is-link :value="selected" @click="showSku()" />
       </van-cell-group>
 
       <van-sku
@@ -77,21 +77,38 @@
         </van-row>
         <p style="margin:0;">{{good.comment[0].content}}</p>
       </div>
+      <van-button
+        round
+        plain
+        @click="login"
+        color="grey"
+        style="width:50%;margin-left:25%;margin-top:5%;"
+      >查看更多评论</van-button>
 
-      <!-- 商品详细描述 -->
-      <!-- <div class="text">{{good.description}}</div> -->
+      <!-- 商品详细描述 富文本 -->
+      <div
+        v-html="good.description"
+        style="margin-top:5%;white-space: pre-wrap; word-wrap: break-word;table-layout: fixed;word-break: break-all; max-width: 100%;"
+      ></div>
     </div>
-    <div>
+
+    <!-- 详情页面底层导航 -->
+    <div style="bottom:0;position: fixed;">
       <van-goods-action>
-        <van-goods-action-icon icon="cart-o" text="购物车" @click="onClickIcon" />
+        <van-goods-action-icon icon="cart-o" text="购物车" to="/cart" />
         <van-goods-action-icon icon="like-o" text="我的收藏" />
         <van-goods-action-button
           type="warning"
           text="加入购物车"
-          @click="onAdd"
+          @click="showSku()"
           :disabled="Boolean(good.sale)"
         />
-        <van-goods-action-button type="danger" text="立即购买" :disabled="Boolean(good.sale)" />
+        <van-goods-action-button
+          type="danger"
+          text="立即购买"
+          :disabled="Boolean(good.sale)"
+          @click="showSku()"
+        />
       </van-goods-action>
     </div>
   </div>
@@ -106,7 +123,8 @@ export default {
       //样例商品
       good: {
         id: 1,
-        name: "西瓜",
+        name:
+          "西瓜  西瓜 西瓜 西瓜   西瓜 西瓜   西瓜  西瓜 西瓜  西瓜 西瓜 西瓜   西瓜 西瓜   西瓜",
         description:
           "大西瓜！！！！啊啊大西瓜！！！！啊啊大西瓜！！！！啊啊大西瓜！！！！啊啊大西瓜！！！！啊啊大西瓜！！！！啊啊",
         category_id: 1,
@@ -245,15 +263,18 @@ export default {
     };
   },
   methods: {
-    show1() {
+    // 展示选择规格
+    showSku() {
       this.show = true;
     },
+    //选择规格后，显示已选中的规格搭配
     onSkuClicked(data) {
       this.selected = "";
-      for (var option of data.selectedSkuComb.options) {
-        this.selected += option.name;
-        this.selected += "/";
-      }
+      if (data.selectedSkuComb)
+        for (var option of data.selectedSkuComb.options) {
+          this.selected += option.name;
+          this.selected += "/";
+        }
     },
     more_comment() {},
 
@@ -268,26 +289,50 @@ export default {
     back() {},
 
     onAdd() {},
-    onBuyClicked() {},
-    onAddCartClicked() {}
+    onBuyClicked(message) {
+      let good = JSON.parse(JSON.stringify(message.selectedSkuComb));
+      good.num = message.selectedNum;
+      good.name = this.good.name;
+      good.imgs = this.good.imgs;
+      good.price /= 100;
+      let goods = [];
+      goods.push(good);
+      this.$router.push({
+        path: "/Order",
+        query: {
+          goods: goods
+        }
+      });
+    },
+    onAddCartClicked(message) {
+      let good = JSON.parse(JSON.stringify(message.selectedSkuComb));
+      good.num = message.selectedNum;
+      good.name = this.good.name;
+      good.imgs = this.good.imgs;
+      good.price /= 100;
+      good.selected = true;
+      this.$store.commit("addCart", good);
+      this.$toast.success("添加购物车成功");
+      this.show = false;
+    }
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+img {
+  max-width: 100% !important;
+  height: auto !important;
+}
 .avatar {
-  margin-left:5%;
-  margin-top:5%;
-  width: 45px;
-  height: 45px;
+  margin-left: 5%;
+  margin-top: 5%;
+  width: 40px;
+  height: 40px;
   overflow: hidden;
   border: 1px solid rgb(255, 255, 255);
   border-radius: 50%;
-}
-.photo-swiper {
-  height: 300px;
-  padding: 0% 3%;
 }
 .custom-back {
   position: absolute;
@@ -312,29 +357,6 @@ export default {
   margin-left: 2.5%;
   word-wrap: break-word;
 }
-.br {
-  margin: 5% 0 2.5% 2.5%;
-  height: 1px;
-  background: rgba(152, 152, 152, 0.3);
-  width: 95%;
-}
-.user {
-  width: 95%;
-  margin-left: 2.5%;
-  display: flex;
-  flex-direction: row;
-}
-.info {
-  margin-top: 2.5%;
-  margin-left: 5%;
-  word-wrap: break-word;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  font-size: 14px;
-}
 .like {
   font-size: 12px;
   color: grey;
@@ -346,8 +368,6 @@ export default {
   font-size: 15px;
 }
 .comment {
-  border: 1.5px solid gray;
   margin: 3.5%;
-  border-radius: 4px;
 }
 </style>
