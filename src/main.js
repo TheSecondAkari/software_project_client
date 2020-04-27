@@ -63,7 +63,6 @@ const api = {
       console.log(err);
     }
   },
-
   async post(url, data = {}, options = {}) {
     try {
       let res = await request.post(url, data, {
@@ -82,7 +81,43 @@ const api = {
       console.log(err);
     }
   },
-  //delete,put还没写，之后看接口是否补充。
+  async put(url, data = {}, options = {}) {
+    try {
+      let res = await request.put(url, data, {
+        headers: {
+          Authorization: sessionStorage.getItem("Authorization"),
+          ...options
+        }
+      });
+      return new Promise((resolve, reject) => {
+        if (res.status >= 200 && res.status < 300)
+          resolve(res);
+        else
+          reject(res);
+      })
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  async delete(url, data = {}, options = {}) {
+    try {
+      let res = await request.delete(url, {
+        param: data,
+        headers: {
+          Authorization: sessionStorage.getItem("Authorization"),
+          ...options
+        }
+      });
+      return new Promise((resolve, reject) => {
+        if (res.status >= 200 && res.status < 300)
+          resolve(res);
+        else
+          reject(res);
+      })
+    } catch (err) {
+      console.log(err);
+    }
+  },
 }
 
 Vue.prototype.api = api;

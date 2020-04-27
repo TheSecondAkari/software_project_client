@@ -1,6 +1,7 @@
 const routers = [
     {
         path: '/', //暂且用入口页面，可以改
+        redirect: '/Good', //重定向，方便暂时使用某些按钮跳转
         meta: {
             title: '首页'
         },

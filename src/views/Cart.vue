@@ -5,23 +5,23 @@
       <p style="margin:2%;font-weight:800;">天东易宝自营</p>
 
       <van-list style="padding-bottom:38%;" v-if="list.length != 0">
-        <van-list class="good-css" v-for="(good, index) in list" :key="good.name">
+        <van-list class="good-css" v-for="(good, index) in list" :key="good.sku_id">
           <div style="float:left;margin-top:40px;">
             <van-checkbox v-bind:value="good['selected']" @click="goodSelected(index)"></van-checkbox>
           </div>
 
           <van-card
             class="card"
-            :key="good.id"
+            :key="good.sku_id"
             :price="good.price"
             :title="good.name"
-            :thumb="good.imgs[0]"
+            :thumb="good.pic[0]"
           >
             <template #tags>
               <van-tag
                 plain
                 type="danger"
-                v-for="item in good.options"
+                v-for="item in good.tags"
                 :key="item.id"
                 style="margin:2%;"
               >{{item.name}}</van-tag>

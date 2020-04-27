@@ -11,6 +11,7 @@ const store = new Vuex.Store({
             name: "",
             email: "",
         },
+        love: [],//收藏的商品
         cart: [],//购物车商品
         //...
     },
@@ -18,9 +19,13 @@ const store = new Vuex.Store({
         User: state => {
             return state.user;
         },
+        Love: state => {
+            return state.love;
+        },
         Cart: state => {
             return state.cart;
         },
+        
         //...
     },
     mutations: {
@@ -29,6 +34,13 @@ const store = new Vuex.Store({
             let res = await api.get('/users');
             state.user = res.data.data;
         },
+        //获取用户的收藏商品
+        async getMyLove(state) { 
+            let res = await api.get('/collections');
+            state.love = res.data.data;
+            console.log(state.love)
+        },
+
         //将商品添加入购物车，目前只是简单实现未登录的添加
         addCart(state, good) { 
             state.cart.unshift(good);
