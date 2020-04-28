@@ -57,6 +57,15 @@ const store = new Vuex.Store({
             let bool = state.cart[index].selected;
             state.cart[index].selected = !bool;
         },
+        logout(state){
+            state.user = {
+                id: 0,
+                name: "",
+                email: "",
+                love:[],
+                cart:[],
+            };
+        }
         //...
     },
     //   strict: debug,

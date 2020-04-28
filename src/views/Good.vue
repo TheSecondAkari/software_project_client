@@ -315,6 +315,7 @@ export default {
         if (v.goods.id == this.good.id) {
           this.like = true;
         }
+      //暂时给商品添加评论，调整页面样式
       this.good.comment = [
         {
           id: 1,
