@@ -96,7 +96,7 @@
         <van-button
           round
           plain
-          @click="login"
+          @click="more_comment()"
           color="grey"
           style="width:50%;margin-left:25%;margin-top:5%;"
         >查看更多评论</van-button>
@@ -295,8 +295,7 @@ export default {
       let res = await this.api.get("/goods/" + this.id);
       if (res.status >= 200 && res.status < 300) this.good = res.data.data;
       //富文本图片添加宽度适应属性
-      this.good.description = this.good.description.replace(
-        /\<img/gi,
+      this.good.description = this.good.description.replace(/<img/gi,
         '<img style="max-width:100%;height:auto" '
       );
       //有规格的商品规格分支里的价格*100，因为内部分支价格单位是分
