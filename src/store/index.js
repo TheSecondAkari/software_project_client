@@ -25,24 +25,22 @@ const store = new Vuex.Store({
         Cart: state => {
             return state.cart;
         },
-        
+
         //...
     },
     mutations: {
         //获取用户账号基本信息
-        async getMyInfo(state) {
-            let res = await api.get('/users');
-            state.user = res.data.data;
+        getMyInfo(state, data) {
+            state.user = data;
         },
         //获取用户的收藏商品
-        async getMyLove(state) { 
-            let res = await api.get('/collections');
-            state.love = res.data.data;
+        getMyLove(state,data) {
+            state.love = data;
             console.log(state.love)
         },
 
         //将商品添加入购物车，目前只是简单实现未登录的添加
-        addCart(state, good) { 
+        addCart(state, good) {
             state.cart.unshift(good);
             console.log(state.cart);
         },
@@ -57,17 +55,29 @@ const store = new Vuex.Store({
             let bool = state.cart[index].selected;
             state.cart[index].selected = !bool;
         },
-        logout(state){
+        logout(state) {
             state.user = {
                 id: 0,
                 name: "",
                 email: "",
-                love:[],
-                cart:[],
+                love: [],
+                cart: [],
             };
         }
         //...
     },
+    actions: {
+        async getMyInfo(context) {
+            let res = await api.get('/users');
+            context.commit('getMyInfo', res.data.data);
+        },
+        async getMyLove(context) {
+            let res = await api.get('/collections');
+            context.commit('getMyLove', res.data.data);
+        },
+
+    }
+
     //   strict: debug,
 
 });
