@@ -1,10 +1,40 @@
 <template>
-  <div>
-    <van-cell-group class="more">
-      <van-cell title="收货地址" is-link to="Myaddress" style="margin-top:5%;padding:4%;" />
-      <van-cell title="我的收藏" is-link to="Mycollection" style="padding:4%;" />
-      <van-cell title="修改信息" is-link style="padding:4%;" />
-    </van-cell-group>
+  <div class="contant">
+    <div class="custom-back" slot="indicator" v-on:click="back()">
+      <van-icon name="arrow-left" size="20px" style="margin:5px 0 5px 2.5px;" />
+    </div>
+    <div class="info">
+      <van-image round width="100px" height="100px" :src="user.avatar" style="margin:auto;" />
+      <p>{{user.name}}</p>
+      <p>{{user.email}}</p>
+    </div>
+    <div class="update">
+      <van-cell-group>
+        <van-cell title="更换头像"></van-cell>
+        <van-uploader :after-read="afterRead" v-model="imgs" :max-count="1" style="margin: 5% 0 5% 10%;" />
+        <van-button type="primary" @click="test1()" style="margin-left:30%;">确定</van-button>
+        <van-cell title="更改昵称"></van-cell>
+        <van-field v-model="username" center clearable label="昵称"  placeholder="请输入新昵称" >
+         <template #button>
+              <van-button size="small" type="primary" @click="test2()">修改</van-button>
+            </template>
+        </van-field>
+        <van-cell title="更改密码"></van-cell>
+        <div>
+        <van-button v-if="status==false" type="primary" center @click="status=true" style="margin:0 auto;">修改密码</van-button>
+        </div>
+        <div v-if="status"> 
+          <van-field v-model="password" center clearable label="新密码" placeholder="请输入新密码" />
+          <van-field v-model="code" center clearable label="短信验证码" placeholder="请输入短信验证码">
+            <template #button>
+              <van-button size="small" type="primary" @click="send_code()">发送验证码</van-button>
+            </template>
+          </van-field>
+          <van-button round type="primary" @click="test3()">确认修改密码</van-button>
+          <van-button round  @click="status=false">取消</van-button>
+        </div>
+      </van-cell-group>
+    </div>
   </div>
 </template>
 
@@ -12,13 +42,81 @@
 export default {
   data() {
     return {
-      // user:this.$store.getters.User,
-      active: "Mine",
-      logon: true
+      user: this.$store.getters.User,
+      username: "",
+      avatar: "",
+      password: "",
+      code: "",
+      imgs: [],
+      status: false
     };
   },
-  mounted(){
+  mounted() {
     console.log(this.$store.getters.User);
+  },
+  methods: {
+    async afterRead(file) {
+      // 此时可以自行将文件上传至服务器
+      let fileData = new FormData();
+      fileData.append("file1", file.file);
+      let res = await this.api.post("/pictures", fileData, {
+        "Content-Type": "multipart/form-data"
+      });
+      this.avatar = res.data.url[0];
+      console.log(this.avatar);
+    },
+    async send_code() {
+      let res = await this.api.post("/users/verify", {
+        email: this.user.email
+      });
+      if (res.status >= 200 && res.status < 300)
+        this.$notify({ type: "success", message: res.data.errmsg });
+    },
+    async test1() {
+      if (this.avatar != "") {
+        let res = await this.api.put("/users", {
+          avatar: this.avatar
+        });
+        if (res.status >= 200 && res.status < 300) {
+          this.$notify({ type: "success", message: res.data.errmsg });
+          this.$store.commit("getMyInfo");
+        }
+        console.log(res);
+        this.avatar = "";
+      } else this.$notify({ type: "warning", message: "不能为空" });
+    },
+    async test2() {
+      if (this.username != "") {
+        let res = await this.api.put("/users", {
+          name: this.username
+        });
+        if (res.status >= 200 && res.status < 300) {
+          this.$notify({ type: "success", message: res.data.errmsg });
+          this.$store.commit("getMyInfo");
+        }
+        console.log(res);
+        this.username = "";
+      } else this.$notify({ type: "warning", message: "不能为空" });
+    },
+    async test3() {
+      if (this.password != "" && this.code != "") {
+        let res = await this.api.put("/users/password", {
+          code: this.code,
+          password: this.password
+        });
+        if (res.status >= 200 && res.status < 300) {
+          this.$notify({ type: "success", message: res.data.errmsg });
+          this.$store.commit("getMyInfo");
+        }
+        console.log(res);
+        this.password = "";
+        this.code = "";
+        this.status = false;
+      } else this.$notify({ type: "warning", message: "不能为空" });
+    },
+    back() {
+      this.$router.push("/Myinfo");
+    }
   }
 };
 </script>
@@ -29,5 +127,27 @@ export default {
   height: 100%;
   width: 100%;
   position: fixed;
+}
+.info {
+  text-align: center;
+  height: 30%;
+  background-color: rgb(201, 37, 25);
+  padding: 10% 0 5% 0;
+}
+.info p {
+  margin-top: 5%;
+  font: bold;
+  color: azure;
+  font-size: 20px;
+}
+.custom-back {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  height: 30px;
+  width: 30px;
+  color: #fff;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.1);
 }
 </style>

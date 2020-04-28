@@ -7,12 +7,12 @@
         round
         width="60px"
         height="60px"
-        :src="this.$store.getters.User.avatar"
+        :src="user.avatar"
         style="float:left;margin-top:20%;"
       />
       <div class="account">
-        <p class="username">{{this.$store.getters.User.name}}</p>
-        <p class="email">{{this.$store.getters.User.email}}</p>
+        <p class="username">{{user.name}}</p>
+        <p class="email">{{user.email}}</p>
       </div>
     </div>
     <div class="maininfo" v-else>
@@ -42,10 +42,10 @@
       <van-cell title="修改信息" is-link to="Updateinfo" style="padding:4%;" />
     </van-cell-group>
     <van-cell-group>
-      <van-cell class="exit" v-if="logon" style="margin-top:20%;padding:4%;" @click="Exit()">
+      <van-cell class="exit" v-if="logon" style="margin-top:20%;padding:4%;" @click="logout()">
         <p>登出</p>
       </van-cell>
-      <van-cell class="exit" v-else style="margin-top:20%;padding:4%;" @click="Logon()">
+      <van-cell class="exit" v-else style="margin-top:20%;padding:4%;" @click="login()" >
         <p>登录</p>
       </van-cell>
     </van-cell-group>
@@ -63,20 +63,27 @@
 export default {
   data() {
     return {
-      // user:this.$store.getters.User,
-      active: "Mine",
-      logon: true
+      user:this.$store.getters.User,
+      active: "Mine"
     };
   },
   mounted(){
-    console.log(this.$store.getters.User);
+    console.log(this.user);
+  },
+    computed: {
+    logon() {
+      var user = this.$store.getters.User;
+      if (user.id > 0) {
+        return true;
+      } else return false;
+    }
   },
   methods:{
-    Exit(){
-      
+    logout(){
+      this.$store.commit("logout");
     },
-    Logon(){
-
+    login(){
+      this.$router.push("/Login");
     }
   }
 };
