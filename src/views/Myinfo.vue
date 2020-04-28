@@ -39,13 +39,13 @@
     <van-cell-group class="more">
       <van-cell title="收货地址" is-link to="Myaddress" style="margin-top:5%;padding:4%;" />
       <van-cell title="我的收藏" is-link to="Mycollection" style="padding:4%;" />
-      <van-cell title="修改密码" is-link style="padding:4%;" />
+      <van-cell title="修改信息" is-link to="Updateinfo" style="padding:4%;" />
     </van-cell-group>
     <van-cell-group>
-      <van-cell class="exit" v-if="logon" style="margin-top:20%;padding:4%;">
+      <van-cell class="exit" v-if="logon" style="margin-top:20%;padding:4%;" @click="Exit()">
         <p>登出</p>
       </van-cell>
-      <van-cell class="exit" v-else style="margin-top:20%;padding:4%;">
+      <van-cell class="exit" v-else style="margin-top:20%;padding:4%;" @click="Logon()">
         <p>登录</p>
       </van-cell>
     </van-cell-group>
@@ -70,6 +70,14 @@ export default {
   },
   mounted(){
     console.log(this.$store.getters.User);
+  },
+  methods:{
+    Exit(){
+      
+    },
+    Logon(){
+
+    }
   }
 };
 </script>

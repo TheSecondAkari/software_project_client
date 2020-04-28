@@ -296,7 +296,7 @@ export default {
       if (res.status >= 200 && res.status < 300) this.good = res.data.data;
       //富文本图片添加宽度适应属性
       this.good.description = this.good.description.replace(
-        /\<img/gi,
+        //<img/gi,
         '<img style="max-width:100%;height:auto" '
       );
       //有规格的商品规格分支里的价格*100，因为内部分支价格单位是分
