@@ -47,6 +47,10 @@ export default {
       ]
     };
   },
+  mounted(){
+    let res = this.api.get('/addresses');
+    console.log(res);
+  },
   methods: {
     back() {
       this.$router.go(-1);

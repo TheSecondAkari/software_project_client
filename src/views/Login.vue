@@ -53,7 +53,10 @@ export default {
           this.$notify({ type: "success", message: res.data.errmsg });
           await this.$store.dispatch("getMyInfo"); //把用户信息存到vuex的state里,使用await确保获取了信息，再跳转页面
           this.$store.commit("getMyLove");
-          this.$router.push("/MyInfo"); //暂定登陆成功跳转到个人中心页面
+          if (this.$route.query.redirect) {
+            let redirect_path = this.$route.query.redirect;
+            this.$router.push(redirect_path);
+          } else this.$router.push("/MyInfo"); //暂定登陆成功跳转到个人中心页面
         }
       }
     }

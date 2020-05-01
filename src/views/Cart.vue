@@ -6,22 +6,21 @@
 
       <van-list style="padding-bottom:38%;" v-if="list.length != 0">
         <van-list class="good-css" v-for="(good, index) in list" :key="good.sku_id">
-          <div style="float:left;margin-top:40px;">
+          <div style="float:left;margin-top:40px;margin-right:5px;">
             <van-checkbox v-bind:value="good['selected']" @click="goodSelected(index)"></van-checkbox>
           </div>
 
           <van-card
             class="card"
-            :key="good.sku_id"
-            :price="good.price"
-            :title="good.name"
-            :thumb="good.pic[0]"
+            :price="good.sku.price"
+            :title="good.sku.goods.name"
+            :thumb="good.sku.goods.pic[0]"
           >
             <template #tags>
               <van-tag
                 plain
                 type="danger"
-                v-for="item in good.tags"
+                v-for="item in good.sku.options"
                 :key="item.id"
                 style="margin:2%;"
               >{{item.name}}</van-tag>
@@ -76,7 +75,7 @@ export default {
   data() {
     return {
       active: "ShoppingCart",
-      list: [],
+      list: this.$store.getters.Cart,
       allselected: false
     };
   },
@@ -90,14 +89,14 @@ export default {
       var total = 0;
       this.$store.getters.Cart.forEach(good => {
         if (good.selected) {
-          total += Number(good.price) * Number(good.num);
+          total += Number(good.sku.price) * Number(good.num);
         }
       });
       return total;
     }
   },
   mounted() {
-    this.list = this.$store.getters.Cart;
+    console.log(this.list);
   },
   methods: {
     // 删除勾选商品
@@ -110,12 +109,8 @@ export default {
           goods.push(good);
         }
       });
-      this.$router.push({
-        path: "/Order",
-        query: {
-          goods: goods
-        }
-      });
+      this.$store.commit("updateBuy", goods, 1);
+      this.$router.push("/Order");
     },
     // 勾选单件商品
     goodSelected(index) {

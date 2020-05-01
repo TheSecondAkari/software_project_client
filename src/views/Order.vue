@@ -32,22 +32,23 @@
 
     <!-- 选购的商品列表 -->
     <div
-      style="margin-top:10%;margin-left: 2.5%;margin-right: 2.5%;padding-bottom:18%;border-radius: 15px;overflow: hidden;">
+      style="margin-top:10%;margin-left: 2.5%;margin-right: 2.5%;padding-bottom:18%;border-radius: 15px;overflow: hidden;"
+    >
       <p style="margin:1%;font-weight:800;">天东易宝自营</p>
       <van-list style="padding-left: 2.5%;padding-right: 2.5%;">
         <van-list class="good-css" v-for="good in list" :key="good.sku_id">
           <van-card
             class="card"
-            :price="good.price"
+            :price="good.sku.price"
             :num="good.num"
-            :title="good.name"
-            :thumb="good.pic[0]"
+            :title="good.sku.goods.name"
+            :thumb="good.sku.goods.pic[0]"
           >
             <template #tags>
               <van-tag
                 plain
                 type="danger"
-                v-for="item in good.tags"
+                v-for="item in good.sku.options"
                 :key="item.id"
                 style="margin:2%;"
               >{{item.name}}</van-tag>
@@ -67,8 +68,9 @@
 export default {
   data() {
     return {
-      list: [],
-      message: "",
+      list: this.$store.getters.Buy.goods,
+      type: this.$store.getters.Buy.type,
+      message: "", //记录订单备注
       price: 0,
       address: {
         name: "张星星",
@@ -79,11 +81,9 @@ export default {
     };
   },
   async mounted() {
-    //   await this.Judge();
-    this.list = this.$route.query.goods;
-    console.log(this.list);
+    console.log(this.list)
     this.list.forEach(good => {
-      this.price += good.price * good.num;
+      this.price += good.sku.price * good.num;
     });
     this.price *= 100;
   },
@@ -92,23 +92,6 @@ export default {
       this.$router.back(-1);
     },
 
-    // Judge() {
-    //   var user = this.$store.getters.User;
-    //   if (user.id < 1) {
-    //     this.$notify({
-    //       type: "danger",
-    //       message: "未登录，请先登陆。"
-    //     });
-    //     this.$router.push("/login");
-    //   } else if (this.$store.getters.AddressList.length == 0) {
-    //     this.$notify({
-    //       type: "danger",
-    //       message: "地址为空，请先添加地址。"
-    //     });
-    //     this.$router.push("/addressList");
-    //   }
-    // },
-    
     changeAddress() {
       // this.$router.push({
       //   path: "/addressList",
@@ -148,13 +131,14 @@ export default {
 
 <style scoped>
 .card {
+  padding: 8px 0;
   text-align: left;
   background-color: white;
 }
 .good-css {
   /* overflow: hidden; */
   border-radius: 10px;
-  margin: 5px 2.5%;
+  margin: 5px 0;
   background-color: white;
 }
 </style>

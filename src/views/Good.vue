@@ -5,7 +5,7 @@
       <div>
         <van-swipe @change="onChange" :autoplay="3000" indicator-color="white">
           <van-swipe-item style="height: 300px;" v-for="(image, index) in good.pic" :key="index">
-            <van-image :src="image" style="height: 100%;" />
+            <van-image :src="image" style="width: 100%;height:auto;" />
           </van-swipe-item>
           <div class="custom-indicator" slot="indicator">{{ current + 1 }}/{{good.pic.length}}</div>
           <div class="custom-back" slot="indicator" v-on:click="back">
@@ -68,10 +68,11 @@
         @add-cart="onAddCartClicked"
       />
 
-      <div style="background-color:rgb(226, 224, 224);padding:5px 0;color:grey;height:15px;width:100%">
-
-      </div>
       <!-- 商品评价 -->
+      <div
+        v-if="good.comment"
+        style="background-color:rgb(226, 224, 224);padding:5px 0;color:grey;height:9px;width:100%"
+      ></div>
       <div id="comment" v-if="good.comment">
         <van-cell is-link style="border:0;">
           <template #title>
@@ -104,7 +105,7 @@
 
       <!-- 商品详细描述 富文本 -->
       <p
-        style="text-align:center;background-color:rgb(226, 224, 224);padding:3px 0;color:grey;"
+        style="text-align:center;background-color:rgb(226, 224, 224);padding:2px 0;color:grey;font-size:12px;"
       >————商品详情————</p>
       <div v-html="good.description" class="Rich_text"></div>
     </div>
@@ -112,8 +113,8 @@
     <!-- 详情页面底层导航 -->
     <div style="bottom:0;position: fixed;">
       <van-goods-action>
-        <van-goods-action-icon icon="cart-o" text="购物车" to="/cart" />
-        <van-goods-action-icon icon="like-o" text="我的收藏" />
+        <van-goods-action-icon icon="cart-o" text="购物车" to="/Cart" />
+        <van-goods-action-icon icon="like-o" text="我的收藏" to="/Mycollection" />
         <van-goods-action-button
           type="warning"
           text="加入购物车"
@@ -242,8 +243,8 @@ export default {
   name: "Good",
   data() {
     return {
-      id: 10, //用于测试商品的获取，迟点删除
-      current: 0,
+      id: 14, //用于测试商品的获取，迟点删除
+      current: 0, //轮播图计数
       //样例商品
       good: {
         id: 0,
@@ -260,7 +261,7 @@ export default {
         pic: []
       },
       show: false,
-      chumbs: {
+      chumbs: { //规格选择弹层的缩略图
         picture: ""
       },
       selected: "", //已经选好的规格展示
@@ -283,7 +284,6 @@ export default {
     }
   },
   async mounted() {
-    // good = $route.query.good; 由其他页面跳转时传入
     await this.getGood();
     this.chumbs = {
       picture: this.good.pic[0]
@@ -295,7 +295,8 @@ export default {
       let res = await this.api.get("/goods/" + this.id);
       if (res.status >= 200 && res.status < 300) this.good = res.data.data;
       //富文本图片添加宽度适应属性
-      this.good.description = this.good.description.replace(/<img/gi,
+      this.good.description = this.good.description.replace(
+        /<img/gi,
         '<img style="max-width:100%;height:auto" '
       );
       //有规格的商品规格分支里的价格*100，因为内部分支价格单位是分
@@ -394,24 +395,33 @@ export default {
 
     //添加购物车
     onAddCartClicked(message) {
-      let good = JSON.parse(JSON.stringify(message.selectedSkuComb));
-      good.sku_id = good.id;
-      good.id = message.goodsId;
-      good.tags = [];
-      for (var sku of this.good.tree)
-        for (var v of sku.v) if (v.id == good[sku.k_s]) good.tags.push(v);
-      good.num = message.selectedNum;
-      good.name = this.good.name;
-      good.pic = this.good.pic;
-      if (!this.good.none_sku) good.price /= 100;
-      good.selected = false;
-      this.$store.commit("addCart", good);
-      this.$toast.success("添加购物车成功");
-      this.show = false;
-      setTimeout(() => {
-        // 确保该操作发生在this.show的监视操作之后
-        this.selected = "";
-      }, 100);
+      //检查是否登录中
+      if (this.$store.state.user.id <= 0) {
+        this.$notify({
+          type: "warning",
+          message: "未登录没有权限操作，请先登录"
+        });
+        this.$router.push({
+          path: "/Login",
+          query: {
+            redirect: "/Good"
+          }
+        });
+      } 
+      else {
+        let data = {
+          goods_id: message.goodsId,
+          sku_id: message.selectedSkuComb.id,
+          num: message.selectedNum
+        };
+        this.$store.dispatch("addCart", data);
+
+        this.show = false;
+        setTimeout(() => {
+          // 确保该操作发生在this.show的监视操作之后
+          this.selected = "";
+        }, 100);
+      }
     },
 
     //立即购买
@@ -471,6 +481,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+img{
+  width: 100%;
+  height: auto;
+}
 .Rich_text {
   /* margin-top: 5%; */
   white-space: pre-wrap;
@@ -481,6 +495,7 @@ export default {
   max-width: 100% !important;
   height: auto !important;
 }
+ /* 这里没效 */
 .Rich_text > img {
   width: 100% !important;
   height: auto !important;

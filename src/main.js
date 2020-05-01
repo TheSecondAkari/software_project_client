@@ -17,6 +17,27 @@ const RouterConfig = {
 };
 const router = new VueRouter(RouterConfig);
 
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requireAuth)) { // 判断该路由是否需要登录权限
+    if (store.state.user.id > 0) // 判断store中是否存有用户信息，判断是否成功登录
+      next();
+    else {
+      Vue.prototype.$notify({
+        type: 'warning',
+        message: "未登录没有权限操作，请先登录"
+      });
+      next({
+        path: '/login',
+        query: {
+          redirect: from.fullPath // 将跳转的路由path作为参数，登录成功后跳转到该路由
+        }
+      })
+    }
+  }
+  else
+    next();
+});
+
 const request = axios.create({
   timeout: 5000,
   baseURL: process.env.NODE_ENV === 'production' ? '' : '/api'
@@ -30,10 +51,10 @@ request.interceptors.response.use(undefined, error => { // undefined 指的是�
     });
     try {
       if (error.response.status == 401) {
-        Vue.prototype.$notify({
-          type: 'warning',
-          message: error.response.data.errmsg
-        });
+        // Vue.prototype.$notify({
+        //   type: 'warning',
+        //   message: error.response.data.errmsg
+        // });
         router.push("/login");
       }
     } catch (err) {
