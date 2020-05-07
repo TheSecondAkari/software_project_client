@@ -6,20 +6,20 @@
       </template>
     </van-nav-bar>
     <van-address-list
-      v-model="chosenAddressId"
       :list="addresslist"
       default-tag-text="默认"
       @add="onAdd"
       @edit="onEdit"
-      @select="onSelect"
     />
     <van-popup v-model="addshow" position="bottom" closeable :style="{ height: '50%' }">
       <h3>地址信息</h3>
       <van-address-edit
         :area-list="areaList"
         :address-info="addAddress"
+         show-set-default
         :area-columns-placeholder="['请选择', '请选择', '请选择']"
         @save="onApply"
+
       />
     </van-popup>
     <van-popup v-model="editshow" position="bottom" closeable :style="{ height: '60%' }">
@@ -27,8 +27,10 @@
       <van-address-edit
         :area-list="areaList"
         show-delete
+         show-set-default
         :address-info="oldAddress"
         :area-columns-placeholder="['请选择', '请选择', '请选择']"
+       
         @save="onSave"
         @delete="onDelete"
       />
@@ -41,6 +43,7 @@ import { Toast } from "vant";
 export default {
   data() {
     return {
+      isdefault:false,
       addAddress:{},
       oldAddress: {}, //用于地址修改时的，传原始值
       addshow: false, // 用于控制弹出层的值Boolean
@@ -4087,7 +4090,6 @@ export default {
         }
       },
       defaultAddId: this.$store.getters.DefaultAddId,
-      chosenAddressId: 0,
       addresslist: this.$store.getters.AddressList,
       list: []
     };
@@ -4095,27 +4097,20 @@ export default {
 
   mounted() {
     console.log(this.addresslist);
-    this.getDefault();
-    console.log("默认"+this.defaultAddId);
-    console.log("选择"+this.chosenAddressId);
   },
   methods: {
     back() {
       this.$router.go(-1);
     },
-    getDefault() {
-    
-        if (this.defaultAddId!=0)
-          this.chosenAddressId = this.defaultAddId;
-      
-    },
     onAdd() {
       this.addshow = true;
+      this.isdefault = false;
       Toast("新增地址");
     },
     onEdit(item, index) {
       this.editshow = true;
       this.oldAddress = item;
+      this.isdefault = item.isDefault;
       Toast("编辑地址:" + index);
     },
     async onApply(Info) {
@@ -4175,61 +4170,67 @@ export default {
       }
       this.editshow = false;
     },
-    async onSelect(item)//选择默认地址
-     {
-      console.log(this.chosenAddressId);
-      var defaultaddress = [];//存放旧的默认地址
-      for(var i = 0;i<this.addresslist.length;i++)
-      {
-        if(this.addresslist[i].id==this.defaultAddId)
-        defaultaddress= this.addresslist[i];
-      }
-      console.log(defaultaddress);
-      if (this.defaultAddId != 0) {
-        let data = await this.api.put("/address/" + this.defaultAddId,{
-        name: defaultaddress.name,
-        phone: defaultaddress.tel,
-        province: defaultaddress.province,
-        city: defaultaddress.city,
-        county: defaultaddress.county,        
-        detail: defaultaddress.addressDetail,
-        code: defaultaddress.areaCode,
-        default: false
-      }
-        );
-        if (data.status >= 200 && data.status < 300) {
-          this.$notify({
-            type: "success",
-            message: "成功取消默认"
-          });
-        }
-      }
+    // onChangeDetail(){
+    //   this.isdefault = !this.isdefault;
+    // }
+    // async onSelect(item)//选择默认地址
+    //  {
+    //   console.log(this.chosenAddressId);
+    //   var defaultaddress = [];//存放旧的默认地址
+    //   for(var i = 0;i<this.addresslist.length;i++)
+    //   {
+    //     if(this.addresslist[i].id==this.defaultAddId)
+    //     defaultaddress= this.addresslist[i];
+    //   }
+    //   console.log(defaultaddress);
+    //   if (this.defaultAddId != 0) {
+    //     let data = await this.api.put("/address/" + this.defaultAddId,{
+    //     name: defaultaddress.name,
+    //     phone: defaultaddress.tel,
+    //     province: defaultaddress.province,
+    //     city: defaultaddress.city,
+    //     county: defaultaddress.county,        
+    //     detail: defaultaddress.addressDetail,
+    //     code: defaultaddress.areaCode,
+    //     default: false
+    //   }
+    //     );
+    //     if (data.status >= 200 && data.status < 300) {
+    //       this.$notify({
+    //         type: "success",
+    //         message: "成功取消默认"
+    //       });
+    //     }
+    //   }
 
-      let data = await this.api.put("/address/" + item.id, {
-        name: item.name,
-        phone: item.tel,
-        province: item.province,
-        city: item.city,
-        county: item.county,
-        detail: item.addressDetail,
-        code: item.areaCode,
-        default: true
-      });
-      if (data.status >= 200 && data.status < 300) {
-        this.$notify({
-          type: "success",
-          message: "成功选择默认"
-        });
-        defaultaddress = [];//存放旧的默认地址
-        await this.$store.dispatch("getAddresses");
-        this.addresslist = this.$store.getters.AddressList;
+    //   let data = await this.api.put("/address/" + item.id, {
+    //     name: item.name,
+    //     phone: item.tel,
+    //     province: item.province,
+    //     city: item.city,
+    //     county: item.county,
+    //     detail: item.addressDetail,
+    //     code: item.areaCode,
+    //     default: true
+    //   });
+    //   if (data.status >= 200 && data.status < 300) {
+    //     this.$notify({
+    //       type: "success",
+    //       message: "成功选择默认"
+    //     });
+    //     defaultaddress = [];//存放旧的默认地址
+    //     await this.$store.dispatch("getAddresses");
+    //     this.addresslist = this.$store.getters.AddressList;
         
         
-      }
-    }
+    //   }
+    // }
   }
 };
 </script>
 
 <style>
+.van-radio__icon{
+  display:none;
+}
 </style>

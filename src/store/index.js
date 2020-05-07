@@ -102,14 +102,14 @@ const store = new Vuex.Store({
 
                 for (var i = 0; i < data.length; i++) {
                     var address = '';
-                    var def = false;
+                    // var def = false;
                     if (data[i].province == data[i].city)  //如果省份和城市是一样的，例如上海市，北京市，address避免重复
                         address = data[i].province + ' ' + data[i].county + ' ' + data[i].detail;
                     else
                         address = data[i].province + ' ' + data[i].city + ' ' + data[i].county + ' ' + data[i].detail;
                     if (data[i].default) {
                         defaultId = data[i].id;
-                        def = true;//判断有无默认地址
+                        // def = true;//判断有无默认地址
                     }
 
                     tempList.push({
@@ -122,13 +122,13 @@ const store = new Vuex.Store({
                         addressDetail: data[i].detail,
                         areaCode: data[i].code,
                         address: address,
-                        default: data[i].default
+                        isDefault: data[i].default
                     });
                 }
-                if (def == false && tempList.length > 0) {//如果没有默认地址且长度大于一就把第一条设为默认地址
-                    tempList[0].default = true;
-                    defaultId = tempList[0].id;
-                }
+                // if (def == false && tempList.length > 0) {//如果没有默认地址且长度大于一就把第一条设为默认地址
+                //     tempList[0].default = true;
+                //     defaultId = tempList[0].id;
+                // }
 
                 context.commit('getAddresses', tempList);
                 console.log("默认id：" + defaultId);
