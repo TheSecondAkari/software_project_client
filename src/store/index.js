@@ -13,7 +13,8 @@ const store = new Vuex.Store({
         },
         love: [],//收藏的商品
         cart: [],//购物车商品
-        addressList:[],//地址
+        addressList: [],//地址
+        defaultAddId: 0,//默认地址
         //...
     },
     getters: {
@@ -26,9 +27,12 @@ const store = new Vuex.Store({
         Cart: state => {
             return state.cart;
         },
-        AddressList: state=>{
+        AddressList: state => {
             return state.addressList;
-        }
+        },
+        DefaultAddId: state => {
+            return state.defaultAddId;
+        },
 
         //...
     },
@@ -38,11 +42,11 @@ const store = new Vuex.Store({
             state.user = data;
         },
         //获取用户的收藏商品
-        getMyLove(state,data) {
+        getMyLove(state, data) {
             state.love = data;
             console.log(state.love)
         },
-        getAddresses(state,data){
+        getAddresses(state, data) {
             state.addressList = data;
             console.log(state.addressList)
         },
@@ -63,6 +67,9 @@ const store = new Vuex.Store({
             let bool = state.cart[index].selected;
             state.cart[index].selected = !bool;
         },
+        getDefaultAddId(state, data) {
+            state.defaultAddId = data
+        },
         logout(state) {
             state.user = {
                 id: 0,
@@ -70,7 +77,8 @@ const store = new Vuex.Store({
                 email: "",
                 love: [],
                 cart: [],
-                addressList:[],
+                addressList: [],
+                defaultAddId: 0,
             };
         }
         //...
@@ -88,14 +96,22 @@ const store = new Vuex.Store({
             let data = await api.get("/addresses");
             console.log(data);
             if (data.status >= 200 && data.status < 300) {
-                data = data.data;
+                data = data.data.data;
                 var tempList = [];
+                var defaultId = 0;
+
                 for (var i = 0; i < data.length; i++) {
                     var address = '';
+                    var def = false;
                     if (data[i].province == data[i].city)  //如果省份和城市是一样的，例如上海市，北京市，address避免重复
                         address = data[i].province + ' ' + data[i].county + ' ' + data[i].detail;
                     else
                         address = data[i].province + ' ' + data[i].city + ' ' + data[i].county + ' ' + data[i].detail;
+                    if (data[i].default) {
+                        defaultId = data[i].id;
+                        def = true;//判断有无默认地址
+                    }
+
                     tempList.push({
                         id: data[i].id,
                         name: data[i].name,
@@ -105,12 +121,21 @@ const store = new Vuex.Store({
                         county: data[i].county,
                         addressDetail: data[i].detail,
                         areaCode: data[i].code,
-                        address: address
+                        address: address,
+                        default: data[i].default
                     });
                 }
-                context.commit('getAddresses',tempList);
+                if (def == false && tempList.length > 0) {//如果没有默认地址且长度大于一就把第一条设为默认地址
+                    tempList[0].default = true;
+                    defaultId = tempList[0].id;
+                }
+
+                context.commit('getAddresses', tempList);
+                console.log("默认id：" + defaultId);
+                context.commit('getDefaultAddId', defaultId);
             }
         },
+
 
     }
 
