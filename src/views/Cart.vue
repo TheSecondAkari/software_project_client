@@ -5,7 +5,7 @@
       <p style="margin:2%;font-weight:800;">天东易宝自营</p>
 
       <van-list style="padding-bottom:38%;" v-if="list.length != 0">
-        <van-list class="good-css" v-for="(good, index) in list" :key="good.sku_id">
+        <van-list class="good-css" v-for="(good, index) in list" :key="good.id">
           <div style="float:left;margin-top:40px;margin-right:5px;">
             <van-checkbox v-bind:value="good['selected']" @click="goodSelected(index)"></van-checkbox>
           </div>
@@ -26,7 +26,7 @@
               >{{item.name}}</van-tag>
             </template>
             <template #footer>
-              <van-stepper v-model="good.num" integer style="margin-top:-22px;" />
+              <van-stepper v-model="good.num" integer @change="goodNumEdit(good.num,good.id)" style="margin-top:-22px;" />
             </template>
           </van-card>
           <!-- slot="footer" -->
@@ -95,9 +95,6 @@ export default {
       return total;
     }
   },
-  mounted() {
-    console.log(this.list);
-  },
   methods: {
     // 删除勾选商品
     del() {},
@@ -109,13 +106,20 @@ export default {
           goods.push(good);
         }
       });
-      this.$store.commit("updateBuy", goods, 1);
+      this.$store.commit("updateBuy", {
+        goods: goods,
+        type: 1
+      });
       this.$router.push("/Order");
     },
     // 勾选单件商品
     goodSelected(index) {
       this.$store.commit("cartGoodSelected", index);
+    },
+    goodNumEdit(value,detail){
+      console.log(value,detail)
     }
+
   }
 };
 </script>

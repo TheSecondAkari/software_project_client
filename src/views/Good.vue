@@ -32,21 +32,21 @@
       </div>
 
       <!-- 商品名字 -->
-      <div class="text" style="font-weight: 700; font-size: 15px;">
+      <div class="good_name" style>
         <p>{{good.name}}</p>
       </div>
 
       <!-- 商品基本信息 -->
       <van-cell-group>
-        <van-cell class="cell">
+        <van-cell class="good_basic">
           <!-- 使用 title 插槽来自定义标题 -->
           <template #title>
             <span class="custom-title">分类</span>
           </template>
           <van-tag plain type="danger" size="large">{{good.category.name}}</van-tag>
         </van-cell>
-        <van-cell class="cell" title="库存" :value="good.stock_num" />
-        <van-cell class="cell" title="销量" :value="good.sale_num" />
+        <van-cell class="good_basic" title="库存" :value="good.stock_num" />
+        <van-cell class="good_basic" title="销量" :value="good.sale_num" />
         <van-cell
           v-if="!good.none_sku"
           title="查看/选择 规格"
@@ -243,7 +243,7 @@ export default {
   name: "Good",
   data() {
     return {
-      id: 14, //用于测试商品的获取，迟点删除
+      id: 10, //用于测试商品的获取，迟点删除
       current: 0, //轮播图计数
       //样例商品
       good: {
@@ -261,7 +261,8 @@ export default {
         pic: []
       },
       show: false,
-      chumbs: { //规格选择弹层的缩略图
+      chumbs: {
+        //规格选择弹层的缩略图
         picture: ""
       },
       selected: "", //已经选好的规格展示
@@ -295,10 +296,10 @@ export default {
       let res = await this.api.get("/goods/" + this.id);
       if (res.status >= 200 && res.status < 300) this.good = res.data.data;
       //富文本图片添加宽度适应属性
-      this.good.description = this.good.description.replace(
-        /<img/gi,
-        '<img style="max-width:100%;height:auto" '
-      );
+      // this.good.description = this.good.description.replace(
+      //   /<img/gi,
+      //   '<img style="width:100%;height:auto" '
+      // );
       //有规格的商品规格分支里的价格*100，因为内部分支价格单位是分
       if (this.good.list)
         this.good.list.forEach(v => {
@@ -407,8 +408,7 @@ export default {
             redirect: "/Good"
           }
         });
-      } 
-      else {
+      } else {
         let data = {
           goods_id: message.goodsId,
           sku_id: message.selectedSkuComb.id,
@@ -426,62 +426,51 @@ export default {
 
     //立即购买
     onBuyClicked(message) {
-      let good = JSON.parse(JSON.stringify(message.selectedSkuComb));
-      good.sku_id = good.id;
-      good.id = message.goodsId;
-      good.tags = [];
-      for (var sku of this.good.tree)
-        for (var v of sku.v) if (v.id == good[sku.k_s]) good.tags.push(v);
-      good.num = message.selectedNum;
-      good.name = this.good.name;
-      good.pic = this.good.pic;
-      if (!this.good.none_sku) good.price /= 100;
-      let goods = [];
-      goods.push(good);
-      this.$router.push({
-        path: "/Order",
-        query: {
-          goods: goods
-        }
-      });
-    }
+      if (this.$store.state.user.id <= 0) {
+        this.$notify({
+          type: "warning",
+          message: "未登录没有权限操作，请先登录"
+        });
+        this.$router.push({
+          path: "/Login",
+          query: {
+            redirect: "/Good"
+          }
+        });
+      } else {
+        let options = [];
+        for (var sku of this.good.tree)
+          for (var v of sku.v)
+            if (v.id == message.selectedSkuComb[sku.k_s]) options.push(v);
 
-    // onAdd() {
-    //   if (this.good.none_sku) {
-    //     let data = JSON.parse(JSON.stringify(this.good));
-    //     data.sku_id = data.collection_id;
-    //     data.selected = false;
-    //     this.$store.commit("addCart", data);
-    //     this.$toast.success("添加购物车成功");
-    //   } else {
-    //     if (this.selected != "")
-    //       this.onAddCartClicked(this.$refs.goodSku.getSkuData());
-    //     else this.showSku();
-    //   }
-    // },
-    // onBuy() {
-    //   if (this.good.none_sku) {
-    //     let goods = [];       //如何选择数量
-    //     goods.push(this.good);
-    //     this.$router.push({
-    //       path: "/Order",
-    //       query: {
-    //         goods: goods
-    //       }
-    //     });
-    //   } else {
-    //     if (this.selected != "")
-    //       this.onBuyClicked(this.$refs.goodSku.getSkuData());
-    //     else this.showSku();
-    //   }
-    // },
+        let data = {
+          num: message.selectedNum,
+          sku_id: message.selectedSkuComb.id,
+          sku: {
+            goods: {
+              name: this.good.name,
+              pic: this.good.pic
+            },
+            goods_id: message.goodsId,
+            options: options,
+            price: message.selectedSkuComb.price / 100,
+            stock_num: message.selectedSkuComb.stock_num
+          }
+        };
+        this.$store.commit("updateBuy", {
+          goods: [data],
+          type: 0
+        });
+        this.$router.push("/Order");
+      }
+    }
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-img{
+img {
   width: 100%;
   height: auto;
 }
@@ -492,21 +481,29 @@ img{
   table-layout: fixed;
   word-break: break-all;
   text-align: center;
-  max-width: 100% !important;
-  height: auto !important;
 }
- /* 这里没效 */
-.Rich_text > img {
+
+/* 在使用scoped的时候，使用穿透符即可 */
+.Rich_text >>> img {
   width: 100% !important;
   height: auto !important;
   -ms-interpolation-mode: bicubic;
-  width: 100%;
 }
 
-/* 已收藏样式 */
+/* 收藏图标样式 */
 .loved {
   margin-left: 6px;
   color: red;
+}
+.like {
+  font-size: 12px;
+  color: grey;
+  padding: 0;
+}
+
+/* 评论样式 */
+.comment {
+  margin: 3.5%;
 }
 .avatar {
   margin-left: 5%;
@@ -517,6 +514,8 @@ img{
   border: 1px solid rgb(255, 255, 255);
   border-radius: 50%;
 }
+
+/* 轮播图标签 */
 .custom-back {
   position: absolute;
   left: 10px;
@@ -535,22 +534,18 @@ img{
   font-size: 12px;
   background: rgba(0, 0, 0, 0.1);
 }
-.text {
+
+.good_name {
   width: 95%;
   margin-left: 2.5%;
   word-wrap: break-word;
+  font-weight: 700;
+  font-size: 15px;
 }
-.like {
-  font-size: 12px;
-  color: grey;
-  padding: 0;
-}
-.cell {
+
+.good_basic {
   line-height: 28px;
   font: 700;
   font-size: 15px;
-}
-.comment {
-  margin: 3.5%;
 }
 </style>

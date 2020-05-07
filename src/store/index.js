@@ -17,6 +17,7 @@ const store = new Vuex.Store({
         },
         love: [],//收藏的商品
         cart: [],//购物车商品
+        addressList: [],//地址
         //...
     },
     getters: {
@@ -32,6 +33,9 @@ const store = new Vuex.Store({
         Buy: state => {
             return state.buy;
         },
+        AddressList: state => {
+            return state.addressList;
+        }
 
         //...
     },
@@ -44,6 +48,10 @@ const store = new Vuex.Store({
         getMyLove(state, data) {
             state.love = data;
             console.log(state.love)
+        },
+        getAddresses(state, data) {
+            state.addressList = data;
+            console.log(state.addressList)
         },
 
         //更新购物车: 传入的cart数据是从后台获取过来的。 替换新数据前，先遍历一下旧数据，把对应商品的勾选属性转移
@@ -74,9 +82,8 @@ const store = new Vuex.Store({
         },
 
         //更新购买行为信息
-        updateBuy(state, goods, type) {
-            state.buy.goods = goods;
-            state.buy.type = type;
+        updateBuy(state, buy) {
+            state.buy = buy;
         },
 
         //登出
@@ -87,6 +94,7 @@ const store = new Vuex.Store({
                 email: "",
                 love: [],
                 cart: [],
+                addressList: [],
             };
         }
         //...
@@ -111,7 +119,34 @@ const store = new Vuex.Store({
             await api.post('/carts', data);
             Vue.prototype.$toast.success("添加购物车成功");
             context.dispatch('updateCart');
-        }
+        },
+        async getAddresses(context) {
+            let data = await api.get("/addresses");
+            console.log(data);
+            if (data.status >= 200 && data.status < 300) {
+                data = data.data;
+                var tempList = [];
+                for (var i = 0; i < data.length; i++) {
+                    var address = '';
+                    if (data[i].province == data[i].city)  //如果省份和城市是一样的，例如上海市，北京市，address避免重复
+                        address = data[i].province + ' ' + data[i].county + ' ' + data[i].detail;
+                    else
+                        address = data[i].province + ' ' + data[i].city + ' ' + data[i].county + ' ' + data[i].detail;
+                    tempList.push({
+                        id: data[i].id,
+                        name: data[i].name,
+                        tel: data[i].phone,
+                        province: data[i].province,
+                        city: data[i].city,
+                        county: data[i].county,
+                        addressDetail: data[i].detail,
+                        areaCode: data[i].code,
+                        address: address
+                    });
+                }
+                context.commit('getAddresses', tempList);
+            }
+        },
 
     }
 

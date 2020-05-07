@@ -73,6 +73,7 @@ export default {
       message: "", //记录订单备注
       price: 0,
       address: {
+        id: 3,
         name: "张星星",
         tel: "15918866423",
         address: "广东省 广州 白云区",
@@ -81,7 +82,6 @@ export default {
     };
   },
   async mounted() {
-    console.log(this.list)
     this.list.forEach(good => {
       this.price += good.sku.price * good.num;
     });
@@ -101,29 +101,27 @@ export default {
       // });
     },
     async submit() {
-      //   var data = undefined;
-      //   var list = this.list;
-      //   var address_id = this.address.id;
-      //   for (var i = 0; i < list.length; i++) {
-      //     var goods_id = [];
-      //     this.goods.forEach(good => {
-      //       if (good.vendor.name == list[i].name) {
-      //         goods_id.push(good.id);
-      //       }
-      //     });
-      //     if (goods_id.length != 0) {
-      //       data = await this.api.post("/orders", {
-      //         address_id: address_id,
-      //         goods_id: goods_id
-      //       });
-      //     }
-      //   }
-      //   if (data.status == 200) {
-      //     this.$toast(data.data.errmsg);
-      //     this.$store.commit("getNotSent");
-      //     this.$store.commit("cleanCartAdd");
-      //     this.$router.push("/");
-      //   }
+      let data = {
+        address_id: 3,
+        remark: this.message,
+        from_cart: this.type == 1 ? true : false
+      };
+      let goods = [];
+      this.list.forEach(good => {
+        goods.push({
+          goods_id: good.sku.goods_id,
+          sku_id: good.sku_id,
+          num: good.num
+        });
+      });
+      data.goods = goods;
+      console.log(data);
+      let res = await this.api.post("/orders", data);
+      if (res.status == 200) {
+        this.$toast(res.data.errmsg);
+        if (this.type == 1) this.$store.dispatch("updateCart");
+        this.$router.push("/");
+      }
     }
   }
 };
