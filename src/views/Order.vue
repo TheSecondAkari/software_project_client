@@ -8,9 +8,9 @@
         icon="location-o"
         is-link
         center
+        v-if="address != ''"
         @click="changeAddress"
-        style="height:85px;background: ghostwhite;"
-      >
+        style="height:85px;background: ghostwhite;">
         <div style="margin-left: 2.5%;padding:2% 0;">
           <div>
             <strong style="font-size: 18px;">{{address.name}}</strong>
@@ -20,6 +20,14 @@
           <div>{{address.detail}}</div>
         </div>
       </van-cell>
+      <van-cell
+        icon="location-o"
+        is-link
+        center
+        v-else
+        @click="changeAddress"
+        style="height:85px;background: ghostwhite;"
+      >当前收货地址列表为空，请先添加收货地址</van-cell>
     </div>
 
     <!-- 订单备注 -->
@@ -72,13 +80,7 @@ export default {
       type: this.$store.getters.Buy.type,
       message: "", //记录订单备注
       price: 0,
-      address: {
-        id: 3,
-        name: "张星星",
-        tel: "15918866423",
-        address: "广东省 广州 白云区",
-        detail: "夏茅东街23号"
-      }
+      address: this.$store.getters.Buy.address
     };
   },
   async mounted() {
@@ -86,6 +88,7 @@ export default {
       this.price += good.sku.price * good.num;
     });
     this.price *= 100;
+    console.log(this.address);
   },
   methods: {
     Back() {
@@ -93,12 +96,12 @@ export default {
     },
 
     changeAddress() {
-      // this.$router.push({
-      //   path: "/addressList",
-      //   query: {
-      //     change: true
-      //   }
-      // });
+      this.$router.push({
+        path: "/Myaddress",
+        query: {
+          selectAddress: true
+        }
+      });
     },
     async submit() {
       let data = {
@@ -115,7 +118,6 @@ export default {
         });
       });
       data.goods = goods;
-      console.log(data);
       let res = await this.api.post("/orders", data);
       if (res.status == 200) {
         this.$toast(res.data.errmsg);

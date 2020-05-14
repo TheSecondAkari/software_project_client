@@ -123,9 +123,10 @@ const api = {
   async delete(url, data = {}, options = {}) {
     try {
       let res = await request.delete(url, {
-        param: data,
+        data: data,
         headers: {
           Authorization: sessionStorage.getItem("Authorization"),
+          "Content-type":"application/json",
           ...options
         }
       });

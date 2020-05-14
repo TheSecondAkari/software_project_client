@@ -11,11 +11,14 @@ const store = new Vuex.Store({
             name: "",
             email: "",
         },
+        see_good_id:"",//当前浏览的商品的id，用于商品详情页
+
         buy: { //记录当前的购买动作的信息,下单页面的依据
             goods: [],//选购的商品
+            address: "",//选定的收货地址
             type: -1,//0代表立即购买，1代表从购物车中结算。-1无意义
         },
-        love: [],//收藏的商品
+        collection: [],//收藏的商品
         cart: [],//购物车商品
         addressList: [],//地址
         defaultAddId: 0,//默认地址
@@ -25,8 +28,8 @@ const store = new Vuex.Store({
         User: state => {
             return state.user;
         },
-        Love: state => {
-            return state.love;
+        Collection: state => {
+            return state.collection;
         },
         Cart: state => {
             return state.cart;
@@ -49,15 +52,18 @@ const store = new Vuex.Store({
             state.user = data;
         },
         //获取用户的收藏商品
-        getMyLove(state, data) {
-            state.love = data;
-            console.log(state.love)
+        getMyCollection(state, data) {
+            state.collection = data;
+            console.log(state.collection)
         },
+
         getAddresses(state, data) {
             state.addressList = data;
             console.log(state.addressList)
         },
-
+        getDefaultAddId(state, data) {
+            state.defaultAddId = data
+        },
         //更新购物车: 传入的cart数据是从后台获取过来的。 替换新数据前，先遍历一下旧数据，把对应商品的勾选属性转移
         updateCart(state, cart) {
             for (let item of state.cart) {
@@ -85,21 +91,43 @@ const store = new Vuex.Store({
             state.cart[index].selected = !bool;
         },
 
+        //设置浏览商品详情页面的商品的id
+        setSeeId(state,id){
+            state.see_good_id = id;
+            console.log("id:",state.see_good_id)
+        },
+
         //更新购买行为信息
         updateBuy(state, buy) {
-            state.buy = buy;
+            state.buy.goods = buy.goods;
+            state.buy.type = buy.type;
+            //选择默认地址
+            let judge = false;
+            for (let v of state.addressList) {
+                if (v.isDefault) {
+                    state.buy.address = v;
+                    judge = true;
+                    break;
+                }
+            }
+            //如果没有默认地址，并且有收货地址，则选第一个
+            if (judge == false && state.addressList.length > 0)
+                state.buy.address = state.addressList[0];
+            console.log(state.buy)
+        },
+        //更新购买行为收货地址
+        setBuyAddress(state, address) {
+            state.buy.address = address;
+            console.log(state.buy)
         },
 
         //登出
-        getDefaultAddId(state, data) {
-            state.defaultAddId = data
-        },
         logout(state) {
             state.user = {
                 id: 0,
                 name: "",
                 email: "",
-                love: [],
+                collection: [],
                 cart: [],
                 addressList: [],
                 defaultAddId: 0,
@@ -112,11 +140,11 @@ const store = new Vuex.Store({
             let res = await api.get('/users');
             context.commit('getMyInfo', res.data.data);
         },
-        async getMyLove(context) {
+        async getMyCollection(context) {
             let res = await api.get('/collections');
-            context.commit('getMyLove', res.data.data);
+            context.commit('getMyCollection', res.data.data);
         },
-        async updateCart(context) {
+        async getCart(context) {
             let res = await api.get('/carts');
             res.data.data.forEach((v) => {
                 v.selected = false;
@@ -126,7 +154,7 @@ const store = new Vuex.Store({
         async addCart(context, data) {
             await api.post('/carts', data);
             Vue.prototype.$toast.success("添加购物车成功");
-            context.dispatch('updateCart');
+            context.dispatch('getCart');
         },
         async getAddresses(context) {
             let data = await api.get("/addresses");
@@ -138,14 +166,14 @@ const store = new Vuex.Store({
 
                 for (var i = 0; i < data.length; i++) {
                     var address = '';
-                    var def = false;
+                    // var def = false;
                     if (data[i].province == data[i].city)  //如果省份和城市是一样的，例如上海市，北京市，address避免重复
                         address = data[i].province + ' ' + data[i].county + ' ' + data[i].detail;
                     else
                         address = data[i].province + ' ' + data[i].city + ' ' + data[i].county + ' ' + data[i].detail;
                     if (data[i].default) {
                         defaultId = data[i].id;
-                        def = true;//判断有无默认地址
+                        // def = true;//判断有无默认地址
                     }
 
                     tempList.push({
@@ -158,14 +186,13 @@ const store = new Vuex.Store({
                         addressDetail: data[i].detail,
                         areaCode: data[i].code,
                         address: address,
-                        default: data[i].default
+                        isDefault: data[i].default
                     });
                 }
-                context.commit('getAddresses', tempList);
-                if (def == false && tempList.length > 0) {//如果没有默认地址且长度大于一就把第一条设为默认地址
-                    tempList[0].default = true;
-                    defaultId = tempList[0].id;
-                }
+                // if (def == false && tempList.length > 0) {//如果没有默认地址且长度大于一就把第一条设为默认地址
+                //     tempList[0].default = true;
+                //     defaultId = tempList[0].id;
+                // }
 
                 context.commit('getAddresses', tempList);
                 console.log("默认id：" + defaultId);

@@ -75,7 +75,6 @@ export default {
         "Content-Type": "multipart/form-data"
       });
       this.avatar = res.data.url[0];
-      console.log(this.avatar);
     },
     async send_code() {
       let res = await this.api.post("/users/verify", {
@@ -96,7 +95,7 @@ export default {
       else {
         let res = await this.api.post("/users", {
           name: this.name,
-          avatar: this.avatar[0],
+          avatar: this.avatar,
           email: this.email,
           password: this.password,
           code: this.code

@@ -52,8 +52,8 @@ export default {
           sessionStorage.setItem("Authorization", res.data.Authorization);
           this.$notify({ type: "success", message: res.data.errmsg });
           await this.$store.dispatch("getMyInfo"); //把用户信息存到vuex的state里,使用await确保获取了信息，再跳转页面
-          this.$store.dispatch("getMyLove");
-          this.$store.dispatch("updateCart");
+          this.$store.dispatch("getMyCollection");
+          this.$store.dispatch("getCart");
           this.$store.dispatch("getAddresses");
           if (this.$route.query.redirect) {
             let redirect_path = this.$route.query.redirect;

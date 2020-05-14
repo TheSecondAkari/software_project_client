@@ -1,240 +1,136 @@
 <template>
   <div id="good">
-    <div id="main" style="margin-bottom: 18%;">
-      <!-- 商品图片展示 -->
-      <div>
-        <van-swipe @change="onChange" :autoplay="3000" indicator-color="white">
-          <van-swipe-item style="height: 300px;" v-for="(image, index) in good.pic" :key="index">
-            <van-image :src="image" style="width: 100%;height:auto;" />
-          </van-swipe-item>
-          <div class="custom-indicator" slot="indicator">{{ current + 1 }}/{{good.pic.length}}</div>
-          <div class="custom-back" slot="indicator" v-on:click="back">
-            <van-icon name="arrow-left" size="20px" style="margin:5px 0 5px 2.5px;" />
-          </div>
-        </van-swipe>
-      </div>
-
-      <!-- 商品价格+我的收藏 -->
-      <div style="margin-top:1%">
-        <div style="float:right;margin-right:4%;" @click="Love()">
-          <div v-if="this.like">
-            <van-icon name="like" size="24" class="loved" />
-            <p style="padding:0;margin:0;font-size:12px;color:red;">已收藏</p>
-          </div>
-          <div v-else style="margin-right:4.5px;">
-            <van-icon name="like-o" size="24" />
-            <p style="padding:0;margin:0;font-size:12px;color:grey;">收藏</p>
-          </div>
+    <van-skeleton :row="30" :loading="loading" :animate="true" style="height: 300px;">
+      <div id="main" style="margin-bottom: 18%;">
+        <!-- 商品图片展示 -->
+        <div>
+          <van-swipe @change="onChange" :autoplay="3000" indicator-color="white">
+            <van-swipe-item style="height: 300px;" v-for="(image, index) in good.pic" :key="index">
+              <van-image :src="image" style="width: 100%;height:auto;" />
+            </van-swipe-item>
+            <div class="custom-indicator" slot="indicator">{{ current + 1 }}/{{good.pic.length}}</div>
+            <div class="custom-back" slot="indicator" v-on:click="back">
+              <van-icon name="arrow-left" size="20px" style="margin:5px 0 5px 2.5px;" />
+            </div>
+          </van-swipe>
         </div>
+
+        <!-- 商品价格+我的收藏 -->
+        <div style="margin-top:1%">
+          <div style="float:right;margin-right:4%;" @click="Love()">
+            <div v-if="this.like">
+              <van-icon name="like" size="24" class="loved" />
+              <p style="padding:0;margin:0;font-size:12px;color:red;">已收藏</p>
+            </div>
+            <div v-else style="margin-right:4.5px;">
+              <van-icon name="like-o" size="24" />
+              <p style="padding:0;margin:0;font-size:12px;color:grey;">收藏</p>
+            </div>
+          </div>
+          <p
+            style="margin:3% 0% 2.5% 2.5%; font-size: 32px; font-weight:550;color:red;"
+          >￥{{good.price}}</p>
+        </div>
+
+        <!-- 商品名字 -->
+        <div class="good_name" style>
+          <p>{{good.name}}</p>
+        </div>
+
+        <!-- 商品基本信息 -->
+        <van-cell-group>
+          <van-cell class="good_basic">
+            <!-- 使用 title 插槽来自定义标题 -->
+            <template #title>
+              <span class="custom-title">分类</span>
+            </template>
+            <van-tag plain type="danger" size="large">{{good.category.name}}</van-tag>
+          </van-cell>
+          <van-cell class="good_basic" title="库存" :value="good.stock_num" />
+          <van-cell class="good_basic" title="销量" :value="good.sale_num" />
+          <van-cell
+            v-if="!good.none_sku"
+            title="查看/选择 规格"
+            is-link
+            :value="selected"
+            @click="showSku()"
+          />
+        </van-cell-group>
+        <van-sku
+          v-model="show"
+          :sku="good"
+          :goods="chumbs"
+          :goods-id="good.id"
+          :hide-stock="false"
+          :close-on-click-overlay="true"
+          :preview-on-click-image="false"
+          ref="goodSku"
+          @buy-clicked="onBuyClicked"
+          @add-cart="onAddCartClicked"
+        />
+
+        <!-- 商品评价 -->
+        <div
+          v-if="good.comment"
+          style="background-color:rgb(226, 224, 224);padding:5px 0;color:grey;height:9px;width:100%"
+        ></div>
+        <div id="comment" v-if="good.comment">
+          <van-cell is-link style="border:0;">
+            <template #title>
+              <span>评价</span>
+              <van-tag plain style="margin-left:2%;">{{good.comment.length}}</van-tag>
+            </template>
+          </van-cell>
+
+          <div class="comment">
+            <van-row>
+              <van-col span="4">
+                <div class="avatar">
+                  <van-image :src="this.good.comment[0].user.avatar" />
+                </div>
+              </van-col>
+              <van-col span="8">
+                <p>{{good.comment[0].user.name}}</p>
+              </van-col>
+            </van-row>
+            <p style="margin:0;">{{good.comment[0].content}}</p>
+          </div>
+          <van-button
+            round
+            plain
+            @click="more_comment()"
+            color="grey"
+            style="width:50%;margin-left:25%;margin-top:5%;"
+          >查看更多评论</van-button>
+        </div>
+
+        <!-- 商品详细描述 富文本 -->
         <p
-          style="margin:3% 0% 2.5% 2.5%; font-size: 32px; font-weight:550;color:red;"
-        >￥{{good.price}}</p>
+          style="text-align:center;background-color:rgb(226, 224, 224);padding:2px 0;color:grey;font-size:12px;"
+        >————商品详情————</p>
+        <div v-html="good.description" class="Rich_text"></div>
       </div>
 
-      <!-- 商品名字 -->
-      <div class="good_name" style>
-        <p>{{good.name}}</p>
+      <!-- 详情页面底层导航 -->
+      <div style="bottom:0;position: fixed;">
+        <van-goods-action>
+          <van-goods-action-icon icon="cart-o" text="购物车" to="/Cart" />
+          <van-goods-action-icon icon="like-o" text="我的收藏" to="/Mycollection" />
+          <van-goods-action-button
+            type="warning"
+            text="加入购物车"
+            :disabled="Boolean(good.sale)"
+            @click="showSku()"
+          />
+          <van-goods-action-button
+            type="danger"
+            text="立即购买"
+            :disabled="Boolean(good.sale)"
+            @click="showSku()"
+          />
+        </van-goods-action>
       </div>
-
-      <!-- 商品基本信息 -->
-      <van-cell-group>
-        <van-cell class="good_basic">
-          <!-- 使用 title 插槽来自定义标题 -->
-          <template #title>
-            <span class="custom-title">分类</span>
-          </template>
-          <van-tag plain type="danger" size="large">{{good.category.name}}</van-tag>
-        </van-cell>
-        <van-cell class="good_basic" title="库存" :value="good.stock_num" />
-        <van-cell class="good_basic" title="销量" :value="good.sale_num" />
-        <van-cell
-          v-if="!good.none_sku"
-          title="查看/选择 规格"
-          is-link
-          :value="selected"
-          @click="showSku()"
-        />
-      </van-cell-group>
-      <van-sku
-        v-model="show"
-        :sku="good"
-        :goods="chumbs"
-        :goods-id="good.id"
-        :hide-stock="false"
-        :close-on-click-overlay="true"
-        :preview-on-click-image="false"
-        ref="goodSku"
-        @buy-clicked="onBuyClicked"
-        @add-cart="onAddCartClicked"
-      />
-
-      <!-- 商品评价 -->
-      <div
-        v-if="good.comment"
-        style="background-color:rgb(226, 224, 224);padding:5px 0;color:grey;height:9px;width:100%"
-      ></div>
-      <div id="comment" v-if="good.comment">
-        <van-cell is-link style="border:0;">
-          <template #title>
-            <span>评价</span>
-            <van-tag plain style="margin-left:2%;">{{good.comment.length}}</van-tag>
-          </template>
-        </van-cell>
-
-        <div class="comment">
-          <van-row>
-            <van-col span="4">
-              <div class="avatar">
-                <van-image :src="this.good.comment[0].user.avatar" />
-              </div>
-            </van-col>
-            <van-col span="8">
-              <p>{{good.comment[0].user.name}}</p>
-            </van-col>
-          </van-row>
-          <p style="margin:0;">{{good.comment[0].content}}</p>
-        </div>
-        <van-button
-          round
-          plain
-          @click="more_comment()"
-          color="grey"
-          style="width:50%;margin-left:25%;margin-top:5%;"
-        >查看更多评论</van-button>
-      </div>
-
-      <!-- 商品详细描述 富文本 -->
-      <p
-        style="text-align:center;background-color:rgb(226, 224, 224);padding:2px 0;color:grey;font-size:12px;"
-      >————商品详情————</p>
-      <div v-html="good.description" class="Rich_text"></div>
-    </div>
-
-    <!-- 详情页面底层导航 -->
-    <div style="bottom:0;position: fixed;">
-      <van-goods-action>
-        <van-goods-action-icon icon="cart-o" text="购物车" to="/Cart" />
-        <van-goods-action-icon icon="like-o" text="我的收藏" to="/Mycollection" />
-        <van-goods-action-button
-          type="warning"
-          text="加入购物车"
-          :disabled="Boolean(good.sale)"
-          @click="showSku()"
-        />
-        <van-goods-action-button
-          type="danger"
-          text="立即购买"
-          :disabled="Boolean(good.sale)"
-          @click="showSku()"
-        />
-      </van-goods-action>
-    </div>
-    <!-- 早期测试数据 -->
-    <!-- <p>
-      {
-        id: 1,
-        name:
-          "西瓜  西瓜 西瓜 西瓜   西瓜 西瓜   西瓜  西瓜 西瓜  西瓜 西瓜 西瓜   西瓜 西瓜   西瓜",
-        description:
-          "大西瓜！！！！啊啊大西瓜！！！！啊啊大西瓜！！！！啊啊大西瓜！！！！啊啊大西瓜！！！！啊啊大西瓜！！！！啊啊",
-        category_id: 1,
-        category: {
-          id: 1,
-          name: "水果",
-          parent_id: 0
-        },
-        price: 20,
-        view: 256,
-        stock_num: 3000,
-        sale_num: 1230,
-        has_spec: true,
-        comment: [
-          {
-            id: 1,
-            user: {
-              avatar:
-                "https://www.cbfgo.cn/tdyb/20200410/ccba2881-58fe-4def-8f04-425b8aacae15.jpg",
-              name: "张三"
-            },
-            content: "不好吃！图片都是骗人的！！！！谁买谁后悔"
-          },
-          {
-            id: 2,
-            user: {
-              avatar:
-                "https://www.cbfgo.cn/tdyb/20200410/ccba2881-58fe-4def-8f04-425b8aacae15.jpg",
-              name: "李四"
-            },
-            content: "好吃！我是过来刷单的(两块一"
-          },
-          {
-            id: 3,
-            user: {
-              avatar:
-                "https://www.cbfgo.cn/tdyb/20200410/ccba2881-58fe-4def-8f04-425b8aacae15.jpg",
-              name: "常五"
-            },
-            content: "反正我亏死了！不能买啊！！！！"
-          }
-        ],
-        pic: [
-          "https://www.cbfgo.cn/tdyb/20200410/ff29923e-1159-4b5e-a614-81ff36c56cdb.jpg",
-          "https://www.cbfgo.cn/tdyb/20200410/176163e1-28f5-4346-b7af-62411d78221e.jpeg",
-          "https://www.cbfgo.cn/tdyb/20200410/78d8c6e9-fb52-47aa-9a27-81cb01dea5a6.jpg"
-        ],
-        specifications: [
-          {
-            id: 1,
-            goods_id: 1,
-            name: "产地",
-            options: [
-              { id: 1, spec_id: 1, name: "马来西亚" },
-              { id: 2, spec_id: 1, name: "美国" },
-              { id: 3, spec_id: 1, name: "新疆" }
-            ]
-          },
-          {
-            id: 2,
-            goods_id: 1,
-            name: "种类",
-            options: [
-              { id: 4, spec_id: 2, name: "黑美人西瓜" },
-              { id: 5, spec_id: 2, name: "京欣西瓜" },
-              { id: 6, spec_id: 2, name: "转基因无籽" }
-            ]
-          }
-        ],
-        skus: [
-          {
-            id: 1,
-            price: 35 * 100,
-            stock_num: 1250,
-            sale_num: 362,
-            purchase_price: 15,
-            s1: "1",
-            s2: "5",
-            options: [
-              { id: 1, spec_id: 1, name: "马来西亚" },
-              { id: 5, spec_id: 2, name: "京欣西瓜" }
-            ]
-          },
-          {
-            id: 2,
-            price: 60 * 100,
-            stock_num: 2250,
-            sale_num: 12,
-            purchase_price: 25,
-            s1: "2",
-            s2: "6",
-            options: [
-              { id: 2, spec_id: 1, name: "美国" },
-              { id: 6, spec_id: 2, name: "转基因无籽" }
-            ]
-          }
-        ],
-        sku_id: 0
-      },
-    </p>-->
+    </van-skeleton>
   </div>
 </template>
 
@@ -243,7 +139,8 @@ export default {
   name: "Good",
   data() {
     return {
-      id: 10, //用于测试商品的获取，迟点删除
+      loading: true,//骨架屏动画是否开启
+      id: 10,//this.$store.state.see_good_id, //商品的获取
       current: 0, //轮播图计数
       //样例商品
       good: {
@@ -260,7 +157,7 @@ export default {
         list: [],
         pic: []
       },
-      show: false,
+      show: false,//商品规格的展示
       chumbs: {
         //规格选择弹层的缩略图
         picture: ""
@@ -284,15 +181,17 @@ export default {
       }
     }
   },
-  async mounted() {
+  async beforeMount() {
     await this.getGood();
     this.chumbs = {
       picture: this.good.pic[0]
     };
+    // this.loading = false;
   },
   methods: {
     //通过商品id获取商品详情
     async getGood() {
+      console.log("get", this.id);
       let res = await this.api.get("/goods/" + this.id);
       if (res.status >= 200 && res.status < 300) this.good = res.data.data;
       //富文本图片添加宽度适应属性
@@ -313,7 +212,7 @@ export default {
           (this.good.none_sku = true);
       }
       //判断当前商品是否在收藏中
-      for (let v of this.$store.getters.Love)
+      for (let v of this.$store.getters.Collection)
         if (v.goods.id == this.good.id) {
           this.like = true;
         }
@@ -363,7 +262,7 @@ export default {
     async Love() {
       if (this.like) {
         let loved_id = -1;
-        for (let v of this.$store.getters.Love)
+        for (let v of this.$store.getters.Collection)
           if (v.goods.id == this.good.id) {
             loved_id = v.id;
             break;
@@ -372,7 +271,7 @@ export default {
         if (res.status >= 200 && res.status < 300) {
           this.$toast(res.data.errmsg);
           this.like = false;
-          this.$store.commit("getMyLove");
+          this.$store.dispatch("getMyCollection");
         }
       } else {
         let res = await this.api.post("/collections", {
@@ -381,7 +280,7 @@ export default {
         if (res.status >= 200 && res.status < 300) {
           this.$toast(res.data.errmsg);
           this.like = true;
-          this.$store.commit("getMyLove");
+          this.$store.dispatch("getMyCollection");
         }
       }
     },
