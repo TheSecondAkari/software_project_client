@@ -25,3 +25,8 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+### npm install error
+运行 npm cache clean --force 清除原本的缓存
+然后再次运行 npm install --save
