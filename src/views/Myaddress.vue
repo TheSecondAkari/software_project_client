@@ -6,9 +6,9 @@
       </template>
     </van-nav-bar>
     <van-address-list
-      v-model="chosenAddressId"
       :list="addresslist"
       default-tag-text="默认"
+      @click-item="clickItem"
       @add="onAdd"
       @edit="onEdit"
     />
@@ -16,6 +16,8 @@
       <h3>地址信息</h3>
       <van-address-edit
         :area-list="areaList"
+        :address-info="addAddress"
+        show-set-default
         :area-columns-placeholder="['请选择', '请选择', '请选择']"
         @save="onApply"
       />
@@ -25,6 +27,7 @@
       <van-address-edit
         :area-list="areaList"
         show-delete
+        show-set-default
         :address-info="oldAddress"
         :area-columns-placeholder="['请选择', '请选择', '请选择']"
         @save="onSave"
@@ -39,7 +42,8 @@ import { Toast } from "vant";
 export default {
   data() {
     return {
-      toOrder: undefined,
+      isdefault: false,
+      addAddress: {},
       oldAddress: {}, //用于地址修改时的，传原始值
       addshow: false, // 用于控制弹出层的值Boolean
       editshow: false,
@@ -4084,44 +4088,33 @@ export default {
           820201: "离岛"
         }
       },
+      defaultAddId: this.$store.getters.DefaultAddId,
       addresslist: this.$store.getters.AddressList,
-      chosenAddressId: "1", //初始页面默认选中第一个地址
       list: []
     };
   },
-
   mounted() {
     console.log(this.addresslist);
-    this.getList();
   },
   methods: {
-    getList() {
-      // let res = this.api.get("/addresses");
-      // console.log(res.data);
-      // for (var i; i < this.addresslist.length; i++) {
-      //   var templist = this.addresslist[i];
-      //   this.list.push({
-      //     id: templist.id,
-      //     name: templist.name,
-      //     tel: templist.phone,
-      //     address:
-      //       templist.province +
-      //       templist.city +
-      //       templist.county +
-      //       templist.detail
-      //   });
-      // }
-    },
     back() {
       this.$router.go(-1);
     },
+    clickItem(item) {
+      if (this.$route.query.selectAddress) {
+        this.$store.commit("setBuyAddress", item);
+        this.$router.go(-1);
+      }
+    },
     onAdd() {
       this.addshow = true;
+      this.isdefault = false;
       Toast("新增地址");
     },
     onEdit(item, index) {
       this.editshow = true;
       this.oldAddress = item;
+      this.isdefault = item.isDefault;
       Toast("编辑地址:" + index);
     },
     async onApply(Info) {
@@ -4141,12 +4134,14 @@ export default {
           type: "success",
           message: data.data.errmsg
         });
-        this.$store.commit("getAddresses");
+        await this.$store.dispatch("getAddresses");
+        this.addresslist = this.$store.getters.AddressList;
       }
+      this.addAddress = {};
       this.addshow = false;
     },
     async onSave(Info) {
-      let data = await this.api.put("/addresses/" + Info.id, {
+      let data = await this.api.put("/address/" + Info.id, {
         name: Info.name,
         phone: Info.tel,
         province: Info.province,
@@ -4161,24 +4156,84 @@ export default {
           type: "success",
           message: data.data.errmsg
         });
-        this.$store.commit("getAddresses");
+        await this.$store.dispatch("getAddresses");
+        this.addresslist = this.$store.getters.AddressList;
       }
       this.editshow = false;
     },
     async onDelete(Info) {
-      let data = await this.api.delete("/addresses/" + Info.id);
+      let data = await this.api.delete("/address/" + Info.id);
       if (data.status >= 200 && data.status < 300) {
         this.$notify({
           type: "success",
           message: data.data.errmsg
         });
-        this.$store.commit("getAddresses");
+        await this.$store.dispatch("getAddresses");
+        this.addresslist = this.$store.getters.AddressList;
+        this.chosenAddressId = this.defaultAddId;
       }
       this.editshow = false;
     }
+    // onChangeDetail(){
+    //   this.isdefault = !this.isdefault;
+    // }
+    // async onSelect(item)//选择默认地址
+    //  {
+    //   console.log(this.chosenAddressId);
+    //   var defaultaddress = [];//存放旧的默认地址
+    //   for(var i = 0;i<this.addresslist.length;i++)
+    //   {
+    //     if(this.addresslist[i].id==this.defaultAddId)
+    //     defaultaddress= this.addresslist[i];
+    //   }
+    //   console.log(defaultaddress);
+    //   if (this.defaultAddId != 0) {
+    //     let data = await this.api.put("/address/" + this.defaultAddId,{
+    //     name: defaultaddress.name,
+    //     phone: defaultaddress.tel,
+    //     province: defaultaddress.province,
+    //     city: defaultaddress.city,
+    //     county: defaultaddress.county,
+    //     detail: defaultaddress.addressDetail,
+    //     code: defaultaddress.areaCode,
+    //     default: false
+    //   }
+    //     );
+    //     if (data.status >= 200 && data.status < 300) {
+    //       this.$notify({
+    //         type: "success",
+    //         message: "成功取消默认"
+    //       });
+    //     }
+    //   }
+
+    //   let data = await this.api.put("/address/" + item.id, {
+    //     name: item.name,
+    //     phone: item.tel,
+    //     province: item.province,
+    //     city: item.city,
+    //     county: item.county,
+    //     detail: item.addressDetail,
+    //     code: item.areaCode,
+    //     default: true
+    //   });
+    //   if (data.status >= 200 && data.status < 300) {
+    //     this.$notify({
+    //       type: "success",
+    //       message: "成功选择默认"
+    //     });
+    //     defaultaddress = [];//存放旧的默认地址
+    //     await this.$store.dispatch("getAddresses");
+    //     this.addresslist = this.$store.getters.AddressList;
+
+    //   }
+    // }
   }
 };
 </script>
 
 <style>
+.van-radio__icon {
+  display: none;
+}
 </style>

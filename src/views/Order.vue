@@ -8,9 +8,9 @@
         icon="location-o"
         is-link
         center
+        v-if="address != ''"
         @click="changeAddress"
-        style="height:85px;background: ghostwhite;"
-      >
+        style="height:85px;background: ghostwhite;">
         <div style="margin-left: 2.5%;padding:2% 0;">
           <div>
             <strong style="font-size: 18px;">{{address.name}}</strong>
@@ -20,6 +20,14 @@
           <div>{{address.detail}}</div>
         </div>
       </van-cell>
+      <van-cell
+        icon="location-o"
+        is-link
+        center
+        v-else
+        @click="changeAddress"
+        style="height:85px;background: ghostwhite;"
+      >当前收货地址列表为空，请先添加收货地址</van-cell>
     </div>
 
     <!-- 订单备注 -->
@@ -32,22 +40,23 @@
 
     <!-- 选购的商品列表 -->
     <div
-      style="margin-top:10%;margin-left: 2.5%;margin-right: 2.5%;padding-bottom:18%;border-radius: 15px;overflow: hidden;">
+      style="margin-top:10%;margin-left: 2.5%;margin-right: 2.5%;padding-bottom:18%;border-radius: 15px;overflow: hidden;"
+    >
       <p style="margin:1%;font-weight:800;">天东易宝自营</p>
       <van-list style="padding-left: 2.5%;padding-right: 2.5%;">
         <van-list class="good-css" v-for="good in list" :key="good.sku_id">
           <van-card
             class="card"
-            :price="good.price"
+            :price="good.sku.price"
             :num="good.num"
-            :title="good.name"
-            :thumb="good.pic[0]"
+            :title="good.sku.goods.name"
+            :thumb="good.sku.goods.pic[0]"
           >
             <template #tags>
               <van-tag
                 plain
                 type="danger"
-                v-for="item in good.tags"
+                v-for="item in good.sku.options"
                 :key="item.id"
                 style="margin:2%;"
               >{{item.name}}</van-tag>
@@ -67,80 +76,54 @@
 export default {
   data() {
     return {
-      list: [],
-      message: "",
+      list: this.$store.getters.Buy.goods,
+      type: this.$store.getters.Buy.type,
+      message: "", //记录订单备注
       price: 0,
-      address: {
-        name: "张星星",
-        tel: "15918866423",
-        address: "广东省 广州 白云区",
-        detail: "夏茅东街23号"
-      }
+      address: this.$store.getters.Buy.address
     };
   },
   async mounted() {
-    //   await this.Judge();
-    this.list = this.$route.query.goods;
-    console.log(this.list);
     this.list.forEach(good => {
-      this.price += good.price * good.num;
+      this.price += good.sku.price * good.num;
     });
     this.price *= 100;
+    console.log(this.address);
   },
   methods: {
     Back() {
       this.$router.back(-1);
     },
 
-    // Judge() {
-    //   var user = this.$store.getters.User;
-    //   if (user.id < 1) {
-    //     this.$notify({
-    //       type: "danger",
-    //       message: "未登录，请先登陆。"
-    //     });
-    //     this.$router.push("/login");
-    //   } else if (this.$store.getters.AddressList.length == 0) {
-    //     this.$notify({
-    //       type: "danger",
-    //       message: "地址为空，请先添加地址。"
-    //     });
-    //     this.$router.push("/addressList");
-    //   }
-    // },
-    
     changeAddress() {
-      // this.$router.push({
-      //   path: "/addressList",
-      //   query: {
-      //     change: true
-      //   }
-      // });
+      this.$router.push({
+        path: "/Myaddress",
+        query: {
+          selectAddress: true
+        }
+      });
     },
     async submit() {
-      //   var data = undefined;
-      //   var list = this.list;
-      //   var address_id = this.address.id;
-      //   for (var i = 0; i < list.length; i++) {
-      //     var goods_id = [];
-      //     this.goods.forEach(good => {
-      //       if (good.vendor.name == list[i].name) {
-      //         goods_id.push(good.id);
-      //       }
-      //     });
-      //     if (goods_id.length != 0) {
-      //       data = await this.api.post("/orders", {
-      //         address_id: address_id,
-      //         goods_id: goods_id
-      //       });
-      //     }
-      //   }
-      //   if (data.status == 200) {
-      //     this.$toast(data.data.errmsg);
-      //     this.$store.commit("getNotSent");
-      //     this.$store.commit("cleanCartAdd");
-      //     this.$router.push("/");
-      //   }
+      let data = {
+        address_id: 3,
+        remark: this.message,
+        from_cart: this.type == 1 ? true : false
+      };
+      let goods = [];
+      this.list.forEach(good => {
+        goods.push({
+          goods_id: good.sku.goods_id,
+          sku_id: good.sku_id,
+          num: good.num
+        });
+      });
+      data.goods = goods;
+      let res = await this.api.post("/orders", data);
+      if (res.status == 200) {
+        this.$toast(res.data.errmsg);
+        if (this.type == 1) this.$store.dispatch("updateCart");
+        this.$router.push("/");
+      }
     }
   }
 };
@@ -148,13 +131,14 @@ export default {
 
 <style scoped>
 .card {
+  padding: 8px 0;
   text-align: left;
   background-color: white;
 }
 .good-css {
   /* overflow: hidden; */
   border-radius: 10px;
-  margin: 5px 2.5%;
+  margin: 5px 0;
   background-color: white;
 }
 </style>

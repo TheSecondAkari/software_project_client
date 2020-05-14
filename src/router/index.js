@@ -39,42 +39,48 @@ const routers = [
     {
         path: '/Updateinfo',
         meta: {
-            title: '修改信息'
+            title: '修改信息',
+            //  requireAuth:true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Updateinfo.vue'], resolve),
     },
     {
         path: '/Myorder',
         meta: {
-            title: '我的订单'
+            title: '我的订单',
+            //  requireAuth:true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Myorder.vue'], resolve),
     },
     {
         path: '/Myorder_pre',
         meta: {
-            title: '待发货'
+            title: '待发货',
+            //  requireAuth:true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Myorder_pre.vue'], resolve),
     },
     {
         path: '/Myorder_snd',
         meta: {
-            title: '已发货'
+            title: '已发货',
+            //  requireAuth:true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Myorder_snd.vue'], resolve),
     },
     {
         path: '/Myorder_com',
         meta: {
-            title: '待评价'
+            title: '待评价',
+            //  requireAuth:true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Myorder_com.vue'], resolve),
     },
     {
         path: '/Myorder_ref',
         meta: {
-            title: '退款中'
+            title: '退款中',
+            //  requireAuth:true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Myorder_ref.vue'], resolve),
     },
@@ -82,14 +88,16 @@ const routers = [
     {
         path: '/Myaddress',
         meta: {
-            title: '收货地址'
+            title: '收货地址',
+            //  requireAuth:true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Myaddress.vue'], resolve),
     },
     {
         path: '/Mycollection',
         meta: {
-            title: '我的收藏'
+            title: '我的收藏',
+            //  requireAuth:true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Mycollection.vue'], resolve),
     },  
@@ -110,7 +118,8 @@ const routers = [
     {
         path: '/Order',
         meta: {
-            title: '下单页面'
+            title: '下单页面',
+            //  requireAuth:true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Order.vue'], resolve),
     },

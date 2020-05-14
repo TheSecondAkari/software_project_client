@@ -4,35 +4,44 @@
       <van-nav-bar title="购物车" />
       <p style="margin:2%;font-weight:800;">天东易宝自营</p>
 
-      <van-list style="padding-bottom:38%;" v-if="list.length != 0">
-        <van-list class="good-css" v-for="(good, index) in list" :key="good.sku_id">
-          <div style="float:left;margin-top:40px;">
+      <div style="padding-bottom:38%;" v-if="list.length != 0">
+        <van-list class="good-css" v-for="(good, index) in list" :key="good.id">
+          <div style="float:left;margin-top:40px;margin-right:5px;">
             <van-checkbox v-bind:value="good['selected']" @click="goodSelected(index)"></van-checkbox>
           </div>
-
           <van-card
             class="card"
-            :key="good.sku_id"
-            :price="good.price"
-            :title="good.name"
-            :thumb="good.pic[0]"
-          >
+            :price="good.sku.price"
+            :title="good.sku.goods.name"
+            :thumb="good.sku.goods.pic[0]">
             <template #tags>
               <van-tag
                 plain
                 type="danger"
-                v-for="item in good.tags"
+                v-for="item in good.sku.options"
                 :key="item.id"
                 style="margin:2%;"
               >{{item.name}}</van-tag>
             </template>
             <template #footer>
-              <van-stepper v-model="good.num" integer style="margin-top:-22px;" />
+              <van-stepper
+                v-model="good.num"
+                integer
+                :max="good.sku.stock_num"
+                @change="goodNumEdit(index,good.num,good.id)"
+                style="margin-top:-30px;"
+              />
+              <van-loading
+                v-show="timer[index]"
+                color="#1989fa"
+                size="12"
+                style="position:relative;margin-top:-12px;top:-15px;left:-30px;z-index:100"
+              />
             </template>
           </van-card>
           <!-- slot="footer" -->
         </van-list>
-      </van-list>
+      </div>
 
       <div v-else style="margin-top:50%; font-size: 22px; text-align: center;">
         购物车空空的
@@ -76,8 +85,9 @@ export default {
   data() {
     return {
       active: "ShoppingCart",
-      list: [],
-      allselected: false
+      list: this.$store.getters.Cart,
+      allselected: false,
+      timer: []
     };
   },
   watch: {
@@ -90,18 +100,29 @@ export default {
       var total = 0;
       this.$store.getters.Cart.forEach(good => {
         if (good.selected) {
-          total += Number(good.price) * Number(good.num);
+          total += Number(good.sku.price) * Number(good.num);
         }
       });
       return total;
     }
   },
   mounted() {
-    this.list = this.$store.getters.Cart;
+    this.timer.length = this.list.length; //设置对应的长度，对应商品
   },
   methods: {
     // 删除勾选商品
-    del() {},
+    async del() {
+      let id_list = [];
+      this.list.forEach(v => {
+        if (v.selected) id_list.push(v.id);
+      });
+      console.log(id_list)
+      await this.api.delete("/carts", {
+        ids: id_list
+      });
+      this.$store.dispatch("getCart");
+      this.timer.splice(0, id_list.length);
+    },
     // 结算，跳转下单页面
     submit() {
       var goods = [];
@@ -110,16 +131,27 @@ export default {
           goods.push(good);
         }
       });
-      this.$router.push({
-        path: "/Order",
-        query: {
-          goods: goods
-        }
+      this.$store.commit("updateBuy", {
+        goods: goods,
+        type: 1
       });
+      this.$router.push("/Order");
     },
     // 勾选单件商品
     goodSelected(index) {
       this.$store.commit("cartGoodSelected", index);
+    },
+    //购物车商品数量修改
+    goodNumEdit(index, newNum, cartId) {
+      console.log(this.list, cartId);
+      let that = this;
+      this.timer[index] && clearTimeout(this.timer[index]);
+      this.timer[index] = setTimeout(async function() {
+      await that.api.put("/carts/" + cartId, {
+          num: newNum
+        });
+        that.timer.splice(index, 1, undefined);
+      }, 700);
     }
   }
 };
@@ -129,6 +161,7 @@ export default {
 <style scoped>
 .card {
   text-align: left;
+  font-size:14px;
   background-color: white;
   position: static;
 }

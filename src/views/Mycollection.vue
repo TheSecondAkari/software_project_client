@@ -5,38 +5,69 @@
         <van-icon name="arrow-left" size="18" color="rgb(201, 37, 25)" @click="back()" />
       </template>
     </van-nav-bar>
-    <van-card
-  num="2"
-  price="2.00"
-  desc="描述信息"
-  title="商品标题"
-  thumb="https://img.yzcdn.cn/vant/ipad.jpeg"
->
-  <template #tags>
-    <van-tag plain type="danger">标签</van-tag>
-    <van-tag plain type="danger">标签</van-tag>
-  </template>
-  <template #footer>
-    <van-button size="mini">查看详情</van-button>
-    <van-button size="mini">取消订单</van-button>
-  </template>
-</van-card>
+    <div v-if="list.length != 0">
+      <van-list v-for="(item) in list" :key="item.id">
+        <van-swipe-cell>
+          <van-card :price="item.goods.price" :title="item.goods.name" :thumb="item.goods.pic[0]" class="goods-card" @click="goToGood(item.goods.id)">
+            <template #tags>
+              <van-tag plain type="danger" style="margin:2%;">{{item.goods.category.name}}</van-tag>
+            </template>
+          </van-card>
+          <template #right>
+            <van-button square text="删除" type="danger" class="delete-button" @click="deleteLove(item.id)"/>
+          </template>
+        </van-swipe-cell>
+      </van-list>
+    </div>
+    <div v-else style="margin-top:50%; font-size: 22px; text-align: center;">
+      我的收藏空空的
+      <br />快去逛逛吧~
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-     data() {
+  data() {
     return {
+      
     };
   },
+  computed:{
+    list(){
+      return this.$store.getters.Collection;
+    }
+  },
+  mounted() {
+    console.log(this.list);
+  },
   methods: {
-        back() {
-      this.$router.go(-1);
+    async deleteLove(id){
+      let res = await this.api.delete("/collections/" + id);
+        if (res.status >= 200 && res.status < 300) {
+          this.$toast(res.data.errmsg);
+          this.$store.dispatch("getMyCollection");
+        }
     },
+    goToGood(id){
+      this.$store.commit("setSeeId",id);
+      this.$router.push("Good");
+    },
+    back() {
+      this.$router.go(-1);
+    }
   }
 };
 </script>
 
 <style>
+.goods-card {
+  margin: 0;
+  background-color: white;
+  font-size:14px;
+}
+
+.delete-button {
+  height: 100%;
+}
 </style>
