@@ -140,7 +140,8 @@ export default {
   data() {
     return {
       loading: true,//骨架屏动画是否开启
-      id: 5,//this.$store.state.see_good_id, //商品的获取
+
+      id: 11,//this.$store.state.see_good_id, //商品的获取
       current: 0, //轮播图计数
       //样例商品
       good: {
