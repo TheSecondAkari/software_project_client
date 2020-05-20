@@ -140,7 +140,7 @@ export default {
   data() {
     return {
       loading: true,//骨架屏动画是否开启
-      id: 10,//this.$store.state.see_good_id, //商品的获取
+      id: 5,//this.$store.state.see_good_id, //商品的获取
       current: 0, //轮播图计数
       //样例商品
       good: {
@@ -186,7 +186,7 @@ export default {
     this.chumbs = {
       picture: this.good.pic[0]
     };
-    // this.loading = false;
+     this.loading = false;
   },
   methods: {
     //通过商品id获取商品详情

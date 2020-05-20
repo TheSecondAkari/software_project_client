@@ -105,7 +105,7 @@ export default {
     },
     async submit() {
       let data = {
-        address_id: 3,
+        address_id: this.address.id,
         remark: this.message,
         from_cart: this.type == 1 ? true : false
       };
@@ -121,7 +121,7 @@ export default {
       let res = await this.api.post("/orders", data);
       if (res.status == 200) {
         this.$toast(res.data.errmsg);
-        if (this.type == 1) this.$store.dispatch("updateCart");
+        if (this.type == 1) this.$store.dispatch("getCart");
         this.$router.push("/");
       }
     }

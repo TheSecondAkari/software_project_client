@@ -55,6 +55,7 @@ export default {
           this.$store.dispatch("getMyCollection");
           this.$store.dispatch("getCart");
           this.$store.dispatch("getAddresses");
+          this.$store.dispatch("getOrderList");
           if (this.$route.query.redirect) {
             let redirect_path = this.$route.query.redirect;
             this.$router.push(redirect_path);
