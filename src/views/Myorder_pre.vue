@@ -1,5 +1,5 @@
 <template>
-  <div class="contant">
+  <div class="order_contant">
     <van-nav-bar title="我的订单">
       <template #left>
         <van-icon name="arrow-left" size="18" color="rgb(201, 37, 25)" @click="back()" />
@@ -40,9 +40,55 @@
               plain
               @click="getInfo(order.id)"
             >查看详情</van-button>
-            <van-button class="cancel_order" round type="primary" color="#ee0a24">取消订单</van-button>
+            <van-button
+              class="cancel_order"
+              round
+              type="primary"
+              color="#ee0a24"
+              @click="cancelorder(order.id)"
+            >取消订单</van-button>
           </div>
-          <div></div>
+          <div>
+            <van-popup
+              class="cancel_panel"
+              v-model="cancel_show"
+              position="bottom"
+              round
+              closeable
+              @close="cancel()"
+            >
+              <van-radio-group v-model="reason_select">
+                <van-radio name="1" checked-color="#ee0a24">拍多/拍错/不想要</van-radio>
+                <van-radio name="2" checked-color="#ee0a24">与商家协商退款</van-radio>
+                <van-radio name="3" checked-color="#ee0a24">商家无法发货</van-radio>
+                <van-radio name="4" checked-color="#ee0a24">其他</van-radio>
+              </van-radio-group>
+              <van-field
+                v-if="reason_select==4"
+                v-model="reason_detail"
+                rows="2"
+                autosize
+                label="退款理由"
+                type="textarea"
+                maxlength="50"
+                placeholder="请输入退款理由"
+                show-word-limit
+              />
+              <van-row>
+                <van-col span="6" offset="3">
+                  <van-button round type="primary" color="#ee0a24" plain @click="cancel()">取消</van-button>
+                </van-col>
+                <van-col span="6" offset="6">
+                  <van-button
+                    round
+                    type="primary"
+                    color="#ee0a24"
+                    @click="Cancelorder(cancel_id)"
+                  >确认退款</van-button>
+                </van-col>
+              </van-row>
+            </van-popup>
+          </div>
         </van-panel>
       </van-tab>
       <van-tab title="已发货">
@@ -71,7 +117,14 @@
           </div>
 
           <div class="order_button">
-            <van-button class="more_info" round type="primary" color="#ee0a24" plain>查看详情</van-button>
+            <van-button
+              class="more_info"
+              round
+              type="primary"
+              color="#ee0a24"
+              plain
+              @click="getInfo(order.id)"
+            >查看详情</van-button>
             <van-button class="cancel_order" round type="primary" color="#ee0a24">确认收货</van-button>
           </div>
           <div></div>
@@ -103,7 +156,14 @@
           </div>
 
           <div class="order_button">
-            <van-button class="more_info" round type="primary" color="#ee0a24" plain>查看详情</van-button>
+            <van-button
+              class="more_info"
+              round
+              type="primary"
+              color="#ee0a24"
+              plain
+              @click="getInfo(order.id)"
+            >查看详情</van-button>
           </div>
           <div></div>
         </van-panel>
@@ -134,7 +194,14 @@
           </div>
 
           <div class="order_button">
-            <van-button class="more_info" round type="primary" color="#ee0a24" plain>查看详情</van-button>
+            <van-button
+              class="more_info"
+              round
+              type="primary"
+              color="#ee0a24"
+              plain
+              @click="getInfo(order.id)"
+            >查看详情</van-button>
           </div>
           <div></div>
         </van-panel>
@@ -153,25 +220,60 @@ export default {
       orderlist_com: this.$store.getters.OrderListCom,
       orderlist_ref: this.$store.getters.OrderListRef,
       orderInfoId: this.$store.getters.orderInfoId,
-      active: 0
+      active: 0,
+      cancel_id: "",
+      cancel_show: false,
+      reason_select: 1,
+      reason_detail: ""
     };
   },
   mounted() {
+    console.log(this.orderlist_ref);
   },
   methods: {
     back() {
       this.$router.go(-1);
     },
     getInfo(id) {
-      console.log(id);
+      this.$store.commit("getOrderInfoId", id);
+      console.log(this.$store.getters.OrderInfoId);
+      this.$router.push("/Myorder");
+    },
+    cancel() {
+      this.reason_select = 1;
+      this.reason_detail = "";
+      this.cancel_show = false;
+    },
+    cancelorder(id) {
+      this.cancel_id = id;
+      this.cancel_show = true;
+    },
+    async Cancelorder(
+      id //确认取消
+    ) {
+      if (this.reason_select == 1) this.reason_detail = "拍多/拍错/不想要";
+      else if (this.reason_select == 2) this.reason_detail = "与商家协商退款";
+      else if (this.reason_select == 3) this.reason_detail = "商家无法发货";
+      console.log(this.reason_detail);
+
+      let res = await this.api.post("/order/" + id + "/refund", {
+        reason: this.reason_detail
+      });
+      if (res.status >= 200 && res.status < 300) console.log("成功");
+      this.reason_detail = "";
+      this.reason_select = 1;
+      this.cancel_show = false;
+      this.$store.dispatch("getOrderList");
     }
   }
 };
 </script>
 
 <style>
-.contant {
+.order_contant {
   background-color: rgb(248, 248, 248);
+  height: 100%;
+  width: 100%;
 }
 .order_panel {
   margin: 10% 0 10% 0;
@@ -207,5 +309,8 @@ export default {
 }
 .cancel_order {
   margin-bottom: 5%;
+}
+.cancel_panel {
+  height: 50%;
 }
 </style>

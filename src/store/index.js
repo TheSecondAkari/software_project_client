@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import api from '../main.js'
+
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
@@ -243,122 +244,155 @@ const store = new Vuex.Store({
                 context.commit('getDefaultAddId', defaultId);
             }
         },
+
         async getOrderList(context) {
             console.log("获取订单");
-            let res = await api.get("/orders");
-
+            var i = 0;
+            var j = 0;
+            var picList = [];
+            let res = await api.get("/orders?status=1");
             if (res.status >= 200 && res.status < 300) {
                 res = res.data.data;
-                console.log(res);
+                // console.log("信息");
+                // console.log(res);
                 var tempList_pre = [];
-                var tempList_snd = [];
-                var tempList_com = [];
-                var tempList_ref = [];
-                for (var i = 0; i < res.length; i++) {
-                    var picList = [];
-                    var j = 0;
-                    if (res[i].status == 1) {
-                        for (
-                            j = 0;
-                            j < res[i].items.length && j < 2;
-                            j++ //获取图片
-                        ) {
-                            picList.push(res[i].items[j].sku.goods.pic[0]);
-                        } 
-                        tempList_pre.push({
-                            id: res[i].id,//id
-                            price: res[i].price,//总价
-                            items: res[i].items,//物品
-                            address: res[i].address,//地址
-                            order_number: res[i].order_number,//订单号
-                            number: res[i].number,//物流号
-                            goodcount: res[i].items.length,//商品数量
-                            pic: picList,//前两张图片
-                            created_at: res[i].created_at,//创建时间
-                            updated_at: res[i].updated_at,//更新时间
-                            remark:res[i].remark,//备注
-                            refund_remark:res[i].refund_remark,//退款备注
+                for (i = 0; i < res.length; i++) {
+                    picList = [];
+                    for (
+                        j = 0;
+                        j < res[i].items.length && j < 2;
+                        j++ //获取图片
+                    ) {
+                        picList.push(res[i].items[j].sku.goods.pic[0]);
+                    }
+                    tempList_pre.push({
+                        id: res[i].id,//id
+                        price: res[i].price,//总价
+                        items: res[i].items,//物品
+                        address: res[i].address,//地址
+                        order_number: res[i].order_number,//订单号
+                        number: res[i].number,//物流号
+                        goodcount: res[i].items.length,//商品数量
+                        pic: picList,//前两张图片
+                        created_at: res[i].created_at,//创建时间
+                        updated_at: res[i].updated_at,//更新时间
+                        remark: res[i].remark,//备注
+                        refund_remark: res[i].refund_remark,//退款备注
 
-                        });
-                    }
-                    else if (res[i].status == 2) {
-                        for (
-                            j = 0;
-                            j < res[i].items.length && j < 2;
-                            j++ //获取图片
-                        ) {
-                            picList.push(res[i].items[j].sku.goods.pic[0]);
-                        } 
-                        tempList_snd.push({
-                            id: res[i].id,//id
-                            price: res[i].price,//总价
-                            items: res[i].items,//物品
-                            address: res[i].address,//地址
-                            order_number: res[i].order_number,//订单号
-                            number: res[i].number,//物流号
-                            goodcount: res[i].items.length,//商品数量
-                            pic: picList,//前两张图片
-                            created_at: res[i].created_at,//创建时间
-                            updated_at: res[i].updated_at,//更新时间
-                            remark:res[i].remark,//备注
-                            refund_remark:res[i].refund_remark,//退款备注
-                        });
-                    }
-                    else if (res[i].status == 3) {
-                        for (
-                            j = 0;
-                            j < res[i].items.length && j < 2;
-                            j++ //获取图片
-                        ) {
-                            picList.push(res[i].items[j].sku.goods.pic[0]);
-                        } 
-                        tempList_com.push({
-                            id: res[i].id,//id
-                            price: res[i].price,//总价
-                            items: res[i].items,//物品
-                            address: res[i].address,//地址
-                            order_number: res[i].order_number,//订单号
-                            number: res[i].number,//物流号
-                            goodcount: res[i].items.length,//商品数量
-                            pic: picList,//前两张图片
-                            created_at: res[i].created_at,//创建时间
-                            updated_at: res[i].updated_at,//更新时间
-                            remark:res[i].remark,//备注
-                            refund_remark:res[i].refund_remark,//退款备注
-                        });
-                    }
-                    else if (res[i].status == 4) {
-                        for (
-                            j = 0;
-                            j < res[i].items.length && j < 2;
-                            j++ //获取图片
-                        ) {
-                            picList.push(res[i].items[j].sku.goods.pic[0]);
-                        } 
-                        tempList_ref.push({
-                            id: res[i].id,//id
-                            price: res[i].price,//总价
-                            items: res[i].items,//物品
-                            address: res[i].address,//地址
-                            order_number: res[i].order_number,//订单号
-                            number: res[i].number,//物流号
-                            goodcount: res[i].items.length,//商品数量
-                            pic: picList,//前两张图片
-                            created_at: res[i].created_at,//创建时间
-                            updated_at: res[i].updated_at,//更新时间
-                            remark:res[i].remark,//备注
-                            refund_remark:res[i].refund_remark,//退款备注
-                        });
-                    }
+                    });
 
                 }
-                context.commit('getOrderListPre', tempList_pre);
-                context.commit('getOrderListSnd', tempList_snd);
-                context.commit('getOrderListCom', tempList_com);
-                context.commit('getOrderListRef', tempList_ref);
-                console.log(tempList_pre);
+            }
+            res = await api.get("/orders?status=2");
+            if (res.status >= 200 && res.status < 300) {
+                res = res.data.data;
+                // console.log("信息");
+                // console.log(res);
+                var tempList_snd = [];
+                for (i = 0; i < res.length; i++) {
+                    picList = [];
+                    for (
+                        j = 0;
+                        j < res[i].items.length && j < 2;
+                        j++ //获取图片
+                    ) {
+                        picList.push(res[i].items[j].sku.goods.pic[0]);
+                    }
+                    tempList_snd.push({
+                        id: res[i].id,//id
+                        price: res[i].price,//总价
+                        items: res[i].items,//物品
+                        address: res[i].address,//地址
+                        order_number: res[i].order_number,//订单号
+                        number: res[i].number,//物流号
+                        goodcount: res[i].items.length,//商品数量
+                        pic: picList,//前两张图片
+                        created_at: res[i].created_at,//创建时间
+                        updated_at: res[i].updated_at,//更新时间
+                        remark: res[i].remark,//备注
+                        refund_remark: res[i].refund_remark,//退款备注
+
+                    });
+                }
+            }
+            res = await api.get("/orders?status=3");
+            if (res.status >= 200 && res.status < 300) {
+                res = res.data.data;
+                // console.log("信息");
+                // console.log(res);
+                var tempList_com = [];
+                for (i = 0; i < res.length; i++) {
+                    picList = [];
+                    for (
+                        j = 0;
+                        j < res[i].items.length && j < 2;
+                        j++ //获取图片
+                    ) {
+                        picList.push(res[i].items[j].sku.goods.pic[0]);
+                    }
+                    tempList_com.push({
+                        id: res[i].id,//id
+                        price: res[i].price,//总价
+                        items: res[i].items,//物品
+                        address: res[i].address,//地址
+                        order_number: res[i].order_number,//订单号
+                        number: res[i].number,//物流号
+                        goodcount: res[i].items.length,//商品数量
+                        pic: picList,//前两张图片
+                        created_at: res[i].created_at,//创建时间
+                        updated_at: res[i].updated_at,//更新时间
+                        remark: res[i].remark,//备注
+                        refund_remark: res[i].refund_remark,//退款备注
+
+                    });
+
+                }
+
 
             }
+            res = await api.get("/orders?status=4");
+            if (res.status >= 200 && res.status < 300) {
+                res = res.data.data;
+                // console.log("信息");
+                // console.log(res);
+                var tempList_ref = [];
+                for (i = 0; i < res.length; i++) {
+                    picList = [];
+                    for (
+                        j = 0;
+                        j < res[i].items.length && j < 2;
+                        j++ //获取图片
+                    ) {
+                        picList.push(res[i].items[j].sku.goods.pic[0]);
+                    }
+                    tempList_ref.push({
+                        id: res[i].id,//id
+                        price: res[i].price,//总价
+                        items: res[i].items,//物品
+                        address: res[i].address,//地址
+                        order_number: res[i].order_number,//订单号
+                        number: res[i].number,//物流号
+                        goodcount: res[i].items.length,//商品数量
+                        pic: picList,//前两张图片
+                        created_at: res[i].created_at,//创建时间
+                        updated_at: res[i].updated_at,//更新时间
+                        remark: res[i].remark,//备注
+                        refund_remark: res[i].refund_remark,//退款备注
+
+                    });
+
+                }
+
+
+            }
+            context.commit('getOrderListPre', tempList_pre);
+            context.commit('getOrderListSnd', tempList_snd);
+            context.commit('getOrderListCom', tempList_com);
+            context.commit('getOrderListRef', tempList_ref);
+            console.log("待发货");
+            console.log(tempList_pre);
+            console.log("退款中");
+            console.log(tempList_ref);
         }
 
 
