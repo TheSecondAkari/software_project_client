@@ -139,8 +139,9 @@ export default {
   name: "Good",
   data() {
     return {
-      loading: true,//骨架屏动画是否开启
-      id: 10,//this.$store.state.see_good_id, //商品的获取
+      loading: true, //骨架屏动画是否开启
+
+      id: this.$store.state.see_good_id, //商品的获取
       current: 0, //轮播图计数
       //样例商品
       good: {
@@ -157,7 +158,7 @@ export default {
         list: [],
         pic: []
       },
-      show: false,//商品规格的展示
+      show: false, //商品规格的展示
       chumbs: {
         //规格选择弹层的缩略图
         picture: ""

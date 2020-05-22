@@ -34,7 +34,7 @@
       <van-grid-item icon="logistics" text="已发货" to="Myorder_snd" />
       <van-grid-item icon="comment-o" text="待评价" to="Myorder_com" />
       <van-grid-item icon="refund-o" text="退款中" to="Myorder_ref" />
-      <van-grid-item icon="todo-list-o" text="我的订单" to="Myorder" />
+      <van-grid-item icon="todo-list-o" text="我的订单" to="Myorder_pre" />
     </van-grid>
     <van-cell-group class="more">
       <van-cell title="收货地址" is-link to="Myaddress" style="margin-top:5%;padding:4%;" />
@@ -54,7 +54,6 @@
       <van-tabbar-item name="Class" icon="search">分类</van-tabbar-item>
       <van-tabbar-item name="ShoppingCart" icon="shopping-cart-o" to="/Cart">购物车</van-tabbar-item>
       <van-tabbar-item name="Mine" icon="user-o">我的</van-tabbar-item>
-      
     </van-tabbar>
   </div>
 </template>

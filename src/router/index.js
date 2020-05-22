@@ -1,11 +1,11 @@
 const routers = [
     {
         path: '/', //暂且用入口页面，可以改
-        redirect: '/Good', //重定向，方便暂时使用某些按钮跳转我调试的目标页面
+        // redirect: '/Good', //重定向，方便暂时使用某些按钮跳转我调试的目标页面
         meta: {
             title: '首页'
         },
-        component: (resolve) => require(['../views/Welcome.vue'], resolve),
+        component: (resolve) => require(['../views/Home.vue'], resolve),
     },
     {
         path: '/Login',
@@ -40,7 +40,7 @@ const routers = [
     {
         path: '/Myorder',
         meta: {
-            title: '我的订单',
+            title: '订单信息',
             //  requireAuth:true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Myorder.vue'], resolve),

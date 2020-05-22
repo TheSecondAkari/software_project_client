@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import api from '../main.js'
+
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
@@ -11,7 +12,7 @@ const store = new Vuex.Store({
             name: "",
             email: "",
         },
-        see_good_id:"",//当前浏览的商品的id，用于商品详情页
+        see_good_id: "",//当前浏览的商品的id，用于商品详情页
 
         buy: { //记录当前的购买动作的信息,下单页面的依据
             goods: [],//选购的商品
@@ -21,7 +22,12 @@ const store = new Vuex.Store({
         collection: [],//收藏的商品
         cart: [],//购物车商品
         addressList: [],//地址
+        orderList_pre: [],//待发货
+        orderList_snd: [],//已发货
+        orderList_com: [],//待评价
+        orderList_ref: [],//退货中
         defaultAddId: 0,//默认地址
+        orderInfoId: 0,//打开的订单ID
         //...
     },
     getters: {
@@ -43,6 +49,21 @@ const store = new Vuex.Store({
         DefaultAddId: state => {
             return state.defaultAddId;
         },
+        OrderInfoId: state => {
+            return state.orderInfoId;
+        },
+        OrderListPre: state => {
+            return state.orderList_pre;
+        },
+        OrderListSnd: state => {
+            return state.orderList_snd;
+        },
+        OrderListCom: state => {
+            return state.orderList_com;
+        },
+        OrderListRef: state => {
+            return state.orderList_ref;
+        },
 
         //...
     },
@@ -61,8 +82,27 @@ const store = new Vuex.Store({
             state.addressList = data;
             console.log(state.addressList)
         },
+        getOrderListPre(state, data) {
+            state.orderList_pre = data;
+            //console.log(state.orderList_pre)
+        },
+        getOrderListSnd(state, data) {
+            state.orderList_snd = data;
+            //console.log(state.orderList_pre)
+        },
+        getOrderListCom(state, data) {
+            state.orderList_com = data;
+            // console.log(state.orderList_pre)
+        },
+        getOrderListRef(state, data) {
+            state.orderList_ref = data;
+            // console.log(state.orderList_pre)
+        },
         getDefaultAddId(state, data) {
             state.defaultAddId = data
+        },
+        getOrderInfoId(state, data) {
+            state.orderInfoId = data
         },
         //更新购物车: 传入的cart数据是从后台获取过来的。 替换新数据前，先遍历一下旧数据，把对应商品的勾选属性转移
         updateCart(state, cart) {
@@ -92,9 +132,9 @@ const store = new Vuex.Store({
         },
 
         //设置浏览商品详情页面的商品的id
-        setSeeId(state,id){
+        setSeeId(state, id) {
             state.see_good_id = id;
-            console.log("id:",state.see_good_id)
+            console.log("id:", state.see_good_id)
         },
 
         //更新购买行为信息
@@ -130,6 +170,11 @@ const store = new Vuex.Store({
                 collection: [],
                 cart: [],
                 addressList: [],
+                orderList_pre: [],
+                orderList_snd: [],
+                orderList_com: [],
+                orderList_ref: [],
+                orderInfoId: 0,
                 defaultAddId: 0,
             };
         }
@@ -200,6 +245,156 @@ const store = new Vuex.Store({
             }
         },
 
+        async getOrderList(context) {
+            console.log("获取订单");
+            var i = 0;
+            var j = 0;
+            var picList = [];
+            let res = await api.get("/orders?status=1");
+            if (res.status >= 200 && res.status < 300) {
+                res = res.data.data;
+                // console.log("信息");
+                // console.log(res);
+                var tempList_pre = [];
+                for (i = 0; i < res.length; i++) {
+                    picList = [];
+                    for (
+                        j = 0;
+                        j < res[i].items.length && j < 2;
+                        j++ //获取图片
+                    ) {
+                        picList.push(res[i].items[j].sku.goods.pic[0]);
+                    }
+                    tempList_pre.push({
+                        id: res[i].id,//id
+                        price: res[i].price,//总价
+                        items: res[i].items,//物品
+                        address: res[i].address,//地址
+                        order_number: res[i].order_number,//订单号
+                        number: res[i].number,//物流号
+                        goodcount: res[i].items.length,//商品数量
+                        pic: picList,//前两张图片
+                        created_at: res[i].created_at,//创建时间
+                        updated_at: res[i].updated_at,//更新时间
+                        remark: res[i].remark,//备注
+                        refund_remark: res[i].refund_remark,//退款备注
+
+                    });
+
+                }
+            }
+            res = await api.get("/orders?status=2");
+            if (res.status >= 200 && res.status < 300) {
+                res = res.data.data;
+                // console.log("信息");
+                // console.log(res);
+                var tempList_snd = [];
+                for (i = 0; i < res.length; i++) {
+                    picList = [];
+                    for (
+                        j = 0;
+                        j < res[i].items.length && j < 2;
+                        j++ //获取图片
+                    ) {
+                        picList.push(res[i].items[j].sku.goods.pic[0]);
+                    }
+                    tempList_snd.push({
+                        id: res[i].id,//id
+                        price: res[i].price,//总价
+                        items: res[i].items,//物品
+                        address: res[i].address,//地址
+                        order_number: res[i].order_number,//订单号
+                        number: res[i].number,//物流号
+                        goodcount: res[i].items.length,//商品数量
+                        pic: picList,//前两张图片
+                        created_at: res[i].created_at,//创建时间
+                        updated_at: res[i].updated_at,//更新时间
+                        remark: res[i].remark,//备注
+                        refund_remark: res[i].refund_remark,//退款备注
+
+                    });
+                }
+            }
+            res = await api.get("/orders?status=3");
+            if (res.status >= 200 && res.status < 300) {
+                res = res.data.data;
+                // console.log("信息");
+                // console.log(res);
+                var tempList_com = [];
+                for (i = 0; i < res.length; i++) {
+                    picList = [];
+                    for (
+                        j = 0;
+                        j < res[i].items.length && j < 2;
+                        j++ //获取图片
+                    ) {
+                        picList.push(res[i].items[j].sku.goods.pic[0]);
+                    }
+                    tempList_com.push({
+                        id: res[i].id,//id
+                        price: res[i].price,//总价
+                        items: res[i].items,//物品
+                        address: res[i].address,//地址
+                        order_number: res[i].order_number,//订单号
+                        number: res[i].number,//物流号
+                        goodcount: res[i].items.length,//商品数量
+                        pic: picList,//前两张图片
+                        created_at: res[i].created_at,//创建时间
+                        updated_at: res[i].updated_at,//更新时间
+                        remark: res[i].remark,//备注
+                        refund_remark: res[i].refund_remark,//退款备注
+
+                    });
+
+                }
+
+
+            }
+            res = await api.get("/orders?status=4");
+            if (res.status >= 200 && res.status < 300) {
+                res = res.data.data;
+                // console.log("信息");
+                // console.log(res);
+                var tempList_ref = [];
+                for (i = 0; i < res.length; i++) {
+                    picList = [];
+                    for (
+                        j = 0;
+                        j < res[i].items.length && j < 2;
+                        j++ //获取图片
+                    ) {
+                        picList.push(res[i].items[j].sku.goods.pic[0]);
+                    }
+                    tempList_ref.push({
+                        id: res[i].id,//id
+                        price: res[i].price,//总价
+                        items: res[i].items,//物品
+                        address: res[i].address,//地址
+                        order_number: res[i].order_number,//订单号
+                        number: res[i].number,//物流号
+                        goodcount: res[i].items.length,//商品数量
+                        pic: picList,//前两张图片
+                        created_at: res[i].created_at,//创建时间
+                        updated_at: res[i].updated_at,//更新时间
+                        remark: res[i].remark,//备注
+                        refund_remark: res[i].refund_remark,//退款备注
+
+                    });
+
+                }
+
+
+            }
+            context.commit('getOrderListPre', tempList_pre);
+            context.commit('getOrderListSnd', tempList_snd);
+            context.commit('getOrderListCom', tempList_com);
+            context.commit('getOrderListRef', tempList_ref);
+            console.log("待发货");
+            console.log(tempList_pre);
+            console.log("退款中");
+            console.log(tempList_ref);
+        }
+
 
     }
 
@@ -208,31 +403,3 @@ const store = new Vuex.Store({
 });
 
 export default store;
-
-
-//将商品添加入购物车，目前只是简单实现未登录的添加:已有的规格商品只是数量的增加
-        // addCart(state, good) {
-        //     let judge = true;
-        //     for (let item of state.cart) {
-        //         if (item.sku_id == good.sku_id) {
-        //             item.num += good.num;
-        //             judge = false;
-        //             break;
-        //         }
-        //     }
-        //     if (judge) state.cart.unshift(good);
-        //     Vue.prototype.$toast.success("添加购物车成功");
-        //     console.log(state.cart);
-        // },
-        // async syncCart(context) {
-        //     let data = context.state.cart;
-        //     let length = data.length;
-        //     for (var index = length - 1; index >= 0; index--) {
-        //         api.post('/carts', {
-        //             goods_id: data[index].id,
-        //             sku_id: data[index].sku_id,
-        //             num: data[index].num
-        //         });
-        //     }
-        //     context.dispatch('updateCart');
-        // },
