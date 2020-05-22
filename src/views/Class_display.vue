@@ -118,6 +118,7 @@ export default {
     },
     back() {
       this.$router.back("-1");
+      Toast.clear();
     }
   }
 };

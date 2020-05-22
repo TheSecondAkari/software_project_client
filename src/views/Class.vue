@@ -1,9 +1,14 @@
 <template>
-  <div>
-    <van-search v-model="search" shape="round" background="rgb(201, 37, 25)" placeholder="请输入搜索关键词" />
+  <div style="height: 100%">
+    <van-search
+      v-model="search"
+      shape="round"
+      background="rgb(201, 37, 25)"
+      placeholder="请输入搜索关键词"
+      @search="searching"
+    />
     <div
-      id="content"
-      style="height: 625px; width: 100%; background-color: #eeeeee; display: flex; flex-direction: row;"
+      style="height: 35em; width: 100%; background-color: #eeeeee; display: flex; flex-direction: row;"
     >
       <van-sidebar v-model="activeKey" @change="onChange" style="height: 100%;">
         <van-sidebar-item v-for="item in categories" :title="item.name" :key="item.id" />
@@ -21,9 +26,23 @@
           :text="item.name"
           style="height: 80px;"
           @click="toDisplay(item.id)"
-        />
+        >
+        </van-grid-item>
       </van-grid>
     </div>
+    <div style="height: 4em"/>
+    <!-- 底层导航栏 -->
+    <van-tabbar
+      v-model="active"
+      active-color="rgb(221, 22, 22)"
+      inactive-color="#000"
+      style="position: fixed; bottom: 0px;height:10%;"
+    >
+      <van-tabbar-item name="Home" icon="wap-home-o" to="/">首页</van-tabbar-item>
+      <van-tabbar-item name="Class" icon="search">分类</van-tabbar-item>
+      <van-tabbar-item name="ShoppingCart" icon="shopping-cart-o" to="/Cart">购物车</van-tabbar-item>
+      <van-tabbar-item name="Mine" icon="user-o" to="/Myinfo">我的</van-tabbar-item>
+    </van-tabbar>
   </div>
 </template>
 
@@ -31,6 +50,7 @@
 export default {
   data() {
     return {
+      active: "Class",
       activeKey: 0,
       search: "",
       categories: [],
@@ -70,6 +90,11 @@ export default {
     toDisplay(index) {
       this.$store.commit("setClassId", index);
       this.$router.push("/class_display");
+    },
+
+    searching(){
+      this.$store.commit("setSearchContent", this.search)
+      this.$router.push("/search")
     }
   }
 };

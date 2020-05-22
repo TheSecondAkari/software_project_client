@@ -14,6 +14,7 @@ const store = new Vuex.Store({
         },
         see_good_id: "",//当前浏览的商品的id，用于商品详情页
         see_class_id: -1,//当前浏览的分类的id,用于分类详情页
+        search_content: "",//搜索内容
 
         buy: { //记录当前的购买动作的信息,下单页面的依据
             goods: [],//选购的商品
@@ -155,6 +156,11 @@ const store = new Vuex.Store({
         setClassId(state, id) {
             state.see_class_id = id;
             console.log("id:", state.see_class_id)
+        },
+
+        //设置搜索内容
+        setSearchContent(state, content){
+            state.search_content = content;
         },
 
         //更新购买行为信息
@@ -423,31 +429,3 @@ const store = new Vuex.Store({
 });
 
 export default store;
-
-
-//将商品添加入购物车，目前只是简单实现未登录的添加:已有的规格商品只是数量的增加
-        // addCart(state, good) {
-        //     let judge = true;
-        //     for (let item of state.cart) {
-        //         if (item.sku_id == good.sku_id) {
-        //             item.num += good.num;
-        //             judge = false;
-        //             break;
-        //         }
-        //     }
-        //     if (judge) state.cart.unshift(good);
-        //     Vue.prototype.$toast.success("添加购物车成功");
-        //     console.log(state.cart);
-        // },
-        // async syncCart(context) {
-        //     let data = context.state.cart;
-        //     let length = data.length;
-        //     for (var index = length - 1; index >= 0; index--) {
-        //         api.post('/carts', {
-        //             goods_id: data[index].id,
-        //             sku_id: data[index].sku_id,
-        //             num: data[index].num
-        //         });
-        //     }
-        //     context.dispatch('updateCart');
-        // },
