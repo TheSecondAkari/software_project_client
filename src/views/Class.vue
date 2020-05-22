@@ -1,0 +1,104 @@
+<template>
+  <div style="height: 100%">
+    <van-search
+      v-model="search"
+      shape="round"
+      background="rgb(201, 37, 25)"
+      placeholder="请输入搜索关键词"
+      @search="searching"
+    />
+    <div
+      style="height: 35em; width: 100%; background-color: #eeeeee; display: flex; flex-direction: row;"
+    >
+      <van-sidebar v-model="activeKey" @change="onChange" style="height: 100%;">
+        <van-sidebar-item v-for="item in categories" :title="item.name" :key="item.id" />
+      </van-sidebar>
+      <van-grid
+        style="width: 70%; height: 60px; margin-top: 10px;"
+        :gutter="10"
+        :column-num="3"
+        icon-size="38"
+      >
+        <van-grid-item
+          v-for="item in subcategories"
+          :key="item.id"
+          :icon="item.picture != null? item.picture: 'photo-o'"
+          :text="item.name"
+          style="height: 80px;"
+          @click="toDisplay(item.id)"
+        >
+        </van-grid-item>
+      </van-grid>
+    </div>
+    <div style="height: 4em"/>
+    <!-- 底层导航栏 -->
+    <van-tabbar
+      v-model="active"
+      active-color="rgb(221, 22, 22)"
+      inactive-color="#000"
+      style="position: fixed; bottom: 0px;height:10%;"
+    >
+      <van-tabbar-item name="Home" icon="wap-home-o" to="/">首页</van-tabbar-item>
+      <van-tabbar-item name="Class" icon="search">分类</van-tabbar-item>
+      <van-tabbar-item name="ShoppingCart" icon="shopping-cart-o" to="/Cart">购物车</van-tabbar-item>
+      <van-tabbar-item name="Mine" icon="user-o" to="/Myinfo">我的</van-tabbar-item>
+    </van-tabbar>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      active: "Class",
+      activeKey: 0,
+      search: "",
+      categories: [],
+      subcategories: []
+    };
+  },
+  async mounted() {
+    var classes = this.$store.getters.Class;
+    if (classes.categories.length == 0) await this.getCategories();
+    else {
+      this.categories = classes.categories;
+      this.activeKey = classes.index;
+      this.subcategories = this.categories[this.activeKey].childrens;
+    }
+  },
+  methods: {
+    async getCategories() {
+      let res = await this.api.get("/categories");
+      if (res.status >= 200 && res.status < 300) {
+        this.categories = res.data.data;
+        this.subcategories = res.data.data[0].childrens;
+      }
+      var temp = {};
+      temp["categories"] = res.data.data;
+      temp["index"] = 0;
+      this.$store.commit("getClass", temp);
+    },
+
+    onChange(index) {
+      this.subcategories = this.categories[index].childrens;
+      var temp = {};
+      temp["categories"] = this.categories;
+      temp["index"] = index;
+      this.$store.commit("getClass", temp);
+    },
+
+    toDisplay(index) {
+      this.$store.commit("setClassId", index);
+      this.$router.push("/class_display");
+    },
+
+    searching(){
+      this.$store.commit("setSearchContent", this.search)
+      this.$router.push("/search")
+    }
+  }
+};
+</script>
+
+<style>
+</style>

@@ -48,7 +48,7 @@
       inactive-color="#000"
     >
       <van-tabbar-item name="Home" icon="wap-home-o">首页</van-tabbar-item>
-      <van-tabbar-item name="Class" icon="search">分类</van-tabbar-item>
+      <van-tabbar-item name="Class" icon="search" to="/class">分类</van-tabbar-item>
       <van-tabbar-item name="ShoppingCart" icon="shopping-cart-o" to="/Cart">购物车</van-tabbar-item>
       <van-tabbar-item name="Mine" icon="user-o" to="/MyInfo">我的</van-tabbar-item>
     </van-tabbar>
@@ -98,7 +98,10 @@ export default {
       this.getGoods(id);
     },
 
-    onSearch() {},
+    onSearch() {
+      this.$store.commit("setSearchContent", this.searchkey);
+      this.$router.push("/search");
+    },
     //点击商品
     gotoGoods(id) {
       this.$store.commit("setSeeId", id);

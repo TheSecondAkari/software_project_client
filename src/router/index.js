@@ -1,12 +1,44 @@
 const routers = [
     {
         path: '/', //暂且用入口页面，可以改
-        name:"Home",
+        // name:"Home",
+        meta: {
+            title: '首页',
+            keepAlive: true, // 需要缓存
+            // title: '欢迎使用天东易宝'
+        },
+        component: (resolve) => require(['../views/Home.vue'], resolve),
+    },
+    {
+        path: '/Home',
         meta: {
             title: '首页',
             keepAlive: true, // 需要缓存
         },
         component: (resolve) => require(['../views/Home.vue'], resolve),
+    },
+    {
+        path: '/Class',
+        meta: {
+            title: '分类'
+        },
+        component: (resolve) => require(['../views/Class.vue'], resolve),
+    },
+    {
+        path: '/Class_display',
+        meta: {
+            title: '分类详情',
+            keepAlive: true, // 需要缓存
+        },
+        component: (resolve) => require(['../views/Class_display.vue'], resolve),
+    },
+    {
+        path: '/Search',
+        meta: {
+            title: '搜索结果',
+            keepAlive: true, // 需要缓存
+        },
+        component: (resolve) => require(['../views/Search.vue'], resolve),
     },
     {
         path: '/Login',
