@@ -1,44 +1,46 @@
 <template>
   <div class="background">
-    <div class="main">
-      <div class="top_half">
-        <div class="top_background"></div>
-        <h3 class="title">天东易宝</h3>
-        <van-search
-          v-model="searchkey"
-          class="searchbar"
-          placeholder="请输入搜索关键词"
-          background="rgb(201, 37, 25)"
-          @search="onSearch"
-        />
-        <div class="roll_img">
-          <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white" width="90%">
-            <van-swipe-item
-              class="my-swipe"
-              v-for="(item) in carousel"
-              :key="item.id"
-              @click="gotoGoods(item.id)"
-            >
-              <van-image :src="item.pic[0]" class="my-img" />
-            </van-swipe-item>
-          </van-swipe>
-        </div>
-      </div>
-      <div class="middle_select">
-        <van-tabs v-model="activeName" @click="chooseTab">
-          <van-tab v-for="(item) in category" :key="item.id" :title="item.title" :name="item.id"></van-tab>
-        </van-tabs>
-      </div>
-      <div class="items">
-        <div v-for="(item,key) in items" :key="key" class="item_block" @click="gotoGoods(item.id)">
-          <div class="img">
-            <img :src="item.pic[0]" class="good-img" />
-          </div>
-          <div class="item_info">{{item.name}}</div>
-          <p class="price">¥{{item.price}}</p>
-        </div>
+    <!-- 轮播图+搜索栏 -->
+    <div class="top_half">
+      <div class="top_background"></div>
+      <h3 class="title">天东易宝</h3>
+      <van-search
+        v-model="searchkey"
+        class="searchbar"
+        placeholder="请输入搜索关键词"
+        background="rgb(201, 37, 25)"
+        @search="onSearch"
+      />
+      <div class="roll_img">
+        <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white" width="90%">
+          <van-swipe-item
+            class="my-swipe"
+            v-for="(item) in carousel"
+            :key="item.id"
+            @click="gotoGoods(item.id)"
+          >
+            <van-image :src="item.pic[0]" class="my-img" />
+          </van-swipe-item>
+        </van-swipe>
       </div>
     </div>
+    <!-- 一级分类标签 -->
+    <div class="middle_select">
+      <van-tabs v-model="activeName" @click="chooseTab">
+        <van-tab v-for="(item) in category" :key="item.id" :title="item.title" :name="item.id"></van-tab>
+      </van-tabs>
+    </div>
+    <!-- 商品列表展示 -->
+    <div class="items">
+      <div v-for="(item,key) in items" :key="key" class="item_block" @click="gotoGoods(item.id)">
+        <div class="img">
+          <img :src="item.pic[0]" class="good-img" />
+        </div>
+        <div class="item_info">{{item.name}}</div>
+        <p class="price">¥{{item.price}}</p>
+      </div>
+    </div>
+
     <van-tabbar
       class="bottom_select"
       v-model="active"
@@ -117,12 +119,6 @@ export default {
 <style scoped>
 .background {
   background-color: #f5f5f5;
-}
-.main {
-  position: relative;
-  width: 100%;
-  height: 752px;
-  overflow: auto;
 }
 .top_half {
   position: relative;

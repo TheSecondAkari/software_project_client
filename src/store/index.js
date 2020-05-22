@@ -68,6 +68,9 @@ const store = new Vuex.Store({
         //...
     },
     mutations: {
+        changeuser(state, data){
+            state.user.name = data
+        },
         //获取用户账号基本信息
         getMyInfo(state, data) {
             state.user = data;

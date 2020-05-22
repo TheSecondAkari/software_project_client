@@ -17,7 +17,7 @@
 
         <!-- 商品价格+我的收藏 -->
         <div style="margin-top:1%">
-          <div style="float:right;margin-right:4%;" @click="Love()">
+          <div style="float:right;margin-right:4%;" @click="Love()" :disabled="isClick">
             <div v-if="this.like">
               <van-icon name="like" size="24" class="loved" />
               <p style="padding:0;margin:0;font-size:12px;color:red;">已收藏</p>
@@ -140,7 +140,7 @@ export default {
   data() {
     return {
       loading: true, //骨架屏动画是否开启
-
+      isClick:false, //收藏，取消收藏是否禁用
       id: this.$store.state.see_good_id, //商品的获取
       current: 0, //轮播图计数
       //样例商品
@@ -261,6 +261,7 @@ export default {
 
     //添加或删除收藏
     async Love() {
+      this.isClick = true;
       if (this.like) {
         let loved_id = -1;
         for (let v of this.$store.getters.Collection)
@@ -284,6 +285,7 @@ export default {
           this.$store.dispatch("getMyCollection");
         }
       }
+      this.isClick = false;
     },
 
     //查看更多评价

@@ -85,7 +85,7 @@ export default {
   data() {
     return {
       active: "ShoppingCart",
-      list: this.$store.getters.Cart,
+      // list: this.$store.getters.Cart,
       allselected: false,
       timer: []
     };
@@ -104,6 +104,9 @@ export default {
         }
       });
       return total;
+    },
+    list(){
+      return this.$store.getters.Cart
     }
   },
   mounted() {

@@ -1,9 +1,10 @@
 const routers = [
     {
         path: '/', //暂且用入口页面，可以改
-        // redirect: '/Good', //重定向，方便暂时使用某些按钮跳转我调试的目标页面
+        name:"Home",
         meta: {
-            title: '首页'
+            title: '首页',
+            keepAlive: true, // 需要缓存
         },
         component: (resolve) => require(['../views/Home.vue'], resolve),
     },
@@ -97,7 +98,8 @@ const routers = [
       {
         path: '/Good',
         meta: {
-            title: '商品详情'
+            title: '商品详情',
+            // keepAlive: true, // 需要缓存
         },
         component: (resolve) => require(['../views/Good.vue'], resolve),
     },
@@ -112,6 +114,7 @@ const routers = [
         path: '/Order',
         meta: {
             title: '下单页面',
+            keepAlive: true, // 需要缓存
             //  requireAuth:true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Order.vue'], resolve),

@@ -45,11 +45,16 @@
       <van-cell class="exit" v-if="logon" style="margin-top:20%;padding:4%;" @click="logout()">
         <p>登出</p>
       </van-cell>
-      <van-cell class="exit" v-else style="margin-top:20%;padding:4%;" @click="login()" >
+      <van-cell class="exit" v-else style="margin-top:20%;padding:4%;" @click="login()">
         <p>登录</p>
       </van-cell>
     </van-cell-group>
-    <van-tabbar class="bottom" v-model="active" active-color="rgb(221, 22, 22)" inactive-color="#000">
+    <van-tabbar
+      class="bottom"
+      v-model="active"
+      active-color="rgb(221, 22, 22)"
+      inactive-color="#000"
+    >
       <van-tabbar-item name="Home" icon="wap-home-o" to="/">首页</van-tabbar-item>
       <van-tabbar-item name="Class" icon="search">分类</van-tabbar-item>
       <van-tabbar-item name="ShoppingCart" icon="shopping-cart-o" to="/Cart">购物车</van-tabbar-item>
@@ -62,14 +67,11 @@
 export default {
   data() {
     return {
-      user:this.$store.getters.User,
+      user: this.$store.getters.User,
       active: "Mine"
     };
   },
-  mounted(){
-    console.log(this.user);
-  },
-    computed: {
+  computed: {
     logon() {
       var user = this.$store.getters.User;
       if (user.id > 0) {
@@ -77,11 +79,11 @@ export default {
       } else return false;
     }
   },
-  methods:{
-    logout(){
+  methods: {
+    logout() {
       this.$store.commit("logout");
     },
-    login(){
+    login() {
       this.$router.push("/Login");
     }
   }
@@ -137,6 +139,6 @@ export default {
   font-size: 15px;
 }
 .bottom {
-    height: 10%;
+  height: 10%;
 }
 </style>
