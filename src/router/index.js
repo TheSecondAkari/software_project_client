@@ -1,11 +1,44 @@
 const routers = [
     {
         path: '/', //暂且用入口页面，可以改
-        redirect: '/Good', //重定向，方便暂时使用某些按钮跳转我调试的目标页面
+        // name:"Home",
         meta: {
-            title: '首页'
+            title: '首页',
+            keepAlive: true, // 需要缓存
+            // title: '欢迎使用天东易宝'
         },
-        component: (resolve) => require(['../views/Welcome.vue'], resolve),
+        component: (resolve) => require(['../views/Home.vue'], resolve),
+    },
+    {
+        path: '/Home',
+        meta: {
+            title: '首页',
+            keepAlive: true, // 需要缓存
+        },
+        component: (resolve) => require(['../views/Home.vue'], resolve),
+    },
+    {
+        path: '/Class',
+        meta: {
+            title: '分类'
+        },
+        component: (resolve) => require(['../views/Class.vue'], resolve),
+    },
+    {
+        path: '/Class_display',
+        meta: {
+            title: '分类详情',
+            keepAlive: true, // 需要缓存
+        },
+        component: (resolve) => require(['../views/Class_display.vue'], resolve),
+    },
+    {
+        path: '/Search',
+        meta: {
+            title: '搜索结果',
+            keepAlive: true, // 需要缓存
+        },
+        component: (resolve) => require(['../views/Search.vue'], resolve),
     },
     {
         path: '/Login',
@@ -45,6 +78,7 @@ const routers = [
         },
         component: (resolve) => require(['../views/Myorder_info.vue'], resolve),
     },
+
     {
         path: '/Myorder',
         meta: {
@@ -53,31 +87,6 @@ const routers = [
         },
         component: (resolve) => require(['../views/Myorder.vue'], resolve),
     },
-    // {
-    //     path: '/Myorder_snd',
-    //     meta: {
-    //         title: '已发货',
-    //         //  requireAuth:true  //需要登录才能进入的页面
-    //     },
-    //     component: (resolve) => require(['../views/Myorder_snd.vue'], resolve),
-    // },
-    // {
-    //     path: '/Myorder_com',
-    //     meta: {
-    //         title: '待评价',
-    //         //  requireAuth:true  //需要登录才能进入的页面
-    //     },
-    //     component: (resolve) => require(['../views/Myorder_com.vue'], resolve),
-    // },
-    // {
-    //     path: '/Myorder_ref',
-    //     meta: {
-    //         title: '退款中',
-    //         //  requireAuth:true  //需要登录才能进入的页面
-    //     },
-    //     component: (resolve) => require(['../views/Myorder_ref.vue'], resolve),
-    // },
-
     {
         path: '/Myaddress',
         meta: {
@@ -97,7 +106,8 @@ const routers = [
       {
         path: '/Good',
         meta: {
-            title: '商品详情'
+            title: '商品详情',
+            // keepAlive: true, // 需要缓存
         },
         component: (resolve) => require(['../views/Good.vue'], resolve),
     },
@@ -112,6 +122,7 @@ const routers = [
         path: '/Order',
         meta: {
             title: '下单页面',
+            keepAlive: true, // 需要缓存
             //  requireAuth:true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Order.vue'], resolve),

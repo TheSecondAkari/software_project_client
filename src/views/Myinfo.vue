@@ -56,7 +56,7 @@
       inactive-color="#000"
     >
       <van-tabbar-item name="Home" icon="wap-home-o" to="/">首页</van-tabbar-item>
-      <van-tabbar-item name="Class" icon="search">分类</van-tabbar-item>
+      <van-tabbar-item name="Class" icon="search" to="/Class">分类</van-tabbar-item>
       <van-tabbar-item name="ShoppingCart" icon="shopping-cart-o" to="/Cart">购物车</van-tabbar-item>
       <van-tabbar-item name="Mine" icon="user-o">我的</van-tabbar-item>
     </van-tabbar>
@@ -71,9 +71,12 @@ export default {
       active: "Mine"
     };
   },
+<<<<<<< HEAD
   mounted() {
     console.log(this.user);
   },
+=======
+>>>>>>> 100bb02c76ac6b49de9e7a7d2121f1bd794fbc68
   computed: {
     logon() {
       var user = this.$store.getters.User;
@@ -83,6 +86,7 @@ export default {
     }
   },
   methods: {
+<<<<<<< HEAD
     async toOrderPre() {
       this.$store.commit("getOrderInfoStatus", 0);
       // console.log("成功");
@@ -103,6 +107,8 @@ export default {
       // console.log("成功");
       // console.log(this.$store.getters.OrderInfoStatus);
     },
+=======
+>>>>>>> 100bb02c76ac6b49de9e7a7d2121f1bd794fbc68
     logout() {
       this.$store.commit("logout");
     },

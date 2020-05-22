@@ -5,7 +5,7 @@
         <van-icon name="arrow-left" size="18" color="rgb(201, 37, 25)" @click="back()" />
       </template>
     </van-nav-bar>
-    <van-tabs v-model="active" @click="changeView">
+    <van-tabs v-model="active">
       <van-tab title="待发货">
         <van-panel
           v-for="order in orderlist_pre"
@@ -31,31 +31,22 @@
             <p class="total_number">共{{order.goodcount}}件</p>
           </div>
 
-          <div >
-            <van-row>
-              <van-col span="5" offset="13">
-                <van-button
-                  class="more_info"
-                  round
-                  type="primary"
-                  color="#ee0a24"
-                   size="small"
-                  plain
-                 
-                  @click="getInfo(order.id)"
-                >查看详情</van-button>
-              </van-col>
-              <van-col span="5" >
-                <van-button
-                  class="cancel_order"
-                  round
-                  type="primary"
-                  color="#ee0a24"
-                   size="small"
-                  @click="cancelorder(order.id)"
-                >取消订单</van-button>
-              </van-col>
-            </van-row>
+          <div class="order_button">
+            <van-button
+              class="more_info"
+              round
+              type="primary"
+              color="#ee0a24"
+              plain
+              @click="getInfo(order.id)"
+            >查看详情</van-button>
+            <van-button
+              class="cancel_order"
+              round
+              type="primary"
+              color="#ee0a24"
+              @click="cancelorder(order.id)"
+            >取消订单</van-button>
           </div>
           <div>
             <van-popup
@@ -66,7 +57,7 @@
               closeable
               @close="cancel()"
             >
-              <van-radio-group v-model="reason_select" class="select" >
+              <van-radio-group v-model="reason_select">
                 <van-radio name="1" checked-color="#ee0a24">拍多/拍错/不想要</van-radio>
                 <van-radio name="2" checked-color="#ee0a24">与商家协商退款</van-radio>
                 <van-radio name="3" checked-color="#ee0a24">商家无法发货</van-radio>
@@ -85,7 +76,7 @@
               />
               <van-row>
                 <van-col span="6" offset="3">
-                  <van-button  round type="primary" color="#ee0a24" plain @click="cancel()" style="width:100%">取消</van-button>
+                  <van-button round type="primary" color="#ee0a24" plain @click="cancel()">取消</van-button>
                 </van-col>
                 <van-col span="6" offset="6">
                   <van-button
@@ -93,11 +84,9 @@
                     type="primary"
                     color="#ee0a24"
                     @click="Cancelorder(cancel_id)"
-                    style="width:100%"
                   >确认退款</van-button>
                 </van-col>
               </van-row>
-<<<<<<< HEAD
             </van-popup>
           </div>
         </van-panel>
@@ -127,31 +116,16 @@
             <p class="total_number">共{{order.goodcount}}件</p>
           </div>
 
-          <div >
-            <van-row>
-              <van-col span="5" offset="13">
-                <van-button
-                  class="more_info"
-                  round
-                  type="primary"
-                  color="#ee0a24"
-                   size="small"
-                  plain
-                 
-                  @click="getInfo(order.id)"
-                >查看详情</van-button>
-              </van-col>
-              <van-col span="5" >
-                <van-button
-                  class="cancel_order"
-                  round
-                  type="primary"
-                  color="#ee0a24"
-                   size="small"
-                  @click="checkorder(order.id)"
-                >确认收货</van-button>
-              </van-col>
-            </van-row>
+          <div class="order_button">
+            <van-button
+              class="more_info"
+              round
+              type="primary"
+              color="#ee0a24"
+              plain
+              @click="getInfo(order.id)"
+            >查看详情</van-button>
+            <van-button class="cancel_order" round type="primary" color="#ee0a24">确认收货</van-button>
           </div>
           <div></div>
         </van-panel>
@@ -181,21 +155,15 @@
             <p class="total_number">共{{order.goodcount}}件</p>
           </div>
 
-         <div >
-            <van-row >
-              <van-col span="5" offset="18">
-                <van-button
-                  class="more_info"
-                  round
-                  type="primary"
-                  color="#ee0a24"
-                   size="small"
-                  plain
-                 
-                  @click="getInfo(order.id)"
-                >查看详情</van-button>
-              </van-col>
-            </van-row>
+          <div class="order_button">
+            <van-button
+              class="more_info"
+              round
+              type="primary"
+              color="#ee0a24"
+              plain
+              @click="getInfo(order.id)"
+            >查看详情</van-button>
           </div>
           <div></div>
         </van-panel>
@@ -209,40 +177,6 @@
           status="退款中"
         >
           <!-- <div class="good_images"> -->
-=======
-            </div>
-          </van-col>
-        </van-row>
-      </van-cell>
-    </div>
-    <!-- 商品 -->
-    <div>
-      <van-cell class="cell">
-        <div class="goods">
-          <van-card
-            v-for="good in orderInfo.items"
-            :key="good.id"
-            :num="good.num"
-            :price="good.price"
-            :title="good.sku.goods.name"
-            :thumb="good.sku.goods.pic[0]"
-          >
-            <template #tags>
-              <van-tag
-                plain
-                type="danger"
-                v-for="option in good.sku.options"
-                :key="option.id"
-              >{{option.name}}</van-tag>
-            </template>
-            <template #footer>
-              <van-button size="mini">查看详情</van-button>
-              <van-button size="mini">评价</van-button>
-            </template>
-          </van-card>
-        </div>
-      </van-cell>
->>>>>>> 100bb02c76ac6b49de9e7a7d2121f1bd794fbc68
 
           <van-image
             class="good_image"
@@ -259,42 +193,20 @@
             <p class="total_number">共{{order.goodcount}}件</p>
           </div>
 
-<<<<<<< HEAD
- <div >
-            <van-row >
-              <van-col span="5" offset="18">
-                <van-button
-                  class="more_info"
-                  round
-                  type="primary"
-                  color="#ee0a24"
-                   size="small"
-                  plain
-                 
-                  @click="getInfo(order.id)"
-                >查看详情</van-button>
-              </van-col>
-            </van-row>
+          <div class="order_button">
+            <van-button
+              class="more_info"
+              round
+              type="primary"
+              color="#ee0a24"
+              plain
+              @click="getInfo(order.id)"
+            >查看详情</van-button>
           </div>
           <div></div>
         </van-panel>
       </van-tab>
     </van-tabs>
-=======
-        <van-cell title="总价格" class="price">{{orderInfo.price}}</van-cell>
-      </van-cellgroup>
-    </div>
-    <!-- 物流信息 -->
-    <div>
-      <van-cell class="cell">
-        <van-row>
-          <van-col span="4">订单信息</van-col>
-        </van-row>
-        <van-cell title="订单编号">{{orderInfo.order_number}}</van-cell>
-        <van-cell title="下单时间">{{orderInfo.created_at}}</van-cell>
-      </van-cell>
-    </div>
->>>>>>> 100bb02c76ac6b49de9e7a7d2121f1bd794fbc68
   </div>
 </template>
 
@@ -303,22 +215,30 @@ export default {
   data() {
     return {
       index: "",
-      orderlist_pre: this.$store.getters.OrderListPre,
-      orderlist_snd: this.$store.getters.OrderListSnd,
-      orderlist_com: this.$store.getters.OrderListCom,
-      orderlist_ref: this.$store.getters.OrderListRef,
-      orderInfoId: this.$store.getters.OrderInfoId,
-      active: this.$store.getters.OrderInfoStatus,
+      orderInfoId: this.$store.getters.orderInfoId,
+      active: 0,
       cancel_id: "",
       cancel_show: false,
       reason_select: 1,
       reason_detail: ""
     };
   },
+  computed: {
+    orderlist_pre(){
+      return this.$store.getters.OrderListPre
+    } ,
+    orderlist_snd(){
+      return this.$store.getters.OrderListSnd
+    },
+    orderlist_com(){
+      return this.$store.getters.OrderListCom
+    },
+    orderlist_ref(){
+      return this.$store.getters.OrderListRef
+    }
+  },
   mounted() {
-    console.log(this.active);
-
-    // this.$store.dispatch("getOrderList");
+    console.log(this.orderlist_ref);
   },
   methods: {
     back() {
@@ -327,11 +247,7 @@ export default {
     getInfo(id) {
       this.$store.commit("getOrderInfoId", id);
       console.log(this.$store.getters.OrderInfoId);
-      this.$router.push("/Myorder_info");
-    },
-    changeView(name) {
-      this.$store.commit("getOrderInfoStatus", name);
-      console.log(this.$store.getters.OrderInfoStatus);
+      this.$router.push("/Myorder");
     },
     cancel() {
       this.reason_select = 1;
@@ -354,17 +270,11 @@ export default {
         reason: this.reason_detail
       });
       if (res.status >= 200 && res.status < 300) console.log("成功");
-      await this.$store.dispatch("getOrderList");
       this.reason_detail = "";
       this.reason_select = 1;
       this.cancel_show = false;
-      location.reload();
-    },
-    async checkorder(id) {
-      let res = await this.api.post("/order/" + id + "/recv");
-      if (res.status >= 200 && res.status < 300) console.log("成功");
-      location.reload();
-    },
+      this.$store.dispatch("getOrderList");
+    }
   }
 };
 </script>
@@ -400,6 +310,9 @@ export default {
   color: rgb(85, 85, 85);
 }
 .order_button {
+  position: relative;
+  left: 50%;
+  width: 50%;
 }
 .more_info {
   margin-bottom: 5%;
@@ -410,8 +323,4 @@ export default {
 .cancel_panel {
   height: 50%;
 }
-.select{
-  margin: 10% 0 10% 5%;
-}
-
 </style>

@@ -10,7 +10,8 @@
         center
         v-if="address != ''"
         @click="changeAddress"
-        style="height:85px;background: ghostwhite;">
+        style="height:85px;background: ghostwhite;"
+      >
         <div style="margin-left: 2.5%;padding:2% 0;">
           <div>
             <strong style="font-size: 18px;">{{address.name}}</strong>
@@ -67,7 +68,7 @@
     </div>
 
     <div>
-      <van-submit-bar :price="price" button-text="提交订单" @submit="submit" />
+      <van-submit-bar :price="price" :disabled="isClick" button-text="提交订单" @submit="submit" />
     </div>
   </div>
 </template>
@@ -76,19 +77,32 @@
 export default {
   data() {
     return {
-      list: this.$store.getters.Buy.goods,
-      type: this.$store.getters.Buy.type,
+      isClick:false,//是否禁用提交订单按钮
       message: "", //记录订单备注
-      price: 0,
-      address: this.$store.getters.Buy.address
+      // list: this.$store.getters.Buy.goods,
+      // type: this.$store.getters.Buy.type,
+      // price: 0,
+      // address: this.$store.getters.Buy.address//因为是对象的属性变化，所以无法触发依赖刷新。如果是buy这一级别就能触发
     };
   },
-  async mounted() {
-    this.list.forEach(good => {
-      this.price += good.sku.price * good.num;
-    });
-    this.price *= 100;
-    console.log(this.address);
+  computed: {
+    address() {
+      return this.$store.getters.Buy.address;
+    },
+    list() {
+      return this.$store.getters.Buy.goods;
+    },
+    type() {
+      return this.$store.getters.Buy.type;
+    },
+    price() {
+      let price = 0
+      this.list.forEach(good => {
+        price += good.sku.price * good.num;
+      });
+      price *= 100;
+      return price
+    }
   },
   methods: {
     Back() {
@@ -104,6 +118,7 @@ export default {
       });
     },
     async submit() {
+      this.isClick = true;
       let data = {
         address_id: this.address.id,
         remark: this.message,
@@ -119,12 +134,17 @@ export default {
       });
       data.goods = goods;
       let res = await this.api.post("/orders", data);
-      if (res.status == 200) {
+      if (res.status >= 200 && res.status <= 300) {
+        this.message = ""
         this.$toast(res.data.errmsg);
         if (this.type == 1) this.$store.dispatch("getCart");
-        this.$router.push("/");
+        this.$router.push("/"); //支付成功后，跳转首页。
       }
+<<<<<<< HEAD
       await this.$store.dispatch("getOrderList");
+=======
+      this.isClick = false;//解除按钮禁用
+>>>>>>> 100bb02c76ac6b49de9e7a7d2121f1bd794fbc68
     }
   }
 };
