@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { Toast } from 'vant';
+import { Toast } from "vant";
 export default {
   data() {
     return {
@@ -67,33 +67,42 @@ export default {
       title: "",
       goods: [],
       sort_type: false,
-      sort: 1
+      sort: 1,
+      oldcategoryid: 0
     };
   },
-  async beforeMount() {
-    Toast.loading({
-      duration: 0,
-      forbidClick: true
-    });
-    await this.onLoad();
-    Toast.clear();
+  // async beforeMount() {
+  //   Toast.loading({ duration: 0, forbidClick: true });
+  //   await this.onLoad();
+  //   Toast.clear();
+  // },
+  async activated() {
+    this.id = this.$store.state.see_class_id;
+    if (this.id != this.oldcategoryid) {
+      Toast.loading({ duration: 0, forbidClick: true });
+      await this.onLoad();
+      Toast.clear();
+    }
   },
   methods: {
-    async onLoad() {
+    async onLoad(page = 1) {
+      // let page = this.page; //改成使用参数传入，如果不传，则默认获取第一页
       this.loading = true;
-      let id = this.id;
-      let page = this.page;
-      let sort = this.sort;
+      if (this.oldcategoryid != this.id) this.oldcategoryid = this.id; //如果不同，更新旧分类id
       let res = await this.api.get(
-        "/goods?category_id=" + id + "&page=" + page + "&sort=" + sort
+        "/goods?category_id=" + this.id + "&page=" + page + "&sort=" + this.sort
       );
-      this.goods = this.goods.concat(res.data.data.items);
-      if (page == Math.ceil(res.data.data.count / 25)) {
-        this.loading = false;
-        this.finished = true;
+      if (res.status >= 200 && res.status <= 300) {
+        //如果是获取第一页，直接更换内容
+        if (page == 1) this.goods = res.data.data.items;
+        else this.goods = this.goods.concat(res.data.data.items); //把新商品拼接到当前内容后面
+        if (page == Math.ceil(res.data.data.count / 25)) {
+          this.loading = false;
+          this.finished = true;
+        }
+        this.page = res.data.data.page + 1;
+        this.title = this.goods[0].category.name;
       }
-      this.page = page + 1;
-      this.title = this.goods[0].category.name
       this.loading = false;
     },
     async changeSort() {

@@ -215,10 +215,6 @@ export default {
   data() {
     return {
       index: "",
-      orderlist_pre: this.$store.getters.OrderListPre,
-      orderlist_snd: this.$store.getters.OrderListSnd,
-      orderlist_com: this.$store.getters.OrderListCom,
-      orderlist_ref: this.$store.getters.OrderListRef,
       orderInfoId: this.$store.getters.orderInfoId,
       active: 0,
       cancel_id: "",
@@ -226,6 +222,20 @@ export default {
       reason_select: 1,
       reason_detail: ""
     };
+  },
+  computed: {
+    orderlist_pre(){
+      return this.$store.getters.OrderListPre
+    } ,
+    orderlist_snd(){
+      return this.$store.getters.OrderListSnd
+    },
+    orderlist_com(){
+      return this.$store.getters.OrderListCom
+    },
+    orderlist_ref(){
+      return this.$store.getters.OrderListRef
+    }
   },
   mounted() {
     console.log(this.orderlist_ref);

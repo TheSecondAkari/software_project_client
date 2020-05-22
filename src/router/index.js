@@ -82,6 +82,7 @@ const routers = [
         path: '/Myorder_pre',
         meta: {
             title: '待发货',
+            keepAlive: true, // 需要缓存
             //  requireAuth:true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Myorder_pre.vue'], resolve),
