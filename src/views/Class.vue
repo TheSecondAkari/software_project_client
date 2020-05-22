@@ -1,9 +1,9 @@
 <template>
   <div>
-    <van-search v-model="search" shape="round" background="#4fc08d" placeholder="请输入搜索关键词" />
+    <van-search v-model="search" shape="round" background="rgb(201, 37, 25)" placeholder="请输入搜索关键词" />
     <div
       id="content"
-      style="height: 550px; width: 100%; background-color: #eeeeee; display: flex; flex-direction: row;"
+      style="height: 625px; width: 100%; background-color: #eeeeee; display: flex; flex-direction: row;"
     >
       <van-sidebar v-model="activeKey" @change="onChange" style="height: 100%;">
         <van-sidebar-item v-for="item in categories" :title="item.name" :key="item.id" />
@@ -38,7 +38,13 @@ export default {
     };
   },
   async mounted() {
-    await this.getCategories();
+    var classes = this.$store.getters.Class;
+    if (classes.categories.length == 0) await this.getCategories();
+    else {
+      this.categories = classes.categories;
+      this.activeKey = classes.index;
+      this.subcategories = this.categories[this.activeKey].childrens;
+    }
   },
   methods: {
     async getCategories() {
@@ -47,14 +53,22 @@ export default {
         this.categories = res.data.data;
         this.subcategories = res.data.data[0].childrens;
       }
+      var temp = {};
+      temp["categories"] = res.data.data;
+      temp["index"] = 0;
+      this.$store.commit("getClass", temp);
     },
 
     onChange(index) {
       this.subcategories = this.categories[index].childrens;
+      var temp = {};
+      temp["categories"] = this.categories;
+      temp["index"] = index;
+      this.$store.commit("getClass", temp);
     },
 
     toDisplay(index) {
-      this.$store.setClassid(index);
+      this.$store.commit("setClassId", index);
       this.$router.push("/class_display");
     }
   }

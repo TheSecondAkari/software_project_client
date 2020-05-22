@@ -61,7 +61,7 @@ const routers = [
     {
         path: '/Myorder',
         meta: {
-            title: '我的订单',
+            title: '订单信息',
             //  requireAuth:true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Myorder.vue'], resolve),
