@@ -83,6 +83,7 @@ export default {
       show: false,
       columns: [],
       search: this.$store.state.search_content,
+      oldsearch: "*",
       showLoading: false,
       loading: false,
       finished: false,
@@ -95,13 +96,7 @@ export default {
       category_id: 0
     };
   },
-  async beforeMount() {
-    Toast.loading({
-      duration: 0,
-      forbidClick: true
-    });
-    await this.onLoad();
-    Toast.clear();
+  mounted() {
     var temp = [
       {
         name: "全部分类",
@@ -120,6 +115,19 @@ export default {
       delete item.childrens;
     });
     this.columns = temp;
+  },
+  async activated() {
+    this.search = this.$store.state.search_content;
+    if (this.oldsearch != this.search) {
+      this.page = 1;
+      this.oldsearch = this.search;
+      Toast.loading({
+        duration: 0,
+        forbidClick: true
+      });
+      await this.onLoad();
+      Toast.clear();
+    }
   },
   methods: {
     async onLoad() {
