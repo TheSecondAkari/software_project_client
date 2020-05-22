@@ -79,6 +79,7 @@ export default {
   async activated() {
     this.id = this.$store.state.see_class_id;
     if (this.id != this.oldcategoryid) {
+      this.oldcategoryid = this.id; //如果不同，更新旧分类id
       Toast.loading({ duration: 0, forbidClick: true });
       await this.onLoad();
       Toast.clear();
@@ -88,7 +89,6 @@ export default {
     async onLoad(page = 1) {
       // let page = this.page; //改成使用参数传入，如果不传，则默认获取第一页
       this.loading = true;
-      if (this.oldcategoryid != this.id) this.oldcategoryid = this.id; //如果不同，更新旧分类id
       let res = await this.api.get(
         "/goods?category_id=" + this.id + "&page=" + page + "&sort=" + this.sort
       );
