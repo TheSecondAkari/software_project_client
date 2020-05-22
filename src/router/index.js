@@ -1,7 +1,7 @@
 const routers = [
     {
         path: '/', //暂且用入口页面，可以改
-        redirect: '/Good', //重定向，方便暂时使用某些按钮跳转我调试的目标页面
+        //redirect: '/Good', //重定向，方便暂时使用某些按钮跳转我调试的目标页面
         meta: {
             title: '欢迎使用天东易宝'
         },
@@ -13,6 +13,20 @@ const routers = [
             title: '首页'
         },
         component: (resolve) => require(['../views/Home.vue'], resolve),
+    },
+    {
+        path: '/class',
+        meta: {
+            title: '分类'
+        },
+        component: (resolve) => require(['../views/Class.vue'], resolve),
+    },
+    {
+        path: '/class_display',
+        meta: {
+            title: '分类详情'
+        },
+        component: (resolve) => require(['../views/Class_display.vue'], resolve),
     },
     {
         path: '/Login',

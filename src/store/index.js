@@ -12,6 +12,7 @@ const store = new Vuex.Store({
             email: "",
         },
         see_good_id:"",//当前浏览的商品的id，用于商品详情页
+        see_class_id: -1,//当前浏览的分类的id,用于分类详情页
 
         buy: { //记录当前的购买动作的信息,下单页面的依据
             goods: [],//选购的商品
@@ -95,6 +96,12 @@ const store = new Vuex.Store({
         setSeeId(state,id){
             state.see_good_id = id;
             console.log("id:",state.see_good_id)
+        },
+
+        //设置浏览分类详情页面的分类的id
+        setClassId(state,id){
+            state.see_class_id = id;
+            console.log("id:",state.see_class_id)
         },
 
         //更新购买行为信息

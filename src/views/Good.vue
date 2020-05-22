@@ -186,7 +186,7 @@ export default {
     this.chumbs = {
       picture: this.good.pic[0]
     };
-    // this.loading = false;
+    this.loading = false;
   },
   methods: {
     //通过商品id获取商品详情
