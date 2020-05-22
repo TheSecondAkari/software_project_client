@@ -1,73 +1,249 @@
 <template>
-  <div class="contant">
-    <van-nav-bar title="订单详情">
+  <div class="order_contant">
+    <van-nav-bar title="我的订单">
       <template #left>
         <van-icon name="arrow-left" size="18" color="rgb(201, 37, 25)" @click="back()" />
       </template>
     </van-nav-bar>
-    <!-- 地址 -->
-    <div class="address">
-      <van-cell class="cell">
-        <van-row>
-          <van-col span="4">
-            <van-icon name="location" class="address_icon" size="30" color="#ee0a24" />
-          </van-col>
-          <van-col span="20">
-            <div>
-              <van-row>
-                <van-col span="4" style="font-weight:bold">{{orderInfo.address.name}}</van-col>
-                <van-col span="20">{{orderInfo.address.phone}}</van-col>
-              </van-row>
-              <van-row>
-                <van-col
-                  span="24"
-                  style="font-weight:bold"
-                >{{orderInfo.address.province}} {{orderInfo.address.city}} {{orderInfo.address.county}}</van-col>
-                <van-col span="24">{{orderInfo.address.detail}}</van-col>
-              </van-row>
-            </div>
-          </van-col>
-        </van-row>
-      </van-cell>
-    </div>
-    <!-- 商品 -->
-    <div>
-      <van-cell class="cell">
-        <div class="goods">
-          <van-card
-          v-for="good in orderInfo.items" :key = id
-            :num=good.num
-            :price=good.price
-            :title=good.sku.goods.name
-            :thumb= good.sku.goods.pic[0]
-          >
-            <template #tags>
-              <van-tag plain type="danger"  v-for="option in good.sku.options" :key = id>{{option.name}}</van-tag>
-            </template>
-            <template #footer>
-              <van-button size="mini">查看详情</van-button>
-              <van-button size="mini">评价</van-button>
-            </template>
-          </van-card>
-        </div>
-      </van-cell>
+    <van-tabs v-model="active" @click="changeView">
+      <van-tab title="待发货">
+        <van-panel
+          v-for="order in orderlist_pre"
+          :key="order.id"
+          class="order_panel"
+          title
+          status="待发货"
+        >
+          <!-- <div class="good_images"> -->
 
-      <van-cellgroup>
-        <van-cell title="备注" class="remark">{{orderInfo.remark}}</van-cell>
+          <van-image
+            class="good_image"
+            width="100"
+            height="100"
+            v-for="pic in order.pic"
+            :key="pic.id"
+            :src="pic"
+          />
+          <!-- <van-icon name="ellipsis" size="50" /> -->
+          <!-- </div> -->
+          <div class="order_info">
+            <p class="total_price">¥ {{order.price}}</p>
+            <p class="total_number">共{{order.goodcount}}件</p>
+          </div>
 
-        <van-cell title="总价格" class="price">{{orderInfo.price}}</van-cell>
-      </van-cellgroup>
-    </div>
-    <!-- 物流信息 -->
-    <div>
-      <van-cell class="cell">
-      <van-row>
-        <van-col span="4">订单信息</van-col>
-      </van-row>
-      <van-cell title="订单编号">{{orderInfo.order_number}}</van-cell>
-      <van-cell title="下单时间">{{orderInfo.created_at}}</van-cell>
-      </van-cell>
-    </div>
+          <div >
+            <van-row>
+              <van-col span="5" offset="13">
+                <van-button
+                  class="more_info"
+                  round
+                  type="primary"
+                  color="#ee0a24"
+                   size="small"
+                  plain
+                 
+                  @click="getInfo(order.id)"
+                >查看详情</van-button>
+              </van-col>
+              <van-col span="5" >
+                <van-button
+                  class="cancel_order"
+                  round
+                  type="primary"
+                  color="#ee0a24"
+                   size="small"
+                  @click="cancelorder(order.id)"
+                >取消订单</van-button>
+              </van-col>
+            </van-row>
+          </div>
+          <div>
+            <van-popup
+              class="cancel_panel"
+              v-model="cancel_show"
+              position="bottom"
+              round
+              closeable
+              @close="cancel()"
+            >
+              <van-radio-group v-model="reason_select" class="select" >
+                <van-radio name="1" checked-color="#ee0a24">拍多/拍错/不想要</van-radio>
+                <van-radio name="2" checked-color="#ee0a24">与商家协商退款</van-radio>
+                <van-radio name="3" checked-color="#ee0a24">商家无法发货</van-radio>
+                <van-radio name="4" checked-color="#ee0a24">其他</van-radio>
+              </van-radio-group>
+              <van-field
+                v-if="reason_select==4"
+                v-model="reason_detail"
+                rows="2"
+                autosize
+                label="退款理由"
+                type="textarea"
+                maxlength="50"
+                placeholder="请输入退款理由"
+                show-word-limit
+              />
+              <van-row>
+                <van-col span="6" offset="3">
+                  <van-button  round type="primary" color="#ee0a24" plain @click="cancel()" style="width:100%">取消</van-button>
+                </van-col>
+                <van-col span="6" offset="6">
+                  <van-button
+                    round
+                    type="primary"
+                    color="#ee0a24"
+                    @click="Cancelorder(cancel_id)"
+                    style="width:100%"
+                  >确认退款</van-button>
+                </van-col>
+              </van-row>
+            </van-popup>
+          </div>
+        </van-panel>
+      </van-tab>
+      <van-tab title="已发货">
+        <van-panel
+          v-for="order in orderlist_snd"
+          :key="order.id"
+          class="order_panel"
+          title
+          status="待收货"
+        >
+          <!-- <div class="good_images"> -->
+
+          <van-image
+            class="good_image"
+            width="100"
+            height="100"
+            v-for="pic in order.pic"
+            :key="pic.id"
+            :src="pic"
+          />
+          <!-- <van-icon name="ellipsis" size="50" /> -->
+          <!-- </div> -->
+          <div class="order_info">
+            <p class="total_price">¥ {{order.price}}</p>
+            <p class="total_number">共{{order.goodcount}}件</p>
+          </div>
+
+          <div >
+            <van-row>
+              <van-col span="5" offset="13">
+                <van-button
+                  class="more_info"
+                  round
+                  type="primary"
+                  color="#ee0a24"
+                   size="small"
+                  plain
+                 
+                  @click="getInfo(order.id)"
+                >查看详情</van-button>
+              </van-col>
+              <van-col span="5" >
+                <van-button
+                  class="cancel_order"
+                  round
+                  type="primary"
+                  color="#ee0a24"
+                   size="small"
+                  @click="checkorder(order.id)"
+                >确认收货</van-button>
+              </van-col>
+            </van-row>
+          </div>
+          <div></div>
+        </van-panel>
+      </van-tab>
+      <van-tab title="已完成">
+        <van-panel
+          v-for="order in orderlist_com"
+          :key="order.id"
+          class="order_panel"
+          title
+          status="待评价"
+        >
+          <!-- <div class="good_images"> -->
+
+          <van-image
+            class="good_image"
+            width="100"
+            height="100"
+            v-for="pic in order.pic"
+            :key="pic.id"
+            :src="pic"
+          />
+          <!-- <van-icon name="ellipsis" size="50" /> -->
+          <!-- </div> -->
+          <div class="order_info">
+            <p class="total_price">¥ {{order.price}}</p>
+            <p class="total_number">共{{order.goodcount}}件</p>
+          </div>
+
+         <div >
+            <van-row >
+              <van-col span="5" offset="18">
+                <van-button
+                  class="more_info"
+                  round
+                  type="primary"
+                  color="#ee0a24"
+                   size="small"
+                  plain
+                 
+                  @click="getInfo(order.id)"
+                >查看详情</van-button>
+              </van-col>
+            </van-row>
+          </div>
+          <div></div>
+        </van-panel>
+      </van-tab>
+      <van-tab title="退款中">
+        <van-panel
+          v-for="order in orderlist_ref"
+          :key="order.id"
+          class="order_panel"
+          title
+          status="退款中"
+        >
+          <!-- <div class="good_images"> -->
+
+          <van-image
+            class="good_image"
+            width="100"
+            height="100"
+            v-for="pic in order.pic"
+            :key="pic.id"
+            :src="pic"
+          />
+          <!-- <van-icon name="ellipsis" size="50" /> -->
+          <!-- </div> -->
+          <div class="order_info">
+            <p class="total_price">¥ {{order.price}}</p>
+            <p class="total_number">共{{order.goodcount}}件</p>
+          </div>
+
+ <div >
+            <van-row >
+              <van-col span="5" offset="18">
+                <van-button
+                  class="more_info"
+                  round
+                  type="primary"
+                  color="#ee0a24"
+                   size="small"
+                  plain
+                 
+                  @click="getInfo(order.id)"
+                >查看详情</van-button>
+              </van-col>
+            </van-row>
+          </div>
+          <div></div>
+        </van-panel>
+      </van-tab>
+    </van-tabs>
   </div>
 </template>
 
@@ -75,50 +251,78 @@
 export default {
   data() {
     return {
-      orderInfoId: this.$store.getters.OrderInfoId,
-      orderInfo: [],
+      index: "",
       orderlist_pre: this.$store.getters.OrderListPre,
       orderlist_snd: this.$store.getters.OrderListSnd,
       orderlist_com: this.$store.getters.OrderListCom,
-      orderlist_ref: this.$store.getters.OrderListRef
+      orderlist_ref: this.$store.getters.OrderListRef,
+      orderInfoId: this.$store.getters.OrderInfoId,
+      active: this.$store.getters.OrderInfoStatus,
+      cancel_id: "",
+      cancel_show: false,
+      reason_select: 1,
+      reason_detail: ""
     };
   },
   mounted() {
-    this.getOrderInfo();
+    console.log(this.active);
+
+    // this.$store.dispatch("getOrderList");
   },
   methods: {
-    getOrderInfo() {
-      console.log(this.orderInfoId);
-      for (var i = 0; i < this.orderlist_pre.length; i++) {
-        if (this.orderInfoId == this.orderlist_pre[i].id) {
-          this.orderInfo = this.orderlist_pre[i];
-        }
-      }
-      console.log(this.orderInfo);
-    },
     back() {
       this.$router.go(-1);
-    }
+    },
+    getInfo(id) {
+      this.$store.commit("getOrderInfoId", id);
+      console.log(this.$store.getters.OrderInfoId);
+      this.$router.push("/Myorder_info");
+    },
+    changeView(name) {
+      this.$store.commit("getOrderInfoStatus", name);
+      console.log(this.$store.getters.OrderInfoStatus);
+    },
+    cancel() {
+      this.reason_select = 1;
+      this.reason_detail = "";
+      this.cancel_show = false;
+    },
+    cancelorder(id) {
+      this.cancel_id = id;
+      this.cancel_show = true;
+    },
+    async Cancelorder(
+      id //确认取消
+    ) {
+      if (this.reason_select == 1) this.reason_detail = "拍多/拍错/不想要";
+      else if (this.reason_select == 2) this.reason_detail = "与商家协商退款";
+      else if (this.reason_select == 3) this.reason_detail = "商家无法发货";
+      console.log(this.reason_detail);
+
+      let res = await this.api.post("/order/" + id + "/refund", {
+        reason: this.reason_detail
+      });
+      if (res.status >= 200 && res.status < 300) console.log("成功");
+      await this.$store.dispatch("getOrderList");
+      this.reason_detail = "";
+      this.reason_select = 1;
+      this.cancel_show = false;
+      location.reload();
+    },
+    async checkorder(id) {
+      let res = await this.api.post("/order/" + id + "/recv");
+      if (res.status >= 200 && res.status < 300) console.log("成功");
+      location.reload();
+    },
   }
 };
 </script>
 
 <style>
-p {
-  margin: 0;
-}
-.contant {
+.order_contant {
   background-color: rgb(248, 248, 248);
-}
-
-.address_icon {
-  position: relative;
-  padding-top: 50%;
-}
-.address {
-}
-.cell {
-  margin-top: 2%;
+  height: 100%;
+  width: 100%;
 }
 .order_panel {
   margin: 10% 0 10% 0;
@@ -145,9 +349,6 @@ p {
   color: rgb(85, 85, 85);
 }
 .order_button {
-  position: relative;
-  left: 50%;
-  width: 50%;
 }
 .more_info {
   margin-bottom: 5%;
@@ -155,4 +356,11 @@ p {
 .cancel_order {
   margin-bottom: 5%;
 }
+.cancel_panel {
+  height: 50%;
+}
+.select{
+  margin: 10% 0 10% 5%;
+}
+
 </style>

@@ -124,6 +124,7 @@ export default {
         if (this.type == 1) this.$store.dispatch("getCart");
         this.$router.push("/");
       }
+      await this.$store.dispatch("getOrderList");
     }
   }
 };

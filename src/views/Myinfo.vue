@@ -30,11 +30,11 @@
       </div>
     </div>
     <van-grid column-num="5" style="margin-top:5%;">
-      <van-grid-item icon="send-gift-o" text="待发货" to="Myorder_pre" />
-      <van-grid-item icon="logistics" text="已发货" to="Myorder_snd" />
-      <van-grid-item icon="comment-o" text="待评价" to="Myorder_com" />
-      <van-grid-item icon="refund-o" text="退款中" to="Myorder_ref" />
-      <van-grid-item icon="todo-list-o" text="我的订单" to="Myorder_pre" />
+      <van-grid-item icon="send-gift-o" text="待发货" @click="toOrderPre" to="Myorder" />
+      <van-grid-item icon="logistics" text="已发货" @click="toOrderSnd" to="Myorder" />
+      <van-grid-item icon="comment-o" text="待评价" @click="toOrderCom" to="Myorder" />
+      <van-grid-item icon="refund-o" text="退款中" @click="toOrderRef" to="Myorder" />
+      <van-grid-item icon="todo-list-o" text="我的订单" @click="toOrderPre" to="Myorder" />
     </van-grid>
     <van-cell-group class="more">
       <van-cell title="收货地址" is-link to="Myaddress" style="margin-top:5%;padding:4%;" />
@@ -45,11 +45,16 @@
       <van-cell class="exit" v-if="logon" style="margin-top:20%;padding:4%;" @click="logout()">
         <p>登出</p>
       </van-cell>
-      <van-cell class="exit" v-else style="margin-top:20%;padding:4%;" @click="login()" >
+      <van-cell class="exit" v-else style="margin-top:20%;padding:4%;" @click="login()">
         <p>登录</p>
       </van-cell>
     </van-cell-group>
-    <van-tabbar class="bottom" v-model="active" active-color="rgb(221, 22, 22)" inactive-color="#000">
+    <van-tabbar
+      class="bottom"
+      v-model="active"
+      active-color="rgb(221, 22, 22)"
+      inactive-color="#000"
+    >
       <van-tabbar-item name="Home" icon="wap-home-o" to="/">首页</van-tabbar-item>
       <van-tabbar-item name="Class" icon="search">分类</van-tabbar-item>
       <van-tabbar-item name="ShoppingCart" icon="shopping-cart-o" to="/Cart">购物车</van-tabbar-item>
@@ -62,14 +67,14 @@
 export default {
   data() {
     return {
-      user:this.$store.getters.User,
+      user: this.$store.getters.User,
       active: "Mine"
     };
   },
-  mounted(){
+  mounted() {
     console.log(this.user);
   },
-    computed: {
+  computed: {
     logon() {
       var user = this.$store.getters.User;
       if (user.id > 0) {
@@ -77,11 +82,31 @@ export default {
       } else return false;
     }
   },
-  methods:{
-    logout(){
+  methods: {
+    async toOrderPre() {
+      this.$store.commit("getOrderInfoStatus", 0);
+      // console.log("成功");
+      // console.log(this.$store.getters.OrderInfoStatus);
+    },
+    async toOrderSnd() {
+      this.$store.commit("getOrderInfoStatus", 1);
+      // console.log("成功");
+      // console.log(this.$store.getters.OrderInfoStatus);
+    },
+    async toOrderCom() {
+      this.$store.commit("getOrderInfoStatus", 2);
+      // console.log("成功");
+      // console.log(this.$store.getters.OrderInfoStatus);
+    },
+    async toOrderRef() {
+      this.$store.commit("getOrderInfoStatus", 3);
+      // console.log("成功");
+      // console.log(this.$store.getters.OrderInfoStatus);
+    },
+    logout() {
       this.$store.commit("logout");
     },
-    login(){
+    login() {
       this.$router.push("/Login");
     }
   }
@@ -137,6 +162,6 @@ export default {
   font-size: 15px;
 }
 .bottom {
-    height: 10%;
+  height: 10%;
 }
 </style>
