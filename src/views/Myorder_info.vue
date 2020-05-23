@@ -85,37 +85,31 @@
         <van-cell title="更新时间">{{orderInfo.updated_at}}</van-cell>
       </van-cell>
     </div>
-    <div>
-      <van-popup
-        class="comment_panel"
-        v-model="comment_show"
-        position="bottom"
-        round
-        closeable
-        @close="cancel()"
-      >
-        <p>分享您的体验让更多人看到吧~</p>
-        <van-field
-          v-if="reason_select==4"
-          v-model="comment"
-          rows="2"
-          autosize
-          label="评价"
-          type="textarea"
-          maxlength="50"
-          placeholder="默认好评"
-          show-word-limit
-        />
-        <van-row>
-          <van-col span="6" offset="3">
-            <van-button round type="primary" color="#ee0a24" plain @click="cancel()">取消</van-button>
-          </van-col>
-          <van-col span="6" offset="6">
-            <van-button round type="primary" color="#ee0a24" @click="Comment(comment_id)">确认评价</van-button>
-          </van-col>
-        </van-row>
-      </van-popup>
-    </div>
+
+    <!-- 评价弹窗 -->
+    <van-dialog
+      v-model="comment_show"
+      title="填写退款理由"
+      show-cancel-button
+      :closeOnClickOverlay="true"
+      confirmButtonText="确认评价"
+      confirmButtonColor="#ee0a24"
+      @confirm="Comment(comment_id)"
+      @close="cancel()"
+    >
+      <p>分享您的体验让更多人看到吧~</p>
+      <van-field
+        v-if="reason_select==4"
+        v-model="comment"
+        rows="2"
+        autosize
+        label="评价"
+        type="textarea"
+        maxlength="50"
+        placeholder="默认好评"
+        show-word-limit
+      />
+    </van-dialog>
   </div>
 </template>
 

@@ -56,55 +56,55 @@
               </van-col>
             </van-row>
           </div>
-          <div>
-            <van-popup
-              class="cancel_panel"
-              v-model="cancel_show"
-              position="bottom"
-              round
-              closeable
-              @close="cancel()"
-            >
-              <van-radio-group v-model="reason_select" class="select">
-                <van-radio name="1" checked-color="#ee0a24">拍多/拍错/不想要</van-radio>
-                <van-radio name="2" checked-color="#ee0a24">与商家协商退款</van-radio>
-                <van-radio name="3" checked-color="#ee0a24">商家无法发货</van-radio>
-                <van-radio name="4" checked-color="#ee0a24">其他</van-radio>
-              </van-radio-group>
-              <van-field
-                v-if="reason_select==4"
-                v-model="reason_detail"
-                rows="2"
-                autosize
-                label="退款理由"
-                type="textarea"
-                maxlength="50"
-                placeholder="请输入退款理由"
-                show-word-limit
-              />
-              <van-row>
-                <van-col span="6" offset="3">
-                  <van-button
-                    round
-                    type="primary"
-                    color="#ee0a24"
-                    plain
-                    @click="cancel()"
-                    style="width:100%"
-                  >取消</van-button>
-                </van-col>
-                <van-col span="6" offset="6">
-                  <van-button
-                    round
-                    type="primary"
-                    color="#ee0a24"
-                    @click="Cancelorder(cancel_id)"
-                    style="width:100%"
-                  >确认退款</van-button>
-                </van-col>
-              </van-row>
-            </van-popup>
-          </div>
+          <!-- 退款理由弹窗 -->
+          <van-dialog
+            v-model="cancel_show"
+            title="填写退款理由"
+            show-cancel-button
+            :closeOnClickOverlay="true"
+            confirmButtonText="确认退款"
+            confirmButtonColor="#ee0a24"
+            @confirm="Cancelorder(cancel_id)"
+            @close="cancel()">
+            <van-radio-group v-model="reason_select" class="select">
+              <van-radio name="1" checked-color="#ee0a24">拍多/拍错/不想要</van-radio>
+              <van-radio name="2" checked-color="#ee0a24">与商家协商退款</van-radio>
+              <van-radio name="3" checked-color="#ee0a24">商家无法发货</van-radio>
+              <van-radio name="4" checked-color="#ee0a24">其他</van-radio>
+            </van-radio-group>
+            <van-field
+              v-if="reason_select==4"
+              v-model="reason_detail"
+              rows="2"
+              autosize
+              label="退款理由"
+              type="textarea"
+              maxlength="50"
+              placeholder="请输入退款理由"
+              show-word-limit
+            />
+            <!-- <van-row>
+              <van-col span="6" offset="3">
+                <van-button
+                  round
+                  type="primary"
+                  color="#ee0a24"
+                  plain
+                  @click="cancel()"
+                  style="width:100%"
+                >取消</van-button>
+              </van-col>
+              <van-col span="6" offset="6">
+                <van-button
+                  round
+                  type="primary"
+                  color="#ee0a24"
+                  @click="Cancelorder(cancel_id)"
+                  style="width:100%"
+                >确认退款</van-button>
+              </van-col>
+            </van-row> -->
+          </van-dialog>
         </van-panel>
       </van-tab>
       <van-tab title="已发货">
@@ -169,7 +169,6 @@
           status="待评价"
         >
           <!-- <div class="good_images"> -->
-
           <van-image
             class="good_image"
             width="100"
@@ -358,10 +357,10 @@ export default {
 .cancel_order {
   margin-bottom: 5%;
 }
-.cancel_panel {
-  height: 50%;
-}
 .select {
-  margin: 10% 0 10% 5%;
+  margin: 5% 0 5% 5%;
+}
+.van-radio{
+  margin: 5px 0;
 }
 </style>
