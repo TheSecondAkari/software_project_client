@@ -19,7 +19,7 @@
             :key="item.id"
             @click="gotoGoods(item.id)"
           >
-            <van-image :src="item.pic[0]" class="my-img" />
+            <van-image :src="item.pic[0]" lazy-load class="my-img" />
           </van-swipe-item>
         </van-swipe>
       </div>
@@ -31,15 +31,16 @@
       </van-tabs>
     </div>
     <!-- 商品列表展示 -->
-    <div class="items">
+    <waterfall style="margin-top:25px" :imgsArr="goodList" :category="category_id" v-if="goodList.length > 0" />
+    <!-- <div class="items">
       <div v-for="(item,key) in items" :key="key" class="item_block" @click="gotoGoods(item.id)">
         <div class="img">
-          <img :src="item.pic[0]" class="good-img" />
+          <img v-lazy="item.pic[0]" class="good-img" />
         </div>
         <div class="item_info">{{item.name}}</div>
         <p class="price">¥{{item.price}}</p>
       </div>
-    </div>
+    </div>-->
 
     <van-tabbar
       class="bottom_select"
@@ -56,16 +57,21 @@
 </template>
 
 <script>
+import waterfall from "./Waterfall";
+
 export default {
   name: "Home",
   data() {
     return {
       searchkey: "",
       carousel: [], //轮播图
-      items: [],
+      goodList: [],
       category: [],
       active: "Home",
-      activeName: "全部"
+      activeName: "全部",
+      loading: false,
+      finished: false,
+      category_id: 0,
     };
   },
   mounted() {
@@ -95,6 +101,7 @@ export default {
       this.carousel = res.data.data;
     },
     chooseTab(id) {
+      this.category_id = id;
       this.getGoods(id);
     },
 
@@ -110,10 +117,16 @@ export default {
     async getGoods(categoryid = 0) {
       let res;
       if (categoryid == 0) res = await this.api.get("/goods");
-      else res = await this.api.get("/goods?category_id=" + categoryid);
+      else {
+        res = await this.api.get("/goods?category_id=" + categoryid);
+      }
       let data = res.data.data;
-      this.items = data.items;
+      this.goodList = data.items;
     }
+  },
+
+  components: {
+    waterfall
   }
 };
 </script>

@@ -48,28 +48,31 @@
 
     <div style="margin-top: 2.5%">
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-        <van-card
-          v-for="item in goods"
-          :key="item.id"
-          :title="item.name"
-          :thumb="item.pic[0]"
-          :tag="item.category.name"
-          @click="toGood(item.id)"
-        >
-          <template #title>
-            <div style="font-size: 18px; font-weight: 1000;">{{item.name}}</div>
-          </template>
-          <template #desc>
-            <div style="margin-top: 5px;">已有{{item.view}}人浏览过</div>
-          </template>
-          <template #price>
-            <small style="color: red">￥</small>
-            <span style="font-size: 16px; color: red">{{item.price}}</span>
-          </template>
-          <template #num>
-            <div style="margin-top: 5px;">已销售：{{item.sale_num}} 件</div>
-          </template>
-        </van-card>
+        <lazy-component>
+          <van-card
+            lazy-load
+            v-for="item in goods"
+            :key="item.id"
+            :title="item.name"
+            :thumb="item.pic[0]"
+            :tag="item.category.name"
+            @click="toGood(item.id)"
+          >
+            <template #title>
+              <div style="font-size: 18px; font-weight: 1000;">{{item.name}}</div>
+            </template>
+            <template #desc>
+              <div style="margin-top: 5px;">已有{{item.view}}人浏览过</div>
+            </template>
+            <template #price>
+              <small style="color: red">￥</small>
+              <span style="font-size: 16px; color: red">{{item.price}}</span>
+            </template>
+            <template #num>
+              <div style="margin-top: 5px;">已销售：{{item.sale_num}} 件</div>
+            </template>
+          </van-card>
+        </lazy-component>
       </van-list>
     </div>
   </div>
@@ -96,7 +99,18 @@ export default {
       category_id: 0
     };
   },
-  mounted() {
+  computed: {
+    search() {
+      return this.$store.state.search_content;
+    }
+  },
+  async beforeMount() {
+    Toast.loading({
+      duration: 0,
+      forbidClick: true
+    });
+    await this.onLoad();
+    Toast.clear();
     var temp = [
       {
         name: "全部分类",
@@ -163,14 +177,25 @@ export default {
             sort
         );
       }
-      this.goods = this.goods.concat(res.data.data.items);
-      if (page == Math.ceil(res.data.data.count / 25)) {
+
+      if (res.data.data.items.length == 0) {
         this.loading = false;
         this.finished = true;
+        Toast({
+          message: "查无此类结果！",
+          duration: 3,
+          icon: "question-o"
+        });
+      } else {
+        this.goods = this.goods.concat(res.data.data.items);
+        if (page == Math.ceil(res.data.data.count / 25)) {
+          this.loading = false;
+          this.finished = true;
+        }
+        this.page = page + 1;
+        this.title = this.goods[0].category.name;
+        this.loading = false;
       }
-      this.page = page + 1;
-      this.title = this.goods[0].category.name;
-      this.loading = false;
     },
     async changeSort() {
       this.page = 1;
