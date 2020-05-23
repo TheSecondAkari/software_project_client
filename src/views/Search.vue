@@ -82,7 +82,6 @@ export default {
     return {
       show: false,
       columns: [],
-      search: this.$store.state.search_content,
       showLoading: false,
       loading: false,
       finished: false,
@@ -94,6 +93,11 @@ export default {
       sort: 1,
       category_id: 0
     };
+  },
+  computed: {
+    search() {
+      return this.$store.state.search_content;
+    }
   },
   async beforeMount() {
     Toast.loading({
@@ -155,14 +159,25 @@ export default {
             sort
         );
       }
-      this.goods = this.goods.concat(res.data.data.items);
-      if (page == Math.ceil(res.data.data.count / 25)) {
+
+      if (res.data.data.items.length == 0) {
         this.loading = false;
         this.finished = true;
+        Toast({
+          message: "查无此类结果！",
+          duration: 3,
+          icon: "question-o"
+        });
+      } else {
+        this.goods = this.goods.concat(res.data.data.items);
+        if (page == Math.ceil(res.data.data.count / 25)) {
+          this.loading = false;
+          this.finished = true;
+        }
+        this.page = page + 1;
+        this.title = this.goods[0].category.name;
+        this.loading = false;
       }
-      this.page = page + 1;
-      this.title = this.goods[0].category.name;
-      this.loading = false;
     },
     async changeSort() {
       this.page = 1;

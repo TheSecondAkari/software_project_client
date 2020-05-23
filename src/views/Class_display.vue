@@ -55,12 +55,11 @@
 </template>
 
 <script>
-import { Toast } from 'vant';
+import { Toast } from "vant";
 export default {
   data() {
     return {
       showLoading: false,
-      id: this.$store.state.see_class_id,
       loading: false,
       finished: false,
       page: 1,
@@ -70,7 +69,12 @@ export default {
       sort: 1
     };
   },
-  async beforeMount() {
+  computed:{
+    id(){
+      return this.$store.state.see_class_id
+    }
+  },
+  async mounted() {
     Toast.loading({
       duration: 0,
       forbidClick: true
@@ -87,14 +91,24 @@ export default {
       let res = await this.api.get(
         "/goods?category_id=" + id + "&page=" + page + "&sort=" + sort
       );
-      this.goods = this.goods.concat(res.data.data.items);
-      if (page == Math.ceil(res.data.data.count / 25)) {
+      if (res.data.data.items.length == 0) {
         this.loading = false;
         this.finished = true;
+        Toast({
+          message: "查无此类结果！",
+          duration: 3,
+          icon: "question-o"
+        });
+      } else {
+        this.goods = this.goods.concat(res.data.data.items);
+        if (page == Math.ceil(res.data.data.count / 25)) {
+          this.loading = false;
+          this.finished = true;
+        }
+        this.page = page + 1;
+        this.title = this.goods[0].category.name;
+        this.loading = false;
       }
-      this.page = page + 1;
-      this.title = this.goods[0].category.name
-      this.loading = false;
     },
     async changeSort() {
       this.page = 1;

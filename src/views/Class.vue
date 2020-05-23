@@ -8,7 +8,7 @@
       @search="searching"
     />
     <div
-      style="height: 35em; width: 100%; background-color: #eeeeee; display: flex; flex-direction: row;"
+      style="height: 45em; width: 100%; background-color: #eeeeee; display: flex; flex-direction: row;"
     >
       <van-sidebar v-model="activeKey" @change="onChange" style="height: 100%;">
         <van-sidebar-item v-for="item in categories" :title="item.name" :key="item.id" />

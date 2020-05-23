@@ -152,13 +152,11 @@ const store = new Vuex.Store({
         //设置浏览商品详情页面的商品的id
         setSeeId(state, id) {
             state.see_good_id = id;
-            console.log("id:", state.see_good_id)
         },
 
         //设置浏览分类详情页面的分类的id
         setClassId(state, id) {
             state.see_class_id = id;
-            console.log("id:", state.see_class_id)
         },
 
         //设置搜索内容
