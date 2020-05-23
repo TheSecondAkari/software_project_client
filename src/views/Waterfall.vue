@@ -8,14 +8,14 @@
   >
     <div class="container" ref="content">
       <div class="col">
+        <lazy-component>
         <div
           class="card"
           v-for="item in imgsList1"
           :key="item.id"
           v-on:click="reDirect(item,$event)"
-          :id="item.id"
-        >
-          <van-image :src="item.pic[0]" style="width: 100%; display: block" />
+          :id="item.id">
+          <van-image :src="item.pic[0]" lazy-load style="width: 100%; display: block" />
           <div class="detail">
             <div class="title">{{item.name}}</div>
             <div style="padding-top: 2.5%;">
@@ -31,16 +31,17 @@
             </div>
           </div>
         </div>
+        </lazy-component>
       </div>
       <div class="col">
+        <lazy-component>
         <div
           class="card"
           v-for="item in imgsList2"
           :key="item.id"
           v-on:click="reDirect(item,$event)"
-          :id="item.id"
-        >
-          <van-image :src="item.pic[0]" style="width: 100%; display: block" />
+          :id="item.id">
+          <van-image :src="item.pic[0]" lazy-load style="width: 100%; display: block" />
           <div class="detail">
             <div class="title">{{item.name}}</div>
             <div style="padding-top: 2.5%;">
@@ -56,6 +57,7 @@
             </div>
           </div>
         </div>
+        </lazy-component>
       </div>
     </div>
   </van-list>

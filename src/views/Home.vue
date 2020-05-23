@@ -31,23 +31,18 @@
       </van-tabs>
     </div>
     <!-- 商品列表展示 -->
-    <waterfall style="margin-top:25px" :imgsArr="goodList" :category="category_id" v-if="goodList.length > 0" />
-    <!-- <div class="items">
-      <div v-for="(item,key) in items" :key="key" class="item_block" @click="gotoGoods(item.id)">
-        <div class="img">
-          <img v-lazy="item.pic[0]" class="good-img" />
-        </div>
-        <div class="item_info">{{item.name}}</div>
-        <p class="price">¥{{item.price}}</p>
-      </div>
-    </div>-->
+    <waterfall
+      style="margin-top:25px"
+      :imgsArr="goodList"
+      :category="category_id"
+      v-if="goodList.length > 0"
+    />
 
     <van-tabbar
       class="bottom_select"
       v-model="active"
       active-color="rgb(221, 22, 22)"
-      inactive-color="#000"
-    >
+      inactive-color="#000">
       <van-tabbar-item name="Home" icon="wap-home-o">首页</van-tabbar-item>
       <van-tabbar-item name="Class" icon="search" to="/class">分类</van-tabbar-item>
       <van-tabbar-item name="ShoppingCart" icon="shopping-cart-o" to="/Cart">购物车</van-tabbar-item>
@@ -61,6 +56,9 @@ import waterfall from "./Waterfall";
 
 export default {
   name: "Home",
+  components: {
+    waterfall
+  },
   data() {
     return {
       searchkey: "",
@@ -71,7 +69,7 @@ export default {
       activeName: "全部",
       loading: false,
       finished: false,
-      category_id: 0,
+      category_id: 0
     };
   },
   mounted() {
@@ -85,11 +83,10 @@ export default {
       if (res.status >= 200 && res.status < 300) {
         let data = res.data.data;
         let temp = {},
-          result = [{ title: "全部", name: "全部", id: 0 }];
+          result = [{ title: "全部", id: 0 }];
         for (let item of data) {
           temp = {};
           temp["title"] = item.name;
-          temp["name"] = item.name;
           temp["id"] = item.id;
           result.push(temp);
         }
@@ -123,10 +120,6 @@ export default {
       let data = res.data.data;
       this.goodList = data.items;
     }
-  },
-
-  components: {
-    waterfall
   }
 };
 </script>

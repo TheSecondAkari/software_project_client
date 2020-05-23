@@ -84,7 +84,6 @@
 export default {
   data() {
     return {
-      user: this.$store.getters.User,
       username: "",
       avatar: "",
       password: "",
@@ -93,8 +92,10 @@ export default {
       status: false
     };
   },
-  mounted() {
-    console.log(this.$store.getters.User);
+  computed:{
+    user(){
+      return this.$store.getters.User
+    } 
   },
   methods: {
     async afterRead(file) {
@@ -105,7 +106,6 @@ export default {
         "Content-Type": "multipart/form-data"
       });
       this.avatar = res.data.url[0];
-      console.log(this.avatar);
     },
     async send_code() {
       let res = await this.api.post("/users/verify", {
@@ -121,7 +121,7 @@ export default {
         });
         if (res.status >= 200 && res.status < 300) {
           this.$notify({ type: "success", message: res.data.errmsg });
-          this.$store.commit("getMyInfo");
+          this.$store.dispatch("getMyInfo");
         }
         console.log(res);
         this.avatar = "";
@@ -134,9 +134,8 @@ export default {
         });
         if (res.status >= 200 && res.status < 300) {
           this.$notify({ type: "success", message: res.data.errmsg });
-          this.$store.commit("getMyInfo");
+          this.$store.dispatch("getMyInfo");
         }
-        console.log(res);
         this.username = "";
       } else this.$notify({ type: "warning", message: "不能为空" });
     },
@@ -148,7 +147,7 @@ export default {
         });
         if (res.status >= 200 && res.status < 300) {
           this.$notify({ type: "success", message: res.data.errmsg });
-          this.$store.commit("getMyInfo");
+          this.$store.dispatch("getMyInfo");
         }
         console.log(res);
         this.password = "";

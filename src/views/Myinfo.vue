@@ -30,11 +30,11 @@
       </div>
     </div>
     <van-grid column-num="5" style="margin-top:5%;">
-      <van-grid-item icon="send-gift-o" text="待发货" @click="toOrderPre" to="Myorder" />
-      <van-grid-item icon="logistics" text="已发货" @click="toOrderSnd" to="Myorder" />
-      <van-grid-item icon="comment-o" text="待评价" @click="toOrderCom" to="Myorder" />
-      <van-grid-item icon="refund-o" text="退款中" @click="toOrderRef" to="Myorder" />
-      <van-grid-item icon="todo-list-o" text="我的订单" @click="toOrderPre" to="Myorder" />
+      <van-grid-item icon="send-gift-o" text="待发货" to="Myorder" />
+      <van-grid-item icon="logistics" text="已发货" to="Myorder" />
+      <van-grid-item icon="comment-o" text="待评价" to="Myorder" />
+      <van-grid-item icon="refund-o" text="退款中" to="Myorder" />
+      <van-grid-item icon="todo-list-o" text="我的订单" to="Myorder" />
     </van-grid>
     <van-cell-group class="more">
       <van-cell title="收货地址" is-link to="Myaddress" style="margin-top:5%;padding:4%;" />

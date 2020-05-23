@@ -85,7 +85,6 @@ export default {
     return {
       show: false,
       columns: [],
-      search: this.$store.state.search_content,
       oldsearch: "*",
       showLoading: false,
       loading: false,
