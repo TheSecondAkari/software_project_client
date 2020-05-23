@@ -11,27 +11,69 @@
     <div class="update">
       <van-cell-group>
         <van-cell title="更换头像"></van-cell>
-        <van-uploader :after-read="afterRead" v-model="imgs" :max-count="1" style="margin: 5% 0 5% 10%;" />
-        <van-button type="primary" @click="test1()" style="margin-left:30%;">确定</van-button>
+        <van-uploader
+          :after-read="afterRead"
+          v-model="imgs"
+          :max-count="1"
+          style="margin: 5% 0 5% 10%;"
+        />
+        <van-button
+          type="primary"
+          @click="changeAvater()"
+          round
+          color="#ee0a24"
+          size="normal"
+          plain
+          style="margin-left:30%;"
+        >确定</van-button>
         <van-cell title="更改昵称"></van-cell>
-        <van-field v-model="username" center clearable label="昵称"  placeholder="请输入新昵称" >
-         <template #button>
-              <van-button size="small" type="primary" @click="test2()">修改</van-button>
-            </template>
+        <van-field v-model="username" center clearable label="昵称" placeholder="请输入新昵称">
+          <template #button>
+            <van-button
+              round
+              color="#ee0a24"
+              size="normal"
+              plain
+              type="primary"
+              @click="changeName()"
+            >修改</van-button>
+          </template>
         </van-field>
         <van-cell title="更改密码"></van-cell>
         <div>
-        <van-button v-if="status==false" type="primary" center @click="status=true" style="margin:0 auto;">修改密码</van-button>
+          <van-button
+            v-if="status==false"
+            type="primary"
+            round
+            color="#ee0a24"
+            size="normal"
+            plain
+            @click="status=true"
+            style="margin:0 auto;"
+          >修改密码</van-button>
         </div>
-        <div v-if="status"> 
+        <div v-if="status">
           <van-field v-model="password" center clearable label="新密码" placeholder="请输入新密码" />
           <van-field v-model="code" center clearable label="短信验证码" placeholder="请输入短信验证码">
             <template #button>
-              <van-button size="small" type="primary" @click="send_code()">发送验证码</van-button>
+              <van-button
+                round
+                color="#ee0a24"
+                size="normal"
+                plain
+                type="primary"
+                @click="send_code()"
+              >发送验证码</van-button>
             </template>
           </van-field>
-          <van-button round type="primary" @click="test3()">确认修改密码</van-button>
-          <van-button round  @click="status=false">取消</van-button>
+          <van-row>
+            <van-col offset="10">
+              <van-button round color="#ee0a24" size="normal" plain @click="status=false">取消</van-button>
+            </van-col>
+            <van-col offset="2">
+              <van-button round color="#ee0a24" size="normal" @click="changePassword()">确认修改密码</van-button>
+            </van-col>
+          </van-row>
         </div>
       </van-cell-group>
     </div>
@@ -72,7 +114,7 @@ export default {
       if (res.status >= 200 && res.status < 300)
         this.$notify({ type: "success", message: res.data.errmsg });
     },
-    async test1() {
+    async changeAvater() {
       if (this.avatar != "") {
         let res = await this.api.put("/users", {
           avatar: this.avatar
@@ -85,7 +127,7 @@ export default {
         this.avatar = "";
       } else this.$notify({ type: "warning", message: "不能为空" });
     },
-    async test2() {
+    async changeName() {
       if (this.username != "") {
         let res = await this.api.put("/users", {
           name: this.username
@@ -98,7 +140,7 @@ export default {
         this.username = "";
       } else this.$notify({ type: "warning", message: "不能为空" });
     },
-    async test3() {
+    async changePassword() {
       if (this.password != "" && this.code != "") {
         let res = await this.api.put("/users/password", {
           code: this.code,

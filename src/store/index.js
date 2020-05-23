@@ -4,6 +4,7 @@ import api from '../main.js'
 
 Vue.use(Vuex);
 
+
 const store = new Vuex.Store({
     state: {
         user: {
@@ -34,6 +35,7 @@ const store = new Vuex.Store({
         orderList_ref: [],//退货中
         defaultAddId: 0,//默认地址
         orderInfoId: 0,//打开的订单ID
+        orderInfoStatus:0,//打开我的订单的类别
         //...
     },
     getters: {
@@ -61,6 +63,9 @@ const store = new Vuex.Store({
         OrderInfoId: state => {
             return state.orderInfoId;
         },
+        OrderInfoStatus: state =>{
+            return state.orderInfoStatus
+        },
         OrderListPre: state => {
             return state.orderList_pre;
         },
@@ -73,6 +78,7 @@ const store = new Vuex.Store({
         OrderListRef: state => {
             return state.orderList_ref;
         },
+        
 
         //...
     },
@@ -121,6 +127,9 @@ const store = new Vuex.Store({
         },
         getOrderInfoId(state, data) {
             state.orderInfoId = data
+        },
+        getOrderInfoStatus(state, data) {
+            state.orderInfoStatus = data
         },
         //更新购物车: 传入的cart数据是从后台获取过来的。 替换新数据前，先遍历一下旧数据，把对应商品的勾选属性转移
         updateCart(state, cart) {
@@ -204,7 +213,9 @@ const store = new Vuex.Store({
                 orderList_com: [],
                 orderList_ref: [],
                 orderInfoId: 0,
+                orderInfoStatus: 0,
                 defaultAddId: 0,
+
             };
         }
         //...
@@ -382,8 +393,8 @@ const store = new Vuex.Store({
             res = await api.get("/orders?status=4");
             if (res.status >= 200 && res.status < 300) {
                 res = res.data.data;
-                // console.log("信息");
-                // console.log(res);
+                console.log("信息");
+                console.log(res);
                 var tempList_ref = [];
                 for (i = 0; i < res.length; i++) {
                     picList = [];
@@ -418,10 +429,10 @@ const store = new Vuex.Store({
             context.commit('getOrderListSnd', tempList_snd);
             context.commit('getOrderListCom', tempList_com);
             context.commit('getOrderListRef', tempList_ref);
-            console.log("待发货");
-            console.log(tempList_pre);
-            console.log("退款中");
-            console.log(tempList_ref);
+            // console.log("待发货");
+            // console.log(tempList_pre);
+            // console.log("退款中");
+            // console.log(tempList_ref);
         }
 
 

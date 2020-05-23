@@ -142,10 +142,11 @@ export default {
       if (res.status >= 200 && res.status <= 300) {
         this.message = "";
         this.$toast(res.data.errmsg);
+        this.isClick = false; //解除按钮禁用
         if (this.type == 1) this.$store.dispatch("getCart");
+        this.$store.dispatch("getOrderList");
         this.$router.push("/"); //支付成功后，跳转首页。
-      }
-      this.isClick = false; //解除按钮禁用
+      } else this.isClick = false; //解除按钮禁用
     }
   }
 };
