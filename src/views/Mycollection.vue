@@ -73,7 +73,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .goods-card {
   margin: 0;
   background-color: white;

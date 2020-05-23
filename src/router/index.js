@@ -20,7 +20,8 @@ const routers = [
     {
         path: '/Class',
         meta: {
-            title: '分类'
+            title: '分类',
+            keepAlive: true, // 需要缓存
         },
         component: (resolve) => require(['../views/Class.vue'], resolve),
     },

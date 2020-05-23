@@ -39,10 +39,11 @@
     />
 
     <van-tabbar
-      class="bottom_select"
+      class="bottom"
       v-model="active"
       active-color="rgb(221, 22, 22)"
-      inactive-color="#000">
+      inactive-color="#000"
+    >
       <van-tabbar-item name="Home" icon="wap-home-o">首页</van-tabbar-item>
       <van-tabbar-item name="Class" icon="search" to="/class">分类</van-tabbar-item>
       <van-tabbar-item name="ShoppingCart" icon="shopping-cart-o" to="/Cart">购物车</van-tabbar-item>
@@ -76,6 +77,9 @@ export default {
     this.getClass();
     this.getSwipe();
     this.getGoods();
+  },
+  activated() {
+    this.active = "Home";
   },
   methods: {
     async getClass() {
@@ -155,11 +159,8 @@ export default {
   display: flex;
   flex-wrap: wrap;
 }
-.bottom_select {
-  position: fixed;
-  bottom: 0px;
-  width: 100%;
-  height: 60px;
+.bottom {
+  height: 10%;
 }
 .title {
   display: inline-block;

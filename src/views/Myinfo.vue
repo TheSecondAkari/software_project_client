@@ -53,8 +53,7 @@
       class="bottom"
       v-model="active"
       active-color="rgb(221, 22, 22)"
-      inactive-color="#000"
-    >
+      inactive-color="#000">
       <van-tabbar-item name="Home" icon="wap-home-o" to="/">首页</van-tabbar-item>
       <van-tabbar-item name="Class" icon="search" to="/Class">分类</van-tabbar-item>
       <van-tabbar-item name="ShoppingCart" icon="shopping-cart-o" to="/Cart">购物车</van-tabbar-item>
@@ -115,7 +114,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .contant {
   background-color: rgb(248, 248, 248);
   height: 100%;

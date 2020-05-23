@@ -26,17 +26,16 @@
           :text="item.name"
           style="height: 80px;"
           @click="toDisplay(item.id)"
-        >
-        </van-grid-item>
+        ></van-grid-item>
       </van-grid>
     </div>
-    <div style="height: 4em"/>
+    <div style="height: 4em" />
     <!-- 底层导航栏 -->
     <van-tabbar
       v-model="active"
+      class="bottom"
       active-color="rgb(221, 22, 22)"
       inactive-color="#000"
-      style="position: fixed; bottom: 0px;height:10%;"
     >
       <van-tabbar-item name="Home" icon="wap-home-o" to="/">首页</van-tabbar-item>
       <van-tabbar-item name="Class" icon="search">分类</van-tabbar-item>
@@ -66,6 +65,9 @@ export default {
       this.subcategories = this.categories[this.activeKey].childrens;
     }
   },
+  activated() {
+    this.active = "Class";
+  },
   methods: {
     async getCategories() {
       let res = await this.api.get("/categories");
@@ -92,13 +94,16 @@ export default {
       this.$router.push("/class_display");
     },
 
-    searching(){
-      this.$store.commit("setSearchContent", this.search)
-      this.$router.push("/search")
+    searching() {
+      this.$store.commit("setSearchContent", this.search);
+      this.$router.push("/search");
     }
   }
 };
 </script>
 
-<style>
+<style scoped>
+.bottom {
+  height: 10%;
+}
 </style>

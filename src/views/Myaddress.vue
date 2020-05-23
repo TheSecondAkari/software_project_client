@@ -4232,7 +4232,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .van-radio__icon {
   display: none;
 }

@@ -13,19 +13,19 @@
             <van-icon name="location" class="address_icon" size="30" color="#ee0a24" />
           </van-col>
           <van-col span="20">
-            <div>
-              <van-row>
-                <van-col span="4" style="font-weight:bold">{{orderInfo.address.name}}</van-col>
-                <van-col span="20">{{orderInfo.address.phone}}</van-col>
-              </van-row>
-              <van-row>
-                <van-col
-                  span="24"
-                  style="font-weight:bold"
-                >{{orderInfo.address.province}} {{orderInfo.address.city}} {{orderInfo.address.county}}</van-col>
-                <van-col span="24">{{orderInfo.address.detail}}</van-col>
-              </van-row>
-            </div>
+            <van-row>
+              <van-col span="7" class="name_css">{{orderInfo.address.name}}</van-col>
+              <van-col span="13">{{orderInfo.address.phone}}</van-col>
+            </van-row>
+            <van-row>
+              <van-col
+                span="20"
+                style="font-weight:bold"
+              >{{orderInfo.address.province}} {{orderInfo.address.city}} {{orderInfo.address.county}}</van-col>
+            </van-row>
+            <van-row>
+              <van-col span="20">{{orderInfo.address.detail}}</van-col>
+            </van-row>
           </van-col>
         </van-row>
       </van-cell>
@@ -198,14 +198,19 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 p {
   margin: 0;
 }
 .contant {
   background-color: rgb(248, 248, 248);
 }
-
+.name_css {
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .address_icon {
   position: relative;
   padding-top: 50%;

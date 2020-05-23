@@ -7,56 +7,58 @@
     style="padding-bottom: 15%; background: ghostwhite;"
   >
     <div class="container" ref="content">
-      <div class="col">
+      <div class="col" ref="list1">
         <lazy-component>
-        <div
-          class="card"
-          v-for="item in imgsList1"
-          :key="item.id"
-          v-on:click="reDirect(item,$event)"
-          :id="item.id">
-          <van-image :src="item.pic[0]" lazy-load style="width: 100%; display: block" />
-          <div class="detail">
-            <div class="title">{{item.name}}</div>
-            <div style="padding-top: 2.5%;">
-              <van-tag plain style="margin-left: 5%;">{{item.category.name}}</van-tag>
-            </div>
-            <div class="other">
-              <div class="line" style="font-size: 12px;">￥</div>
-              <div class="line" style="font-size: 22px;">{{item.price}}</div>
-              <div
-                class="line"
-                style="position: absolute; right: 10px; font-size: 12px;"
-              >{{item.view}}人浏览</div>
+          <div
+            class="card"
+            v-for="item in goodsList1"
+            :key="item.id"
+            v-on:click="reDirect(item,$event)"
+            :id="item.id"
+          >
+            <van-image :src="item.pic[0]" lazy-load style="width: 100%; display: block" />
+            <div class="detail">
+              <div class="title">{{item.name}}</div>
+              <div style="padding-top: 2.5%;">
+                <van-tag plain style="margin-left: 5%;">{{item.category.name}}</van-tag>
+              </div>
+              <div class="other">
+                <div class="line" style="font-size: 12px;">￥</div>
+                <div class="line" style="font-size: 22px;">{{item.price}}</div>
+                <div
+                  class="line"
+                  style="position: absolute; right: 10px; font-size: 12px;"
+                >{{item.view}}人浏览</div>
+              </div>
             </div>
           </div>
-        </div>
         </lazy-component>
       </div>
-      <div class="col">
+      <div class="col" ref="list2">
         <lazy-component>
-        <div
-          class="card"
-          v-for="item in imgsList2"
-          :key="item.id"
-          v-on:click="reDirect(item,$event)"
-          :id="item.id">
-          <van-image :src="item.pic[0]" lazy-load style="width: 100%; display: block" />
-          <div class="detail">
-            <div class="title">{{item.name}}</div>
-            <div style="padding-top: 2.5%;">
-              <van-tag plain style="margin-left: 5%;">{{item.category.name}}</van-tag>
-            </div>
-            <div class="other">
-              <div class="line" style="font-size: 12px;">￥</div>
-              <div class="line" style="font-size: 22px;">{{item.price}}</div>
-              <div
-                class="line"
-                style="position: absolute; right: 10px; font-size: 12px;"
-              >{{item.view}}人浏览</div>
+          <div
+            class="card"
+            v-for="item in goodsList2"
+            :key="item.id"
+            v-on:click="reDirect(item,$event)"
+            :id="item.id"
+          >
+            <van-image :src="item.pic[0]" lazy-load style="width: 100%; display: block" />
+            <div class="detail">
+              <div class="title">{{item.name}}</div>
+              <div style="padding-top: 2.5%;">
+                <van-tag plain style="margin-left: 5%;">{{item.category.name}}</van-tag>
+              </div>
+              <div class="other">
+                <div class="line" style="font-size: 12px;">￥</div>
+                <div class="line" style="font-size: 22px;">{{item.price}}</div>
+                <div
+                  class="line"
+                  style="position: absolute; right: 10px; font-size: 12px;"
+                >{{item.view}}人浏览</div>
+              </div>
             </div>
           </div>
-        </div>
         </lazy-component>
       </div>
     </div>
@@ -73,8 +75,8 @@ export default {
       loading: false,
       finished: false,
       mainList: [],
-      imgsList1: [],
-      imgsList2: [],
+      goodsList1: [],
+      goodsList2: [],
       page: 2
     };
   },
@@ -121,12 +123,17 @@ export default {
 
     getImagelist: function() {
       var mainList = this.imgs.slice(0, 25);
-      var mid = parseInt(mainList.length / 2);
-      var imgsList1 = mainList.slice(mid, mainList.length);
-      var imgsList2 = mainList.slice(0, mid);
+      var mid = Math.ceil(mainList.length / 2);
+      var goodsList1 = mainList.slice(0, mid);
+      var goodsList2 = mainList.slice(mid, mainList.length);
       this.mainList = this.mainList.concat(mainList);
-      this.imgsList1 = this.imgsList1.concat(imgsList1);
-      this.imgsList2 = this.imgsList2.concat(imgsList2);
+      if (this.$refs.list1.offsetHeight <= this.$refs.list2.offsetHeight) {
+        this.goodsList1 = this.goodsList1.concat(goodsList2);
+        this.goodsList2 = this.goodsList2.concat(goodsList1);
+      } else {
+        this.goodsList1 = this.goodsList1.concat(goodsList1);
+        this.goodsList2 = this.goodsList2.concat(goodsList2);
+      }
     },
     async reDirect(item) {
       this.$store.commit("setSeeId", item.id);
@@ -136,7 +143,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .container {
   margin-top: 10px;
   display: flex;
