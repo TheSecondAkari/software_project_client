@@ -41,6 +41,7 @@
             :price="good.price"
             :title="good.sku.goods.name"
             :thumb="good.sku.goods.pic[0]"
+            @click-thumb="toGood(good.sku.goods.id)"
           >
             <template #tags>
               <van-tag
@@ -51,7 +52,7 @@
               >{{option.name}}</van-tag>
             </template>
             <template #footer>
-              <van-button size="small" round type="primary" color="#ee0a24" plain>查看详情</van-button>
+              <!-- <van-button size="small" round type="primary" color="#ee0a24" plain @click="toGood(good.sku.goods.id)">查看详情</van-button> -->
               <van-button
                 size="small"
                 v-if="orderInfoStatus==2"
@@ -168,6 +169,10 @@ export default {
         }
       }
     },
+    toGood(id) {
+      this.$store.commit("setSeeId", id);
+      this.$router.push("/good");
+    },
     comment(id) {
       this.comment_id = id;
       this.comment_show = true;
@@ -175,7 +180,7 @@ export default {
       console.log("评论ID：" + this.comment_id);
     },
     async Comment(id) {
-      let res = await this.api.post("/order/" + id + "/comment",{
+      let res = await this.api.post("/order/" + id + "/comment", {
         content: this.content
       });
       if (res.status >= 200 && res.status < 300) console.log("成功");

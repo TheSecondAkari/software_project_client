@@ -68,7 +68,7 @@
           </van-field>
           <van-row>
             <van-col offset="10">
-              <van-button round color="#ee0a24" size="normal" plain @click="status=false">取消</van-button>
+              <van-button round color="#ee0a24" size="normal" plsain @click="status=false">取消</van-button>
             </van-col>
             <van-col offset="2">
               <van-button round color="#ee0a24" size="normal" @click="changePassword()">确认修改密码</van-button>
@@ -123,7 +123,6 @@ export default {
           this.$notify({ type: "success", message: res.data.errmsg });
           this.$store.dispatch("getMyInfo");
         }
-        console.log(res);
         this.avatar = "";
       } else this.$notify({ type: "warning", message: "不能为空" });
     },
@@ -149,7 +148,6 @@ export default {
           this.$notify({ type: "success", message: res.data.errmsg });
           this.$store.dispatch("getMyInfo");
         }
-        console.log(res);
         this.password = "";
         this.code = "";
         this.status = false;
