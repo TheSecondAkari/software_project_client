@@ -140,7 +140,11 @@ export default {
         if (this.type == 1) this.$store.dispatch("getCart");
         this.$router.push("/"); //支付成功后，跳转首页。
       }
+<<<<<<< HEAD
+      await this.$store.dispatch("getOrderList");
+=======
       this.isClick = false;//解除按钮禁用
+>>>>>>> 100bb02c76ac6b49de9e7a7d2121f1bd794fbc68
     }
   }
 };

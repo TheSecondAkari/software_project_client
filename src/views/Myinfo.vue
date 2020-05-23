@@ -30,11 +30,11 @@
       </div>
     </div>
     <van-grid column-num="5" style="margin-top:5%;">
-      <van-grid-item icon="send-gift-o" text="待发货" to="Myorder_pre" />
-      <van-grid-item icon="logistics" text="已发货" to="Myorder_snd" />
-      <van-grid-item icon="comment-o" text="待评价" to="Myorder_com" />
-      <van-grid-item icon="refund-o" text="退款中" to="Myorder_ref" />
-      <van-grid-item icon="todo-list-o" text="我的订单" to="Myorder_pre" />
+      <van-grid-item icon="send-gift-o" text="待发货" @click="toOrderPre" to="Myorder" />
+      <van-grid-item icon="logistics" text="已发货" @click="toOrderSnd" to="Myorder" />
+      <van-grid-item icon="comment-o" text="待评价" @click="toOrderCom" to="Myorder" />
+      <van-grid-item icon="refund-o" text="退款中" @click="toOrderRef" to="Myorder" />
+      <van-grid-item icon="todo-list-o" text="我的订单" @click="toOrderPre" to="Myorder" />
     </van-grid>
     <van-cell-group class="more">
       <van-cell title="收货地址" is-link to="Myaddress" style="margin-top:5%;padding:4%;" />
@@ -71,6 +71,12 @@ export default {
       active: "Mine"
     };
   },
+<<<<<<< HEAD
+  mounted() {
+    console.log(this.user);
+  },
+=======
+>>>>>>> 100bb02c76ac6b49de9e7a7d2121f1bd794fbc68
   computed: {
     logon() {
       var user = this.$store.getters.User;
@@ -80,6 +86,29 @@ export default {
     }
   },
   methods: {
+<<<<<<< HEAD
+    async toOrderPre() {
+      this.$store.commit("getOrderInfoStatus", 0);
+      // console.log("成功");
+      // console.log(this.$store.getters.OrderInfoStatus);
+    },
+    async toOrderSnd() {
+      this.$store.commit("getOrderInfoStatus", 1);
+      // console.log("成功");
+      // console.log(this.$store.getters.OrderInfoStatus);
+    },
+    async toOrderCom() {
+      this.$store.commit("getOrderInfoStatus", 2);
+      // console.log("成功");
+      // console.log(this.$store.getters.OrderInfoStatus);
+    },
+    async toOrderRef() {
+      this.$store.commit("getOrderInfoStatus", 3);
+      // console.log("成功");
+      // console.log(this.$store.getters.OrderInfoStatus);
+    },
+=======
+>>>>>>> 100bb02c76ac6b49de9e7a7d2121f1bd794fbc68
     logout() {
       this.$store.commit("logout");
     },

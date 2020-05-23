@@ -66,49 +66,43 @@ export default {
       title: "",
       goods: [],
       sort_type: false,
-      sort: 1
+      sort: 1,
+      oldcategoryid: 0
     };
   },
-  computed:{
-    id(){
-      return this.$store.state.see_class_id
+  // async beforeMount() {
+  //   Toast.loading({ duration: 0, forbidClick: true });
+  //   await this.onLoad();
+  //   Toast.clear();
+  // },
+  async activated() {
+    this.id = this.$store.state.see_class_id;
+    if (this.id != this.oldcategoryid) {
+      this.oldcategoryid = this.id; //如果不同，更新旧分类id
+      Toast.loading({ duration: 0, forbidClick: true });
+      await this.onLoad();
+      Toast.clear();
     }
   },
-  async mounted() {
-    Toast.loading({
-      duration: 0,
-      forbidClick: true
-    });
-    await this.onLoad();
-    Toast.clear();
-  },
   methods: {
-    async onLoad() {
+    async onLoad(page = 1) {
+      // let page = this.page; //改成使用参数传入，如果不传，则默认获取第一页
       this.loading = true;
-      let id = this.id;
-      let page = this.page;
-      let sort = this.sort;
       let res = await this.api.get(
-        "/goods?category_id=" + id + "&page=" + page + "&sort=" + sort
+        "/goods?category_id=" + this.id + "&page=" + page + "&sort=" + this.sort
       );
-      if (res.data.data.items.length == 0) {
-        this.loading = false;
-        this.finished = true;
-        Toast({
-          message: "查无此类结果！",
-          duration: 3,
-          icon: "question-o"
-        });
-      } else {
-        this.goods = this.goods.concat(res.data.data.items);
+      if (res.status >= 200 && res.status <= 300) {
+        //如果是获取第一页，直接更换内容
+        if (page == 1) this.goods = res.data.data.items;
+        else this.goods = this.goods.concat(res.data.data.items); //把新商品拼接到当前内容后面
         if (page == Math.ceil(res.data.data.count / 25)) {
           this.loading = false;
           this.finished = true;
         }
-        this.page = page + 1;
+        this.page = res.data.data.page + 1;
         this.title = this.goods[0].category.name;
-        this.loading = false;
       }
+      this.loading = false;
     },
     async changeSort() {
       this.page = 1;

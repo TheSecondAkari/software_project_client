@@ -71,46 +71,22 @@ const routers = [
         component: (resolve) => require(['../views/Updateinfo.vue'], resolve),
     },
     {
-        path: '/Myorder',
+        path: '/Myorder_info',
         meta: {
             title: '订单信息',
             //  requireAuth:true  //需要登录才能进入的页面
         },
-        component: (resolve) => require(['../views/Myorder.vue'], resolve),
-    },
-    {
-        path: '/Myorder_pre',
-        meta: {
-            title: '待发货',
-            //  requireAuth:true  //需要登录才能进入的页面
-        },
-        component: (resolve) => require(['../views/Myorder_pre.vue'], resolve),
-    },
-    {
-        path: '/Myorder_snd',
-        meta: {
-            title: '已发货',
-            //  requireAuth:true  //需要登录才能进入的页面
-        },
-        component: (resolve) => require(['../views/Myorder_snd.vue'], resolve),
-    },
-    {
-        path: '/Myorder_com',
-        meta: {
-            title: '待评价',
-            //  requireAuth:true  //需要登录才能进入的页面
-        },
-        component: (resolve) => require(['../views/Myorder_com.vue'], resolve),
-    },
-    {
-        path: '/Myorder_ref',
-        meta: {
-            title: '退款中',
-            //  requireAuth:true  //需要登录才能进入的页面
-        },
-        component: (resolve) => require(['../views/Myorder_ref.vue'], resolve),
+        component: (resolve) => require(['../views/Myorder_info.vue'], resolve),
     },
 
+    {
+        path: '/Myorder',
+        meta: {
+            title: '我的订单',
+            //  requireAuth:true  //需要登录才能进入的页面
+        },
+        component: (resolve) => require(['../views/Myorder.vue'], resolve),
+    },
     {
         path: '/Myaddress',
         meta: {
