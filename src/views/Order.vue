@@ -44,27 +44,32 @@
       style="margin-top:10%;margin-left: 2.5%;margin-right: 2.5%;padding-bottom:18%;border-radius: 15px;overflow: hidden;"
     >
       <p style="margin:1%;font-weight:800;">天东易宝自营</p>
-      <van-list style="padding-left: 2.5%;padding-right: 2.5%;">
-        <van-list class="good-css" v-for="good in list" :key="good.sku_id">
-          <van-card
-            class="card"
-            :price="good.sku.price"
-            :num="good.num"
-            :title="good.sku.goods.name"
-            :thumb="good.sku.goods.pic[0]"
-          >
-            <template #tags>
-              <van-tag
-                plain
-                type="danger"
-                v-for="item in good.sku.options"
-                :key="item.id"
-                style="margin:2%;"
-              >{{item.name}}</van-tag>
-            </template>
-          </van-card>
+      <div style="padding-left: 2.5%;padding-right: 2.5%;">
+        <van-list class="good-css">
+          <lazy-component>
+            <van-card
+              class="card"
+              lazy-load
+              v-for="good in list"
+              :key="good.sku_id"
+              :price="good.sku.price"
+              :num="good.num"
+              :title="good.sku.goods.name"
+              :thumb="good.sku.goods.pic[0]"
+            >
+              <template #tags>
+                <van-tag
+                  plain
+                  type="danger"
+                  v-for="item in good.sku.options"
+                  :key="item.id"
+                  style="margin:2%;"
+                >{{item.name}}</van-tag>
+              </template>
+            </van-card>
+          </lazy-component>
         </van-list>
-      </van-list>
+      </div>
     </div>
 
     <div>
@@ -77,8 +82,8 @@
 export default {
   data() {
     return {
-      isClick:false,//是否禁用提交订单按钮
-      message: "", //记录订单备注
+      isClick: false, //是否禁用提交订单按钮
+      message: "" //记录订单备注
       // list: this.$store.getters.Buy.goods,
       // type: this.$store.getters.Buy.type,
       // price: 0,
@@ -96,12 +101,12 @@ export default {
       return this.$store.getters.Buy.type;
     },
     price() {
-      let price = 0
+      let price = 0;
       this.list.forEach(good => {
         price += good.sku.price * good.num;
       });
       price *= 100;
-      return price
+      return price;
     }
   },
   methods: {
@@ -135,12 +140,12 @@ export default {
       data.goods = goods;
       let res = await this.api.post("/orders", data);
       if (res.status >= 200 && res.status <= 300) {
-        this.message = ""
+        this.message = "";
         this.$toast(res.data.errmsg);
         if (this.type == 1) this.$store.dispatch("getCart");
         this.$router.push("/"); //支付成功后，跳转首页。
       }
-      this.isClick = false;//解除按钮禁用
+      this.isClick = false; //解除按钮禁用
     }
   }
 };

@@ -19,7 +19,7 @@
             :key="item.id"
             @click="gotoGoods(item.id)"
           >
-            <van-image :src="item.pic[0]" class="my-img" />
+            <van-image :src="item.pic[0]" lazy-load class="my-img" />
           </van-swipe-item>
         </van-swipe>
       </div>
@@ -34,7 +34,7 @@
     <div class="items">
       <div v-for="(item,key) in items" :key="key" class="item_block" @click="gotoGoods(item.id)">
         <div class="img">
-          <img :src="item.pic[0]" class="good-img" />
+          <img v-lazy="item.pic[0]" class="good-img" />
         </div>
         <div class="item_info">{{item.name}}</div>
         <p class="price">¥{{item.price}}</p>

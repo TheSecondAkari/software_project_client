@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router'
 import Vant from 'vant'
+import { Lazyload } from 'vant';//引入懒加载
 import 'vant/lib/index.css' //将vant组件全引入，会增加代码包体积，暂且用于开发，之后改成自动按需引入
 import axios from 'axios';
 import Routers from './router/index.js'
@@ -10,6 +11,9 @@ import store from './store/index.js'
 Vue.config.productionTip = false
 Vue.use(Vant);
 Vue.use(VueRouter);
+Vue.use(Lazyload, {
+  lazyComponent: true,//开启组件懒加载
+});//使用懒加载
 
 const RouterConfig = {
   mode: 'history',//之后产品打包的时候，要把这句注释掉
