@@ -121,7 +121,7 @@ export default {
         });
         if (res.status >= 200 && res.status < 300) {
           this.$notify({ type: "success", message: res.data.errmsg });
-          this.$store.commit("getMyInfo");
+          await this.$store.dispatch("getMyInfo");
         }
         console.log(res);
         this.avatar = "";
@@ -134,7 +134,7 @@ export default {
         });
         if (res.status >= 200 && res.status < 300) {
           this.$notify({ type: "success", message: res.data.errmsg });
-          this.$store.commit("getMyInfo");
+          await this.$store.dispatch("getMyInfo");
         }
         console.log(res);
         this.username = "";
@@ -148,7 +148,7 @@ export default {
         });
         if (res.status >= 200 && res.status < 300) {
           this.$notify({ type: "success", message: res.data.errmsg });
-          this.$store.commit("getMyInfo");
+         await this.$store.dispatch("getMyInfo");
         }
         console.log(res);
         this.password = "";

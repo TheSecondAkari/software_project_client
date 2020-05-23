@@ -76,7 +76,9 @@ export default {
   },
   computed: {
     logon() {
-      var user = this.$store.getters.User;
+      
+      
+      var user = this.$store.getters.User;console.log(user);
       if (user.id > 0) {
         return true;
       } else return false;
