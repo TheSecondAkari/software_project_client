@@ -429,10 +429,10 @@ const store = new Vuex.Store({
             context.commit('getOrderListSnd', tempList_snd);
             context.commit('getOrderListCom', tempList_com);
             context.commit('getOrderListRef', tempList_ref);
-            // console.log("待发货");
-            // console.log(tempList_pre);
-            // console.log("退款中");
-            // console.log(tempList_ref);
+            console.log("待发货");
+            console.log(tempList_pre);
+            console.log("退款中");
+            console.log(tempList_ref);
         }
 
 

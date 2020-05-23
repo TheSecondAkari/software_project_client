@@ -205,8 +205,7 @@ p {
   position: relative;
   padding-top: 50%;
 }
-.address {
-}
+
 .cell {
   margin-top: 2%;
 }
