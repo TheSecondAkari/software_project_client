@@ -71,12 +71,6 @@ export default {
       active: "Mine"
     };
   },
-<<<<<<< HEAD
-  mounted() {
-    console.log(this.user);
-  },
-=======
->>>>>>> 100bb02c76ac6b49de9e7a7d2121f1bd794fbc68
   computed: {
     logon() {
       var user = this.$store.getters.User;
@@ -86,29 +80,6 @@ export default {
     }
   },
   methods: {
-<<<<<<< HEAD
-    async toOrderPre() {
-      this.$store.commit("getOrderInfoStatus", 0);
-      // console.log("成功");
-      // console.log(this.$store.getters.OrderInfoStatus);
-    },
-    async toOrderSnd() {
-      this.$store.commit("getOrderInfoStatus", 1);
-      // console.log("成功");
-      // console.log(this.$store.getters.OrderInfoStatus);
-    },
-    async toOrderCom() {
-      this.$store.commit("getOrderInfoStatus", 2);
-      // console.log("成功");
-      // console.log(this.$store.getters.OrderInfoStatus);
-    },
-    async toOrderRef() {
-      this.$store.commit("getOrderInfoStatus", 3);
-      // console.log("成功");
-      // console.log(this.$store.getters.OrderInfoStatus);
-    },
-=======
->>>>>>> 100bb02c76ac6b49de9e7a7d2121f1bd794fbc68
     logout() {
       this.$store.commit("logout");
     },

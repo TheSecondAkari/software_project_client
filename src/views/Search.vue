@@ -48,28 +48,31 @@
 
     <div style="margin-top: 2.5%">
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-        <van-card
-          v-for="item in goods"
-          :key="item.id"
-          :title="item.name"
-          :thumb="item.pic[0]"
-          :tag="item.category.name"
-          @click="toGood(item.id)"
-        >
-          <template #title>
-            <div style="font-size: 18px; font-weight: 1000;">{{item.name}}</div>
-          </template>
-          <template #desc>
-            <div style="margin-top: 5px;">已有{{item.view}}人浏览过</div>
-          </template>
-          <template #price>
-            <small style="color: red">￥</small>
-            <span style="font-size: 16px; color: red">{{item.price}}</span>
-          </template>
-          <template #num>
-            <div style="margin-top: 5px;">已销售：{{item.sale_num}} 件</div>
-          </template>
-        </van-card>
+        <lazy-component>
+          <van-card
+            lazy-load
+            v-for="item in goods"
+            :key="item.id"
+            :title="item.name"
+            :thumb="item.pic[0]"
+            :tag="item.category.name"
+            @click="toGood(item.id)"
+          >
+            <template #title>
+              <div style="font-size: 18px; font-weight: 1000;">{{item.name}}</div>
+            </template>
+            <template #desc>
+              <div style="margin-top: 5px;">已有{{item.view}}人浏览过</div>
+            </template>
+            <template #price>
+              <small style="color: red">￥</small>
+              <span style="font-size: 16px; color: red">{{item.price}}</span>
+            </template>
+            <template #num>
+              <div style="margin-top: 5px;">已销售：{{item.sale_num}} 件</div>
+            </template>
+          </van-card>
+        </lazy-component>
       </van-list>
     </div>
   </div>

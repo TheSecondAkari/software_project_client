@@ -5,41 +5,45 @@
       <p style="margin:2%;font-weight:800;">天东易宝自营</p>
 
       <div style="padding-bottom:38%;" v-if="list.length != 0">
-        <van-list class="good-css" v-for="(good, index) in list" :key="good.id">
-          <div style="float:left;margin-top:40px;margin-right:5px;">
-            <van-checkbox v-bind:value="good['selected']" @click="goodSelected(index)"></van-checkbox>
-          </div>
-          <van-card
-            class="card"
-            :price="good.sku.price"
-            :title="good.sku.goods.name"
-            :thumb="good.sku.goods.pic[0]">
-            <template #tags>
-              <van-tag
-                plain
-                type="danger"
-                v-for="item in good.sku.options"
-                :key="item.id"
-                style="margin:2%;"
-              >{{item.name}}</van-tag>
-            </template>
-            <template #footer>
-              <van-stepper
-                v-model="good.num"
-                integer
-                :max="good.sku.stock_num"
-                @change="goodNumEdit(index,good.num,good.id)"
-                style="margin-top:-30px;"
-              />
-              <van-loading
-                v-show="timer[index]"
-                color="#1989fa"
-                size="12"
-                style="position:relative;margin-top:-12px;top:-15px;left:-30px;z-index:100"
-              />
-            </template>
-          </van-card>
-          <!-- slot="footer" -->
+        <van-list class="good-css">
+            <div v-for="(good, index) in list" :key="good.id">
+              <!-- 多选框 -->
+              <div style="float:left;margin-top:40px;margin-right:5px;">
+                <van-checkbox v-bind:value="good['selected']" @click="goodSelected(index)"></van-checkbox>
+              </div>
+              <!-- 商品卡 -->
+              <van-card
+                class="card"
+                lazy-load
+                :price="good.sku.price"
+                :title="good.sku.goods.name"
+                :thumb="good.sku.goods.pic[0]">
+                <template #tags>
+                  <van-tag
+                    plain
+                    type="danger"
+                    v-for="item in good.sku.options"
+                    :key="item.id"
+                    style="margin:2%;"
+                  >{{item.name}}</van-tag>
+                </template>
+                <template #footer>
+                  <van-stepper
+                    v-model="good.num"
+                    integer
+                    :max="good.sku.stock_num"
+                    @change="goodNumEdit(index,good.num,good.id)"
+                    style="margin-top:-30px;"
+                  />
+                  <van-loading
+                    v-show="timer[index]"
+                    color="#1989fa"
+                    size="12"
+                    style="position:relative;margin-top:-12px;top:-15px;left:-30px;z-index:100"
+                  />
+                </template>
+              </van-card>
+            </div>
         </van-list>
       </div>
 
@@ -105,8 +109,8 @@ export default {
       });
       return total;
     },
-    list(){
-      return this.$store.getters.Cart
+    list() {
+      return this.$store.getters.Cart;
     }
   },
   mounted() {
@@ -119,7 +123,7 @@ export default {
       this.list.forEach(v => {
         if (v.selected) id_list.push(v.id);
       });
-      console.log(id_list)
+      console.log(id_list);
       await this.api.delete("/carts", {
         ids: id_list
       });
@@ -150,7 +154,7 @@ export default {
       let that = this;
       this.timer[index] && clearTimeout(this.timer[index]);
       this.timer[index] = setTimeout(async function() {
-      await that.api.put("/carts/" + cartId, {
+        await that.api.put("/carts/" + cartId, {
           num: newNum
         });
         that.timer.splice(index, 1, undefined);
@@ -164,7 +168,7 @@ export default {
 <style scoped>
 .card {
   text-align: left;
-  font-size:14px;
+  font-size: 14px;
   background-color: white;
   position: static;
 }

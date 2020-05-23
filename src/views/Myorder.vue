@@ -31,7 +31,7 @@
             <p class="total_number">共{{order.goodcount}}件</p>
           </div>
 
-          <div >
+          <div>
             <van-row>
               <van-col span="5" offset="13">
                 <van-button
@@ -39,19 +39,18 @@
                   round
                   type="primary"
                   color="#ee0a24"
-                   size="small"
+                  size="small"
                   plain
-                 
                   @click="getInfo(order.id)"
                 >查看详情</van-button>
               </van-col>
-              <van-col span="5" >
+              <van-col span="5">
                 <van-button
                   class="cancel_order"
                   round
                   type="primary"
                   color="#ee0a24"
-                   size="small"
+                  size="small"
                   @click="cancelorder(order.id)"
                 >取消订单</van-button>
               </van-col>
@@ -66,7 +65,7 @@
               closeable
               @close="cancel()"
             >
-              <van-radio-group v-model="reason_select" class="select" >
+              <van-radio-group v-model="reason_select" class="select">
                 <van-radio name="1" checked-color="#ee0a24">拍多/拍错/不想要</van-radio>
                 <van-radio name="2" checked-color="#ee0a24">与商家协商退款</van-radio>
                 <van-radio name="3" checked-color="#ee0a24">商家无法发货</van-radio>
@@ -85,7 +84,14 @@
               />
               <van-row>
                 <van-col span="6" offset="3">
-                  <van-button  round type="primary" color="#ee0a24" plain @click="cancel()" style="width:100%">取消</van-button>
+                  <van-button
+                    round
+                    type="primary"
+                    color="#ee0a24"
+                    plain
+                    @click="cancel()"
+                    style="width:100%"
+                  >取消</van-button>
                 </van-col>
                 <van-col span="6" offset="6">
                   <van-button
@@ -97,7 +103,6 @@
                   >确认退款</van-button>
                 </van-col>
               </van-row>
-<<<<<<< HEAD
             </van-popup>
           </div>
         </van-panel>
@@ -127,7 +132,7 @@
             <p class="total_number">共{{order.goodcount}}件</p>
           </div>
 
-          <div >
+          <div>
             <van-row>
               <van-col span="5" offset="13">
                 <van-button
@@ -135,19 +140,18 @@
                   round
                   type="primary"
                   color="#ee0a24"
-                   size="small"
+                  size="small"
                   plain
-                 
                   @click="getInfo(order.id)"
                 >查看详情</van-button>
               </van-col>
-              <van-col span="5" >
+              <van-col span="5">
                 <van-button
                   class="cancel_order"
                   round
                   type="primary"
                   color="#ee0a24"
-                   size="small"
+                  size="small"
                   @click="checkorder(order.id)"
                 >确认收货</van-button>
               </van-col>
@@ -181,17 +185,16 @@
             <p class="total_number">共{{order.goodcount}}件</p>
           </div>
 
-         <div >
-            <van-row >
+          <div>
+            <van-row>
               <van-col span="5" offset="18">
                 <van-button
                   class="more_info"
                   round
                   type="primary"
                   color="#ee0a24"
-                   size="small"
+                  size="small"
                   plain
-                 
                   @click="getInfo(order.id)"
                 >查看详情</van-button>
               </van-col>
@@ -209,40 +212,6 @@
           status="退款中"
         >
           <!-- <div class="good_images"> -->
-=======
-            </div>
-          </van-col>
-        </van-row>
-      </van-cell>
-    </div>
-    <!-- 商品 -->
-    <div>
-      <van-cell class="cell">
-        <div class="goods">
-          <van-card
-            v-for="good in orderInfo.items"
-            :key="good.id"
-            :num="good.num"
-            :price="good.price"
-            :title="good.sku.goods.name"
-            :thumb="good.sku.goods.pic[0]"
-          >
-            <template #tags>
-              <van-tag
-                plain
-                type="danger"
-                v-for="option in good.sku.options"
-                :key="option.id"
-              >{{option.name}}</van-tag>
-            </template>
-            <template #footer>
-              <van-button size="mini">查看详情</van-button>
-              <van-button size="mini">评价</van-button>
-            </template>
-          </van-card>
-        </div>
-      </van-cell>
->>>>>>> 100bb02c76ac6b49de9e7a7d2121f1bd794fbc68
 
           <van-image
             class="good_image"
@@ -259,18 +228,16 @@
             <p class="total_number">共{{order.goodcount}}件</p>
           </div>
 
-<<<<<<< HEAD
- <div >
-            <van-row >
+          <div>
+            <van-row>
               <van-col span="5" offset="18">
                 <van-button
                   class="more_info"
                   round
                   type="primary"
                   color="#ee0a24"
-                   size="small"
+                  size="small"
                   plain
-                 
                   @click="getInfo(order.id)"
                 >查看详情</van-button>
               </van-col>
@@ -280,21 +247,6 @@
         </van-panel>
       </van-tab>
     </van-tabs>
-=======
-        <van-cell title="总价格" class="price">{{orderInfo.price}}</van-cell>
-      </van-cellgroup>
-    </div>
-    <!-- 物流信息 -->
-    <div>
-      <van-cell class="cell">
-        <van-row>
-          <van-col span="4">订单信息</van-col>
-        </van-row>
-        <van-cell title="订单编号">{{orderInfo.order_number}}</van-cell>
-        <van-cell title="下单时间">{{orderInfo.created_at}}</van-cell>
-      </van-cell>
-    </div>
->>>>>>> 100bb02c76ac6b49de9e7a7d2121f1bd794fbc68
   </div>
 </template>
 
@@ -364,7 +316,7 @@ export default {
       let res = await this.api.post("/order/" + id + "/recv");
       if (res.status >= 200 && res.status < 300) console.log("成功");
       location.reload();
-    },
+    }
   }
 };
 </script>
@@ -399,8 +351,7 @@ export default {
   font-size: 14px;
   color: rgb(85, 85, 85);
 }
-.order_button {
-}
+
 .more_info {
   margin-bottom: 5%;
 }
@@ -410,8 +361,7 @@ export default {
 .cancel_panel {
   height: 50%;
 }
-.select{
+.select {
   margin: 10% 0 10% 5%;
 }
-
 </style>

@@ -6,7 +6,7 @@
         <div>
           <van-swipe @change="onChange" :autoplay="3000" indicator-color="white">
             <van-swipe-item style="height: 300px;" v-for="(image, index) in good.pic" :key="index">
-              <van-image :src="image" style="width: 100%;height:auto;" />
+              <van-image :src="image" lazy-load style="width: 100%;height:auto;" />
             </van-swipe-item>
             <div class="custom-indicator" slot="indicator">{{ current + 1 }}/{{good.pic.length}}</div>
             <div class="custom-back" slot="indicator" v-on:click="back">
@@ -86,7 +86,7 @@
             <van-row>
               <van-col span="4">
                 <div class="avatar">
-                  <van-image :src="this.good.comment[0].user.avatar" />
+                  <van-image :src="this.good.comment[0].user.avatar" lazy-load />
                 </div>
               </van-col>
               <van-col span="8">
