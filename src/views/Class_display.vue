@@ -37,8 +37,7 @@
             :key="item.id"
             :title="item.name"
             :thumb="item.pic[0]"
-            @click="toGood(item.id)"
-          >
+            @click="toGood(item.id)">
             <template #title>
               <div style="font-size: 18px; font-weight: 1000;">{{item.name}}</div>
             </template>
@@ -72,10 +71,10 @@ export default {
       goods: [],
       sort_type: false,
       sort: 1,
+      id:this.$store.state.see_class_id,
       oldcategoryid: 0
     };
   },
-
   async activated() {
     this.title = this.$route.query.className;
     this.id = this.$store.state.see_class_id;

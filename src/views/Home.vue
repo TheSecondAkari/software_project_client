@@ -148,17 +148,6 @@ export default {
   width: 100%;
   overflow: auto;
 }
-.select_block {
-  height: 60px;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-.items {
-  width: 100%;
-  min-height: 452px;
-  display: flex;
-  flex-wrap: wrap;
-}
 .bottom {
   height: 10%;
 }
@@ -169,14 +158,6 @@ export default {
   margin-left: 15px;
   top: 2px;
   left: 2px;
-}
-.item_block {
-  width: 45.5%;
-  margin-left: 3%;
-  height: 250px;
-  margin-top: 10px;
-  border-radius: 5px;
-  background-color: white;
 }
 .searchbar {
   position: absolute;
@@ -200,23 +181,6 @@ export default {
   border-radius: 5px 5px 0 0;
   overflow: hidden;
 }
-.item_info {
-  height: 50px;
-  width: 100%;
-  line-height: 25px;
-  /* 多余文字为省略号 */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-.price {
-  font-weight: bolder;
-  color: red;
-  margin-top: 10px;
-  margin-left: 10px;
-}
 .my-swipe .van-swipe-item {
   color: #fff;
   font-size: 20px;
@@ -227,8 +191,5 @@ export default {
 .my-img {
   width: 100%;
   height: auto;
-}
-.good-img {
-  height: 100%;
 }
 </style>
