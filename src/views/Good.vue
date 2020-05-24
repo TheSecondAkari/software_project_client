@@ -140,7 +140,7 @@ export default {
   data() {
     return {
       loading: true, //骨架屏动画是否开启
-      isClick:false, //收藏，取消收藏是否禁用
+      isClick: false, //收藏，取消收藏是否禁用
       id: this.$store.state.see_good_id, //商品的获取
       current: 0, //轮播图计数
       //样例商品
@@ -195,11 +195,11 @@ export default {
       console.log("get", this.id);
       let res = await this.api.get("/goods/" + this.id);
       if (res.status >= 200 && res.status < 300) this.good = res.data.data;
-      //富文本图片添加宽度适应属性
-      // this.good.description = this.good.description.replace(
-      //   /<img/gi,
-      //   '<img style="width:100%;height:auto" '
-      // );
+      //富文本图片之间的空行处理,图片列表（行内元素）发父元素，font-size：0
+      this.good.description = this.good.description.replace(
+        /<p><img/gi,
+        '<p style="font-size:0;"><img'
+      );
       //有规格的商品规格分支里的价格*100，因为内部分支价格单位是分
       if (this.good.list)
         this.good.list.forEach(v => {
@@ -217,7 +217,7 @@ export default {
         if (v.goods.id == this.good.id) {
           this.like = true;
         }
-      //暂时给商品添加评论，调整页面样式
+      // 暂时给商品添加评论，调整页面样式
       this.good.comment = [
         {
           id: 1,
