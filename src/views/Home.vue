@@ -32,7 +32,7 @@
     </div>
     <!-- 商品列表展示 -->
     <waterfall
-      style="margin-top:25px"
+      class="goodlist"
       :imgsArr="goodList"
       :category="category_id"
       v-if="goodList.length > 0"
@@ -191,5 +191,9 @@ export default {
 .my-img {
   width: 100%;
   height: auto;
+}
+.goodList {
+  margin-top: 25px;
+  margin-bottom: 25px;
 }
 </style>

@@ -109,9 +109,13 @@ export default {
     },
 
     async getMoreGood(that) {
-      let res = await this.api.get(
-        "/goods?category_id=" + this.category_id + "&page=" + that.page
-      );
+      let res;
+      if (this.category_id == 0)
+        res = await this.api.get("/goods?page=" + that.page);
+      else
+        res = await this.api.get(
+          "/goods?category_id=" + this.category_id + "&page=" + that.page
+        );
       if (res.data.data.items.length == 0) {
         return false;
       } else {
@@ -121,7 +125,7 @@ export default {
       }
     },
 
-    getImagelist: function() {
+    getImagelist() {
       var mainList = this.imgs.slice(0, 25);
       var mid = Math.ceil(mainList.length / 2);
       var goodsList1 = mainList.slice(0, mid);
