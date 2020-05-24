@@ -32,22 +32,22 @@
     </div>
     <!-- 商品列表展示 -->
     <waterfall
-      class="goodlist"
+      class="goodList"
       :imgsArr="goodList"
       :category="category_id"
       v-if="goodList.length > 0"
     />
-
+    <!-- <div style="height: 2.5em" /> -->
     <van-tabbar
-      class="bottom"
       v-model="active"
+      class="bottom"
       active-color="rgb(221, 22, 22)"
       inactive-color="#000"
     >
-      <van-tabbar-item name="Home" icon="wap-home-o">首页</van-tabbar-item>
-      <van-tabbar-item name="Class" icon="search" to="/class">分类</van-tabbar-item>
+      <van-tabbar-item name="Home" icon="wap-home-o" to="/">首页</van-tabbar-item>
+      <van-tabbar-item name="Class" icon="search" to="/Class">分类</van-tabbar-item>
       <van-tabbar-item name="ShoppingCart" icon="shopping-cart-o" to="/Cart">购物车</van-tabbar-item>
-      <van-tabbar-item name="Mine" icon="user-o" to="/MyInfo">我的</van-tabbar-item>
+      <van-tabbar-item name="Mine" icon="user-o" to="/Myinfo">我的</van-tabbar-item>
     </van-tabbar>
   </div>
 </template>
@@ -192,8 +192,8 @@ export default {
   width: 100%;
   height: auto;
 }
-.goodList {
+.goodlist {
   margin-top: 25px;
-  margin-bottom: 25px;
+  margin-bottom: 9%;
 }
 </style>

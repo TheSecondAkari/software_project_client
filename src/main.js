@@ -45,7 +45,7 @@ const router = new VueRouter(RouterConfig);
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requireAuth)) { // 判断该路由是否需要登录权限
-    if (store.state.user.id > 0) // 判断store中是否存有用户信息，判断是否成功登录
+    if (sessionStorage.getItem("Authorization") != null) // 判断store中是否存有用户信息，判断是否成功登录
       next();
     else {
       Vue.prototype.$notify({

@@ -218,35 +218,39 @@ export default {
           this.like = true;
         }
       // 暂时给商品添加评论，调整页面样式
-      this.good.comment = [
-        {
-          id: 1,
-          user: {
-            avatar:
-              "https://www.cbfgo.cn/tdyb/20200410/ccba2881-58fe-4def-8f04-425b8aacae15.jpg",
-            name: "张三"
-          },
-          content: "不好吃！图片都是骗人的！！！！谁买谁后悔"
-        },
-        {
-          id: 2,
-          user: {
-            avatar:
-              "https://www.cbfgo.cn/tdyb/20200410/ccba2881-58fe-4def-8f04-425b8aacae15.jpg",
-            name: "李四"
-          },
-          content: "好吃！我是过来刷单的(两块一"
-        },
-        {
-          id: 3,
-          user: {
-            avatar:
-              "https://www.cbfgo.cn/tdyb/20200410/ccba2881-58fe-4def-8f04-425b8aacae15.jpg",
-            name: "常五"
-          },
-          content: "反正我亏死了！不能买啊！！！！"
-        }
-      ];
+      // this.good.comment = [
+      //   {
+      //     id: 1,
+      //     user: {
+      //       avatar:
+      //         "https://www.cbfgo.cn/tdyb/20200410/ccba2881-58fe-4def-8f04-425b8aacae15.jpg",
+      //       name: "张三"
+      //     },
+      //     content:
+      //       "不好吃！图片都是骗人的！！！！谁买谁后悔!!!不好吃！图片都是骗人的！！！！谁买谁后悔",
+      //     creat_at: "2020-05-19"
+      //   },
+      //   {
+      //     id: 2,
+      //     user: {
+      //       avatar:
+      //         "https://www.cbfgo.cn/tdyb/20200410/ccba2881-58fe-4def-8f04-425b8aacae15.jpg",
+      //       name: "李四"
+      //     },
+      //     content: "好吃！我是过来刷单的(两块一",
+      //     creat_at: "2020-05-16"
+      //   },
+      //   {
+      //     id: 3,
+      //     user: {
+      //       avatar:
+      //         "https://www.cbfgo.cn/tdyb/20200410/ccba2881-58fe-4def-8f04-425b8aacae15.jpg",
+      //       name: "常五"
+      //     },
+      //     content: "反正我亏死了！不能买啊！！！！",
+      //     creat_at: "2020-05-12"
+      //   }
+      // ];
     },
 
     //轮播图自动触发事件
@@ -289,7 +293,10 @@ export default {
     },
 
     //查看更多评价
-    more_comment() {},
+    more_comment() {
+      this.$store.commit("setSeeComments", this.good.comment);
+      this.$router.push("/Comments");
+    },
 
     //后退按钮
     back() {

@@ -22,6 +22,7 @@ export default {
           JSON.parse(sessionStorage.getItem("store"))
         )
       );
+      sessionStorage.removeItem("store");
     }
     //在页面刷新时将vuex里的信息保存到sessionStorage里
     window.addEventListener("beforeunload", () => {
