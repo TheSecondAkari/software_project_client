@@ -1,29 +1,31 @@
 <template>
   <div style="background-color: #eeeeee;">
-    <div
-      style="display: flex; align-items: center; flex-direction: row; padding: 10px; background-color: white;"
-    >
-      <van-icon name="arrow-left" @click="back" />
-      <div style="font-size: 16px; margin-left: 5px;">{{title}}</div>
-      <!-- <div style="display: flex; flex-direction: row; vertical-align: middle;"> -->
-      <div style="margin-left: 40%">筛选：</div>
-      <van-button
-        round
-        type="info"
-        size="mini"
-        :disabled="!sort_type"
-        :plain="sort_type"
-        @click="changeSort"
-      >按热度</van-button>
-      <van-button
-        round
-        type="info"
-        size="mini"
-        :disabled="sort_type"
-        :plain="!sort_type"
-        @click="changeSort"
-      >按销量</van-button>
-      <!-- </div> -->
+    <div class="topbar">
+      <div class="topbar-part">
+        <van-icon name="arrow-left" @click="back" />
+        <span style="margin-left: 5px;">
+          <strong>{{title}}</strong>
+        </span>
+      </div>
+      <div class="topbar-part">
+        <span>筛选：</span>
+        <van-button
+          round
+          type="info"
+          size="mini"
+          :disabled="!sort_type"
+          :plain="sort_type"
+          @click="changeSort"
+        >按热度</van-button>
+        <van-button
+          round
+          type="info"
+          size="mini"
+          :disabled="sort_type"
+          :plain="!sort_type"
+          @click="changeSort"
+        >按销量</van-button>
+      </div>
     </div>
 
     <div style="margin-top: 2.5%">
@@ -35,7 +37,8 @@
             :key="item.id"
             :title="item.name"
             :thumb="item.pic[0]"
-            @click="toGood(item.id)">
+            @click="toGood(item.id)"
+          >
             <template #title>
               <div style="font-size: 18px; font-weight: 1000;">{{item.name}}</div>
             </template>
@@ -72,12 +75,9 @@ export default {
       oldcategoryid: 0
     };
   },
-  // async beforeMount() {
-  //   Toast.loading({ duration: 0, forbidClick: true });
-  //   await this.onLoad();
-  //   Toast.clear();
-  // },
+
   async activated() {
+    this.title = this.$route.query.className;
     this.id = this.$store.state.see_class_id;
     if (this.id != this.oldcategoryid) {
       this.oldcategoryid = this.id; //如果不同，更新旧分类id
@@ -87,8 +87,8 @@ export default {
     }
   },
   methods: {
+    //获取商品，page改成使用参数传入，如果不传，则默认获取第一页
     async onLoad(page = 1) {
-      // let page = this.page; //改成使用参数传入，如果不传，则默认获取第一页
       this.loading = true;
       let res = await this.api.get(
         "/goods?category_id=" + this.id + "&page=" + page + "&sort=" + this.sort
@@ -97,12 +97,14 @@ export default {
         //如果是获取第一页，直接更换内容
         if (page == 1) this.goods = res.data.data.items;
         else this.goods = this.goods.concat(res.data.data.items); //把新商品拼接到当前内容后面
-        if (page == Math.ceil(res.data.data.count / 25)) {
+        if (
+          page == Math.ceil(res.data.data.count / 25) ||
+          Math.ceil(res.data.data.count / 25) == 0
+        ) {
           this.loading = false;
           this.finished = true;
         }
         this.page = res.data.data.page + 1;
-        this.title = this.goods[0].category.name;
       }
       this.loading = false;
     },
@@ -135,4 +137,18 @@ export default {
 </script>
 
 <style scoped>
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: white;
+}
+.topbar-part {
+  display: flex;
+  align-items: center;
+}
+span {
+  padding: 1px;
+}
 </style>>

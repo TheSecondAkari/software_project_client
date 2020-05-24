@@ -25,7 +25,7 @@
           :icon="item.picture != null? item.picture: 'photo-o'"
           :text="item.name"
           style="height: 80px;"
-          @click="toDisplay(item.id)"
+          @click="toDisplay(item)"
         ></van-grid-item>
       </van-grid>
     </div>
@@ -89,9 +89,14 @@ export default {
       this.$store.commit("getClass", temp);
     },
 
-    toDisplay(index) {
-      this.$store.commit("setClassId", index);
-      this.$router.push("/class_display");
+    toDisplay(item) {
+      this.$store.commit("setClassId", item.id);
+      this.$router.push({
+        path:"/class_display",
+        query:{
+          className:item.name
+        }
+      });
     },
 
     searching() {
