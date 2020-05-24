@@ -56,14 +56,14 @@
     <div>
       <!-- 购物车底层操作栏 -->
       <div class="footer">
-        <div style="display: flex; flex-direction: row;justify-content:space-around;">
+        <div style="display: flex; flex-direction: row;justify-content:space-around; align-items: center">
           <van-checkbox v-model="allselected" icon-size="18px" style="color:grey;">全选</van-checkbox>
-          <div style="height: 42px; line-height: 42px;font-size: 18px;text-align:center;">
+          <div style="height: 50px; line-height: 50px;font-size: 18px;text-align:center;">
             合计:
             <strong style="font-size: 14px; color: red">￥{{total.toFixed(2)}}</strong>
           </div>
-          <van-button round color="red" style="height: 42px;width:25%;" @click="del">删除</van-button>
-          <van-button round color="orange" style="height: 42px;width:25%;" @click="submit">结算</van-button>
+          <van-button round color="red" style="height: 30px;width:20%; line-height: 30px;" @click="del">删除</van-button>
+          <van-button round color="orange" style="height: 30px;width:20%; line-height: 30px;" @click="submit">结算</van-button>
         </div>
       </div>
 
@@ -179,11 +179,12 @@ export default {
   background-color: white;
 }
 .footer {
-  height: 7%;
   width: 100%;
   position: fixed;
   bottom: 10%;
   background-color: white;
+  border-bottom: 1px solid #dddeee;
+  border-top: 1px solid #dddeee;
 }
 .bottom{
   height:10%;
