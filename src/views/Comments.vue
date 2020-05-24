@@ -22,7 +22,7 @@
               <p>{{item.creat_at}}</p>
             </van-col>
           </van-row>
-          <p style="margin:0;">{{item.content}}</p>
+          <p class="content">{{item.content}}</p>
         </div>
       </lazy-component>
     </van-list>
@@ -49,7 +49,7 @@ export default {
 
 <style scoped>
 .comment {
-  margin: 3.5%;
+  margin: 4%;
 }
 .name {
   overflow: hidden;
@@ -59,7 +59,6 @@ export default {
 .time {
   color: grey;
   text-align: right;
-  padding: 0 5px;
 }
 .avatar {
   margin-left: 5%;
@@ -69,5 +68,8 @@ export default {
   overflow: hidden;
   border: 1px solid rgb(255, 255, 255);
   border-radius: 50%;
+}
+.content{
+  margin-top: 2px;
 }
 </style>
