@@ -1,7 +1,6 @@
 const routers = [
     {
         path: '/', //暂且用入口页面，可以改
-        // name:"Home",
         meta: {
             title: '首页',
             keepAlive: true, // 需要缓存
@@ -67,7 +66,7 @@ const routers = [
         path: '/Updateinfo',
         meta: {
             title: '修改信息',
-            //  requireAuth:true  //需要登录才能进入的页面
+            requireAuth:true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Updateinfo.vue'], resolve),
     },
@@ -75,7 +74,7 @@ const routers = [
         path: '/Myorder_info',
         meta: {
             title: '订单信息',
-            //  requireAuth:true  //需要登录才能进入的页面
+            requireAuth:true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Myorder_info.vue'], resolve),
     },
@@ -84,7 +83,7 @@ const routers = [
         path: '/Myorder',
         meta: {
             title: '我的订单',
-            //  requireAuth:true  //需要登录才能进入的页面
+            requireAuth:true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Myorder.vue'], resolve),
     },
@@ -92,7 +91,7 @@ const routers = [
         path: '/Myaddress',
         meta: {
             title: '收货地址',
-            //  requireAuth:true  //需要登录才能进入的页面
+            requireAuth:true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Myaddress.vue'], resolve),
     },
@@ -100,7 +99,7 @@ const routers = [
         path: '/Mycollection',
         meta: {
             title: '我的收藏',
-            //  requireAuth:true  //需要登录才能进入的页面
+            requireAuth:true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Mycollection.vue'], resolve),
     },  
@@ -124,7 +123,7 @@ const routers = [
         meta: {
             title: '下单页面',
             keepAlive: true, // 需要缓存
-            //  requireAuth:true  //需要登录才能进入的页面
+            requireAuth:true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Order.vue'], resolve),
     },

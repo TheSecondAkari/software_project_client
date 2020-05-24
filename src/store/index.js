@@ -35,7 +35,7 @@ const store = new Vuex.Store({
         orderList_ref: [],//退货中
         defaultAddId: 0,//默认地址
         orderInfoId: 0,//打开的订单ID
-        orderInfoStatus:0,//打开我的订单的类别
+        orderInfoStatus: 0,//打开我的订单的类别
         //...
     },
     getters: {
@@ -63,7 +63,7 @@ const store = new Vuex.Store({
         OrderInfoId: state => {
             return state.orderInfoId;
         },
-        OrderInfoStatus: state =>{
+        OrderInfoStatus: state => {
             return state.orderInfoStatus
         },
         OrderListPre: state => {
@@ -78,12 +78,12 @@ const store = new Vuex.Store({
         OrderListRef: state => {
             return state.orderList_ref;
         },
-        
+
 
         //...
     },
     mutations: {
-        changeuser(state, data){
+        changeuser(state, data) {
             state.user.name = data
         },
         //获取用户账号基本信息
@@ -169,7 +169,7 @@ const store = new Vuex.Store({
         },
 
         //设置搜索内容
-        setSearchContent(state, content){
+        setSearchContent(state, content) {
             state.search_content = content;
         },
 
@@ -199,22 +199,36 @@ const store = new Vuex.Store({
 
         //登出
         logout(state) {
+            sessionStorage.removeItem("Authorization");
+            // statec初始化
             state.user = {
                 id: 0,
+                avater: "",
                 name: "",
                 email: "",
-                collection: [],
-                cart: [],
-                addressList: [],
-                orderList_pre: [],
-                orderList_snd: [],
-                orderList_com: [],
-                orderList_ref: [],
-                orderInfoId: 0,
-                orderInfoStatus: 0,
-                defaultAddId: 0,
-
             };
+            state.see_good_id = "";//当前浏览的商品的id，用于商品详情页
+            state.see_class_id = -1;//当前浏览的分类的id,用于分类详情页
+            state.search_content = "";//搜索内容
+            state.buy = { //记录当前的购买动作的信息,下单页面的依据
+                goods: [],//选购的商品
+                address: "",//选定的收货地址
+                type: -1,//0代表立即购买，1代表从购物车中结算。-1无意义
+            };
+            state.classes = {
+                categories: [],
+                index: 0,
+            }; //全部分类
+            state.collection = [];//收藏的商品
+            state.cart = [];//购物车商品
+            state.addressList = [];//地址
+            state.orderList_pre = [];//待发货
+            state.orderList_snd = [];//已发货
+            state.orderList_com = [];//待评价
+            state.orderList_ref = [];//退货中
+            state.defaultAddId = 0;//默认地址
+            state.orderInfoId = 0;//打开的订单ID
+            state.orderInfoStatus = 0;//打开我的订单的类别
         }
         //...
     },
