@@ -99,7 +99,6 @@
     >
       <p>分享您的体验让更多人看到吧~</p>
       <van-field
-        v-if="reason_select==4"
         v-model="comment"
         rows="2"
         autosize
@@ -120,49 +119,15 @@ export default {
       content: "",
       comment_show: false,
       comment_id: "",
-      orderInfoId: this.$store.getters.OrderInfoId,
-      orderInfoStatus: this.$store.getters.OrderInfoStatus,
-      orderInfo: [],
-      orderlist_pre: this.$store.getters.OrderListPre,
-      orderlist_snd: this.$store.getters.OrderListSnd,
-      orderlist_com: this.$store.getters.OrderListCom,
-      orderlist_ref: this.$store.getters.OrderListRef
+      orderInfoStatus: this.$route.query.status,
+      orderInfo: this.$route.query.data,
     };
   },
   mounted() {
-    this.getOrderInfo();
     console.log(this.orderInfo);
     console.log(this.orderInfoStatus);
   },
   methods: {
-    getOrderInfo() {
-      var i = 0;
-      if (this.orderInfoStatus == 0) {
-        for (i = 0; i < this.orderlist_pre.length; i++) {
-          if (this.orderInfoId == this.orderlist_pre[i].id) {
-            this.orderInfo = this.orderlist_pre[i];
-          }
-        }
-      } else if (this.orderInfoStatus == 1) {
-        for (i = 0; i < this.orderlist_snd.length; i++) {
-          if (this.orderInfoId == this.orderlist_snd[i].id) {
-            this.orderInfo = this.orderlist_snd[i];
-          }
-        }
-      } else if (this.orderInfoStatus == 2) {
-        for (i = 0; i < this.orderlist_com.length; i++) {
-          if (this.orderInfoId == this.orderlist_com[i].id) {
-            this.orderInfo = this.orderlist_com[i];
-          }
-        }
-      } else if (this.orderInfoStatus == 3) {
-        for (i = 0; i < this.orderlist_ref.length; i++) {
-          if (this.orderInfoId == this.orderlist_ref[i].id) {
-            this.orderInfo = this.orderlist_ref[i];
-          }
-        }
-      }
-    },
     toGood(id) {
       this.$store.commit("setSeeId", id);
       this.$router.push("/good");
@@ -186,7 +151,12 @@ export default {
       this.content = "";
     },
     back() {
-      this.$router.go(-1);
+      this.$router.push({
+          path: "/Myorder",
+          query: {
+            status: this.orderInfoStatus
+          }
+        });
     }
   }
 };

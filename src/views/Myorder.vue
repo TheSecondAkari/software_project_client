@@ -5,7 +5,7 @@
         <van-icon name="arrow-left" size="18" color="rgb(201, 37, 25)" @click="back()" />
       </template>
     </van-nav-bar>
-    <van-tabs v-model="active" @click="changeView">
+    <van-tabs v-model="active" >
       <van-tab title="待发货">
         <van-panel
           v-for="order in orderlist_pre"
@@ -41,7 +41,7 @@
                   color="#ee0a24"
                   size="small"
                   plain
-                  @click="getInfo(order.id)"
+                  @click="getInfo(order)"
                 >查看详情</van-button>
               </van-col>
               <van-col span="5">
@@ -65,7 +65,8 @@
             confirmButtonText="确认退款"
             confirmButtonColor="#ee0a24"
             @confirm="Cancelorder(cancel_id)"
-            @close="cancel()">
+            @close="cancel()"
+          >
             <van-radio-group v-model="reason_select" class="select">
               <van-radio name="1" checked-color="#ee0a24">拍多/拍错/不想要</van-radio>
               <van-radio name="2" checked-color="#ee0a24">与商家协商退款</van-radio>
@@ -103,7 +104,7 @@
                   style="width:100%"
                 >确认退款</van-button>
               </van-col>
-            </van-row> -->
+            </van-row>-->
           </van-dialog>
         </van-panel>
       </van-tab>
@@ -142,7 +143,7 @@
                   color="#ee0a24"
                   size="small"
                   plain
-                  @click="getInfo(order.id)"
+                  @click="getInfo(order)"
                 >查看详情</van-button>
               </van-col>
               <van-col span="5">
@@ -194,7 +195,7 @@
                   color="#ee0a24"
                   size="small"
                   plain
-                  @click="getInfo(order.id)"
+                  @click="getInfo(order)"
                 >查看详情</van-button>
               </van-col>
             </van-row>
@@ -237,7 +238,7 @@
                   color="#ee0a24"
                   size="small"
                   plain
-                  @click="getInfo(order.id)"
+                  @click="getInfo(order)"
                 >查看详情</van-button>
               </van-col>
             </van-row>
@@ -258,8 +259,7 @@ export default {
       orderlist_snd: this.$store.getters.OrderListSnd,
       orderlist_com: this.$store.getters.OrderListCom,
       orderlist_ref: this.$store.getters.OrderListRef,
-      orderInfoId: this.$store.getters.OrderInfoId,
-      active: this.$store.getters.OrderInfoStatus,
+      active: this.$route.query.status,
       cancel_id: "",
       cancel_show: false,
       reason_select: 1,
@@ -267,22 +267,25 @@ export default {
     };
   },
   mounted() {
-    console.log(this.active);
-
+    // console.log(this.active);
     // this.$store.dispatch("getOrderList");
   },
   methods: {
     back() {
-      this.$router.go(-1);
+      this.$router.push("/Myinfo");
     },
-    getInfo(id) {
-      this.$store.commit("getOrderInfoId", id);
-      console.log(this.$store.getters.OrderInfoId);
-      this.$router.push("/Myorder_info");
-    },
-    changeView(name) {
-      this.$store.commit("getOrderInfoStatus", name);
-      console.log(this.$store.getters.OrderInfoStatus);
+    getInfo(order) {
+      // this.$store.commit("getOrderInfoId", id);
+      console.log(order);
+      this.$router.push({
+        path: "/Myorder_info",
+        query: {
+          data: order,
+          status: this.active
+        }
+      });
+
+      // this.$router.push("/Myorder_info");
     },
     cancel() {
       this.reason_select = 1;
@@ -360,7 +363,7 @@ export default {
 .select {
   margin: 5% 0 5% 5%;
 }
-.van-radio{
+.van-radio {
   margin: 5px 0;
 }
 </style>

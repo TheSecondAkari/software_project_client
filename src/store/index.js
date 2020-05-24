@@ -34,8 +34,8 @@ const store = new Vuex.Store({
         orderList_com: [],//待评价
         orderList_ref: [],//退货中
         defaultAddId: 0,//默认地址
-        orderInfoId: 0,//打开的订单ID
-        orderInfoStatus:0,//打开我的订单的类别
+        // orderInfoId: 0,//打开的订单ID
+        // orderInfoStatus:0,//打开我的订单的类别
         //...
     },
     getters: {
@@ -60,12 +60,12 @@ const store = new Vuex.Store({
         DefaultAddId: state => {
             return state.defaultAddId;
         },
-        OrderInfoId: state => {
-            return state.orderInfoId;
-        },
-        OrderInfoStatus: state =>{
-            return state.orderInfoStatus
-        },
+        // OrderInfoId: state => {
+        //     return state.orderInfoId;
+        // },
+        // OrderInfoStatus: state =>{
+        //     return state.orderInfoStatus
+        // },
         OrderListPre: state => {
             return state.orderList_pre;
         },
@@ -125,12 +125,12 @@ const store = new Vuex.Store({
         getDefaultAddId(state, data) {
             state.defaultAddId = data
         },
-        getOrderInfoId(state, data) {
-            state.orderInfoId = data
-        },
-        getOrderInfoStatus(state, data) {
-            state.orderInfoStatus = data
-        },
+        // getOrderInfoId(state, data) {
+        //     state.orderInfoId = data
+        // },
+        // getOrderInfoStatus(state, data) {
+        //     state.orderInfoStatus = data
+        // },
         //更新购物车: 传入的cart数据是从后台获取过来的。 替换新数据前，先遍历一下旧数据，把对应商品的勾选属性转移
         updateCart(state, cart) {
             for (let item of state.cart) {

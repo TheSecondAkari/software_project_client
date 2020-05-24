@@ -30,11 +30,11 @@
       </div>
     </div>
     <van-grid column-num="5" style="margin-top:5%;">
-      <van-grid-item icon="send-gift-o" text="待发货" to="Myorder" />
-      <van-grid-item icon="logistics" text="已发货" to="Myorder" />
-      <van-grid-item icon="comment-o" text="待评价" to="Myorder" />
-      <van-grid-item icon="refund-o" text="退款中" to="Myorder" />
-      <van-grid-item icon="todo-list-o" text="我的订单" to="Myorder" />
+      <van-grid-item icon="send-gift-o" text="待发货" @click="toOrderPre()" />
+      <van-grid-item icon="logistics" text="已发货" @click="toOrderSnd()" />
+      <van-grid-item icon="comment-o" text="待评价" @click="toOrderCom()" />
+      <van-grid-item icon="refund-o" text="退款中" @click="toOrderRef()" />
+      <van-grid-item icon="todo-list-o" text="我的订单" @click="toOrderPre()" />
     </van-grid>
     <van-cell-group class="more">
       <van-cell title="收货地址" is-link to="Myaddress" style="margin-top:5%;padding:4%;" />
@@ -53,7 +53,8 @@
       class="bottom"
       v-model="active"
       active-color="rgb(221, 22, 22)"
-      inactive-color="#000">
+      inactive-color="#000"
+    >
       <van-tabbar-item name="Home" icon="wap-home-o" to="/">首页</van-tabbar-item>
       <van-tabbar-item name="Class" icon="search" to="/Class">分类</van-tabbar-item>
       <van-tabbar-item name="ShoppingCart" icon="shopping-cart-o" to="/Cart">购物车</van-tabbar-item>
@@ -75,9 +76,8 @@ export default {
   },
   computed: {
     logon() {
-      
-      
-      var user = this.$store.getters.User;console.log(user);
+      var user = this.$store.getters.User;
+      console.log(user);
       if (user.id > 0) {
         return true;
       } else return false;
@@ -85,24 +85,36 @@ export default {
   },
   methods: {
     async toOrderPre() {
-      this.$store.commit("getOrderInfoStatus", 0);
-      // console.log("成功");
-      // console.log(this.$store.getters.OrderInfoStatus);
+      this.$router.push({
+        path: "/Myorder",
+        query: {
+          status: 0
+        }
+      });
     },
     async toOrderSnd() {
-      this.$store.commit("getOrderInfoStatus", 1);
-      // console.log("成功");
-      // console.log(this.$store.getters.OrderInfoStatus);
+      this.$router.push({
+        path: "/Myorder",
+        query: {
+          status: 1
+        }
+      });
     },
     async toOrderCom() {
-      this.$store.commit("getOrderInfoStatus", 2);
-      // console.log("成功");
-      // console.log(this.$store.getters.OrderInfoStatus);
+      this.$router.push({
+        path: "/Myorder",
+        query: {
+          status: 2
+        }
+      });
     },
     async toOrderRef() {
-      this.$store.commit("getOrderInfoStatus", 3);
-      // console.log("成功");
-      // console.log(this.$store.getters.OrderInfoStatus);
+      this.$router.push({
+        path: "/Myorder",
+        query: {
+          status: 3
+        }
+      });
     },
     logout() {
       this.$store.commit("logout");
