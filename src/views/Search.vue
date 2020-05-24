@@ -149,16 +149,6 @@ export default {
       let page = this.page;
       let sort = this.sort;
       let res = undefined;
-      console.log(
-        "/goods/search?key=" +
-          key +
-          "&page=" +
-          page +
-          "&category_id=" +
-          this.category_id +
-          "&sort=" +
-          sort
-      );
       if (this.category_id == 0) {
         res = await this.api.get(
           "/goods/search?key=" + key + "&page=" + page + "&sort=" + sort
