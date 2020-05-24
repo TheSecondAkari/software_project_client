@@ -14,6 +14,7 @@ const store = new Vuex.Store({
             email: "",
         },
         see_good_id: "",//当前浏览的商品的id，用于商品详情页
+        see_comments:{},//当前浏览的商品的所有评价，用于更多评价页面
         see_class_id: -1,//当前浏览的分类的id,用于分类详情页
         search_content: "",//搜索内容
 
@@ -162,7 +163,10 @@ const store = new Vuex.Store({
         setSeeId(state, id) {
             state.see_good_id = id;
         },
-
+        //设置更多评价页面的商品的内容
+        setSeeComments(state,data){
+            state.see_comments = data;
+        },
         //设置浏览分类详情页面的分类的id
         setClassId(state, id) {
             state.see_class_id = id;
