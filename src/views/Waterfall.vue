@@ -23,8 +23,8 @@
                 <van-tag plain style="margin-left: 5%;">{{item.category.name}}</van-tag>
               </div>
               <div class="other">
-                <div class="line" style="font-size: 12px;">￥</div>
-                <div class="line" style="font-size: 22px;">{{item.price}}</div>
+                <div class="line" style="font-size: 12px; color: red">￥</div>
+                <div class="line" style="font-size: 22px; color: red">{{item.price}}</div>
                 <div
                   class="line"
                   style="position: absolute; right: 10px; font-size: 12px;"
@@ -50,8 +50,8 @@
                 <van-tag plain style="margin-left: 5%;">{{item.category.name}}</van-tag>
               </div>
               <div class="other">
-                <div class="line" style="font-size: 12px;">￥</div>
-                <div class="line" style="font-size: 22px;">{{item.price}}</div>
+                <div class="line" style="font-size: 12px; color: red">￥</div>
+                <div class="line" style="font-size: 22px; color: red">{{item.price}}</div>
                 <div
                   class="line"
                   style="position: absolute; right: 10px; font-size: 12px;"

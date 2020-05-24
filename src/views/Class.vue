@@ -29,7 +29,7 @@
         ></van-grid-item>
       </van-grid>
     </div>
-    <div style="height: 4em" />
+    <div style="height: 4.5em" />
     <!-- 底层导航栏 -->
     <van-tabbar
       v-model="active"
