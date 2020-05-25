@@ -189,6 +189,12 @@ export default {
     };
     this.loading = false;
   },
+  beforeRouteLeave(to, from, next) {
+    if(to.path == "/Login" && sessionStorage.getItem("Authorization") != null)
+      next({path:"/"});
+    else
+      next();
+  },
   methods: {
     //通过商品id获取商品详情
     async getGood() {
