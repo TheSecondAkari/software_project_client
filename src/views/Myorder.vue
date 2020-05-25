@@ -266,26 +266,18 @@ export default {
       reason_detail: ""
     };
   },
-  mounted() {
-    // console.log(this.active);
-    // this.$store.dispatch("getOrderList");
-  },
   methods: {
     back() {
-      this.$router.push("/Myinfo");
+      this.$router.back(-1)
     },
     getInfo(order) {
-      // this.$store.commit("getOrderInfoId", id);
-      console.log(order);
+      this.$store.commit("setOrderInfo", order);
       this.$router.push({
         path: "/Myorder_info",
         query: {
-          data: order,
           status: this.active
         }
       });
-
-      // this.$router.push("/Myorder_info");
     },
     cancel() {
       this.reason_select = 1;

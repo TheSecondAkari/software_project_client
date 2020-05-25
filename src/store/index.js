@@ -4,7 +4,6 @@ import api from '../main.js'
 
 Vue.use(Vuex);
 
-
 const store = new Vuex.Store({
     state: {
         user: {
@@ -14,7 +13,7 @@ const store = new Vuex.Store({
             email: "",
         },
         see_good_id: "",//当前浏览的商品的id，用于商品详情页
-        see_comments:{},//当前浏览的商品的所有评价，用于更多评价页面
+        see_comments: {},//当前浏览的商品的所有评价，用于更多评价页面
         see_class_id: -1,//当前浏览的分类的id,用于分类详情页
         search_content: "",//搜索内容
 
@@ -35,13 +34,8 @@ const store = new Vuex.Store({
         orderList_com: [],//待评价
         orderList_ref: [],//退货中
         defaultAddId: 0,//默认地址
-<<<<<<< HEAD
-        // orderInfoId: 0,//打开的订单ID
-        // orderInfoStatus:0,//打开我的订单的类别
-=======
-        orderInfoId: 0,//打开的订单ID
-        orderInfoStatus: 0,//打开我的订单的类别
->>>>>>> 9594535d489a25b55c18275acf0a5c7f2ca6c522
+        orderInfo: null,//用于订单详情页面的内容传值。
+        
         //...
     },
     getters: {
@@ -66,21 +60,12 @@ const store = new Vuex.Store({
         DefaultAddId: state => {
             return state.defaultAddId;
         },
-<<<<<<< HEAD
-        // OrderInfoId: state => {
-        //     return state.orderInfoId;
-        // },
-        // OrderInfoStatus: state =>{
+        OrderInfo: state => {
+            return state.orderInfo;
+        },
+        // OrderInfoStatus: state => {
         //     return state.orderInfoStatus
         // },
-=======
-        OrderInfoId: state => {
-            return state.orderInfoId;
-        },
-        OrderInfoStatus: state => {
-            return state.orderInfoStatus
-        },
->>>>>>> 9594535d489a25b55c18275acf0a5c7f2ca6c522
         OrderListPre: state => {
             return state.orderList_pre;
         },
@@ -140,12 +125,10 @@ const store = new Vuex.Store({
         getDefaultAddId(state, data) {
             state.defaultAddId = data
         },
-        // getOrderInfoId(state, data) {
-        //     state.orderInfoId = data
-        // },
-        // getOrderInfoStatus(state, data) {
-        //     state.orderInfoStatus = data
-        // },
+        setOrderInfo(state, data) {
+            state.orderInfo = data
+        },
+
         //更新购物车: 传入的cart数据是从后台获取过来的。 替换新数据前，先遍历一下旧数据，把对应商品的勾选属性转移
         updateCart(state, cart) {
             for (let item of state.cart) {
@@ -178,7 +161,7 @@ const store = new Vuex.Store({
             state.see_good_id = id;
         },
         //设置更多评价页面的商品的内容
-        setSeeComments(state,data){
+        setSeeComments(state, data) {
             state.see_comments = data;
         },
         //设置浏览分类详情页面的分类的id
@@ -245,8 +228,7 @@ const store = new Vuex.Store({
             state.orderList_com = [];//待评价
             state.orderList_ref = [];//退货中
             state.defaultAddId = 0;//默认地址
-            state.orderInfoId = 0;//打开的订单ID
-            state.orderInfoStatus = 0;//打开我的订单的类别
+            state.orderInfo = {};
         }
         //...
     },
