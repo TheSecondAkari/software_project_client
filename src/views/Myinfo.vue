@@ -71,9 +71,6 @@ export default {
       active: "Mine"
     };
   },
-  mounted() {
-    console.log(this.user);
-  },
   computed: {
     logon() {
       var user = this.$store.getters.User;

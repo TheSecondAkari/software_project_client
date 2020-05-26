@@ -97,7 +97,7 @@ Vue.use(VueRouter);
 
 
 const RouterConfig = {
-  mode: 'history',//之后产品打包的时候，要把这句注释掉
+  // mode: 'history',//之后产品打包的时候，要把这句注释掉
   routes: Routers,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {

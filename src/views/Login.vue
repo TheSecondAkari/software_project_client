@@ -39,6 +39,21 @@ export default {
       password: ""
     };
   },
+  created() {
+    //注册监听键盘点击事件，判断是回车键则触发登录函数
+    let that = this;
+    document.onkeydown = function() {
+      var key = window.event.keyCode;
+      if (key == 13 || key == 100) {
+        that.login(); //登录函数
+      }
+    };
+  },
+  //离开当前页面，会注销键盘监听事件
+  beforeRouteLeave(to, from, next) {
+    document.onkeydown = null;
+    next();
+  },
   methods: {
     async login() {
       if (this.email == "" || this.password == "")
@@ -52,10 +67,10 @@ export default {
           sessionStorage.setItem("Authorization", res.data.Authorization);
           this.$notify({ type: "success", message: res.data.errmsg });
           await this.$store.dispatch("getMyInfo"); //把用户信息存到vuex的state里,使用await确保获取了信息，再跳转页面
-          await this.$store.dispatch("getMyCollection");
-          await this.$store.dispatch("getCart");
-          await this.$store.dispatch("getAddresses");
-          await this.$store.dispatch("getOrderList");
+          this.$store.dispatch("getMyCollection");
+          this.$store.dispatch("getCart");
+          this.$store.dispatch("getAddresses");
+          this.$store.dispatch("getOrderList");
           if (this.$route.query.redirect) {
             let redirect_path = this.$route.query.redirect;
             this.$router.push(redirect_path);
