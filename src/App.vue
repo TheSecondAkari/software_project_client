@@ -32,11 +32,22 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+}
+/* 共用的样式 */
+.custom-back {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  height: 30px;
+  width: 30px;
+  color: #fff;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.1);
 }
 </style>

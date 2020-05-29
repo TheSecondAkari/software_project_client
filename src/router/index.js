@@ -107,7 +107,7 @@ const routers = [
         path: '/Good',
         meta: {
             title: '商品详情',
-            // keepAlive: true, // 需要缓存
+            keepAlive: true, // 需要缓存
         },
         component: (resolve) => require(['../views/Good.vue'], resolve),
     },

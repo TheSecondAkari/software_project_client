@@ -1,5 +1,8 @@
 <template>
   <div id="login">
+    <div class="custom-back" slot="indicator" @click="back">
+      <van-icon name="arrow-left" size="20px" style="margin:5px 0 5px 2.5px;" />
+    </div>
     <h3>欢迎使用天东易宝</h3>
     <div class="message">
       <van-field
@@ -12,6 +15,7 @@
       <van-field
         v-model="password"
         clearable
+        type="password"
         left-icon="closed-eye"
         placeholder="密码"
         class="input_field"
@@ -44,7 +48,7 @@ export default {
     let that = this;
     document.onkeydown = function() {
       var key = window.event.keyCode;
-      if (key == 13 || key == 100) {
+      if (key == 13) {
         that.login(); //登录函数
       }
     };
@@ -77,6 +81,9 @@ export default {
           } else this.$router.push("/MyInfo"); //暂定登陆成功跳转到个人中心页面
         }
       }
+    },
+    back(){
+      this.$router.back(-1);
     }
   }
 };
@@ -101,7 +108,7 @@ h3 {
   border-radius: 4px;
 }
 p {
-  margin-top: 50%;
+  margin-top: 40%;
   font-size: 12px;
   text-align: center;
   color: red;
