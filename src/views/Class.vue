@@ -7,18 +7,11 @@
       placeholder="请输入搜索关键词"
       @search="searching"
     />
-    <div
-      style="height: 45em; width: 100%; background-color: #eeeeee; display: flex; flex-direction: row;"
-    >
-      <van-sidebar v-model="activeKey" @change="onChange" style="height: 100%;">
+    <div class="content">
+      <van-sidebar v-model="activeKey" @change="onChange" class="aside">
         <van-sidebar-item v-for="item in categories" :title="item.name" :key="item.id" />
       </van-sidebar>
-      <van-grid
-        style="width: 70%; height: 60px; margin-top: 10px;"
-        :gutter="10"
-        :column-num="3"
-        icon-size="38"
-      >
+      <van-grid class="main_content" :gutter="10" :column-num="3" icon-size="38">
         <van-grid-item
           v-for="item in subcategories"
           :key="item.id"
@@ -92,9 +85,9 @@ export default {
     toDisplay(item) {
       this.$store.commit("setClassId", item.id);
       this.$router.push({
-        path:"/class_display",
-        query:{
-          className:item.name
+        path: "/class_display",
+        query: {
+          className: item.name
         }
       });
     },
@@ -108,6 +101,20 @@ export default {
 </script>
 
 <style scoped>
+.content {
+  width: 100%;
+  background-color: #eeeeee;
+  display: flex;
+}
+.aside {
+  height: 100%;
+  flex-grow: 0;
+}
+.main_content {
+  flex: 1 1 70vw;
+  height: 60px;
+  margin-top: 10px;
+}
 .bottom {
   height: 10%;
 }
