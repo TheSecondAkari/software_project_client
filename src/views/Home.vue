@@ -90,6 +90,7 @@ export default {
     this.loading = false;
   },
   activated() {
+    this.searchkey = "";
     this.active = "Home";
   },
   methods: {

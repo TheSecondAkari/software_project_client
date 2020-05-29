@@ -172,6 +172,7 @@ const store = new Vuex.Store({
         //设置搜索内容
         setSearchContent(state, content) {
             state.search_content = content;
+            console.log(state.search_content)
         },
 
         //更新购买行为信息
