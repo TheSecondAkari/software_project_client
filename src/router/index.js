@@ -78,11 +78,11 @@ const routers = [
         },
         component: (resolve) => require(['../views/Myorder_info.vue'], resolve),
     },
-
     {
         path: '/Myorder',
         meta: {
             title: '我的订单',
+            keepAlive: true, // 需要缓存
             requireAuth: true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Myorder.vue'], resolve),
@@ -99,6 +99,7 @@ const routers = [
         path: '/Mycollection',
         meta: {
             title: '我的收藏',
+            keepAlive: true, // 需要缓存
             requireAuth: true  //需要登录才能进入的页面
         },
         component: (resolve) => require(['../views/Mycollection.vue'], resolve),

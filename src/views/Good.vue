@@ -356,7 +356,7 @@ export default {
           goods: [data],
           type: 0
         });
-        this.$router.push("/Order");
+        this.$router.push("/Order").catch(() => {});
       }
     }
   }

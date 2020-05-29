@@ -5,6 +5,7 @@
         class="icon"
         fit="cover"
         round
+        lazy-load
         width="60px"
         height="60px"
         :src="user.avatar"
@@ -20,6 +21,7 @@
         class="icon"
         fit="cover"
         round
+        lazy-load
         width="60px"
         height="60px"
         src="https://img.yzcdn.cn/vant/cat.jpeg"
@@ -82,12 +84,14 @@ export default {
   },
   methods: {
     async toOrderPre() {
-      this.$router.push({
-        path: "/Myorder",
-        query: {
-          status: 0
-        }
-      });
+      this.$router
+        .push({
+          path: "/Myorder",
+          query: {
+            status: 0
+          }
+        })
+        .catch(() => {});
     },
     async toOrderSnd() {
       this.$router.push({
@@ -95,7 +99,7 @@ export default {
         query: {
           status: 1
         }
-      });
+      }).catch(() => {});
     },
     async toOrderCom() {
       this.$router.push({
@@ -103,7 +107,7 @@ export default {
         query: {
           status: 2
         }
-      });
+      }).catch(() => {});
     },
     async toOrderRef() {
       this.$router.push({
@@ -111,7 +115,7 @@ export default {
         query: {
           status: 3
         }
-      });
+      }).catch(() => {});
     },
     logout() {
       this.$store.commit("logout");
