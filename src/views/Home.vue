@@ -39,9 +39,9 @@
       class="goodlist"
       :imgsArr="goodList"
       :category="category_id"
-      v-if="goodList.length > 0 && loading == false"
+      v-show="goodList.length > 0 && loading == false"
     />
-    <div class="tips" v-else>
+    <div class="tips" v-show="goodList.length == 0">
       <strong>
         该分类目前没有商品
         <br />请浏览其他分类。
@@ -87,7 +87,9 @@ export default {
     this.getClass();
     this.getSwipe();
     await this.getGoods();
-    this.loading = false;
+    this.$nextTick(() => {
+      this.loading = false;
+    });
   },
   activated() {
     this.searchkey = "";
@@ -128,7 +130,6 @@ export default {
       this.$router.push("Good");
     },
     async getGoods(categoryid = 0) {
-      this.goodList = [];
       this.loading = true;
       let res;
       if (categoryid == 0) res = await this.api.get("/goods");
@@ -138,7 +139,9 @@ export default {
       let data = res.data.data;
       this.category_id = categoryid;
       this.goodList = data.items;
-      this.loading = false;
+      this.$nextTick(() => {
+        this.loading = false;
+      });
     }
   }
 };

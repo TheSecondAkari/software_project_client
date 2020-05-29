@@ -2,6 +2,7 @@
   <van-list
     v-model="loading"
     :finished="finished"
+    :immediate-check="false"
     finished-text="没有更多了"
     @load="onLoad()"
     style="padding-bottom: 15%; background: ghostwhite;"
@@ -80,17 +81,33 @@ export default {
       page: 2
     };
   },
+  watch: {
+    imgsArr() {
+      //检测到传入的内容变化，数据初始化
+      this.imgs = this.imgsArr;
+      this.category_id = this.category;
+      this.loading = false;
+      this.finished = false;
+      this.mainList = [];
+      this.goodsList1 = [];
+      this.goodsList2 = [];
+      this.page = 2;
+      this.getImagelist();
+      // this.onLoad()
+    }
+  },
+  mounted() {
+    this.getImagelist();
+    // this.onLoad()
+  },
   methods: {
     async onLoad() {
       // 异步更新数据
       setTimeout(async () => {
+        await this.getMoreGood(this);
         this.getImagelist();
-        if (await this.getMoreGood(this)) {
-          this.loading = false;
-        } else {
-          this.loading = false;
-          this.finished = true;
-        }
+        this.loading = false;
+        // this.finished = true;
       }, 100);
     },
 
@@ -102,16 +119,12 @@ export default {
         res = await this.api.get(
           "/goods?category_id=" + this.category_id + "&page=" + that.page
         );
-      if (res.data.data.items.length == 0) {
-        return false;
-      } else {
-        that.imgs = res.data.data.items;
-        that.page = that.page + 1;
-        return true;
-      }
+      that.imgs = res.data.data.items;
+      that.page = that.page + 1;
     },
 
     getImagelist() {
+      if (this.imgs.length < 20) this.finished = true;
       var mainList = this.imgs.slice(0, 20); //一页20个商品
       var mid = Math.floor(mainList.length / 2);
 
