@@ -1,6 +1,6 @@
 <template>
   <div id="good">
-    <van-skeleton :row="30" :loading="loading" :animate="true" style="height: 300px;">
+    <van-skeleton class="skeleton1" :row="1" :loading="loading">
       <div id="main" style="margin-bottom: 18%;">
         <!-- 商品图片展示 -->
         <div>
@@ -131,6 +131,8 @@
         </van-goods-action>
       </div>
     </van-skeleton>
+    <van-skeleton class="skeleton2" :row="7" :loading="loading"></van-skeleton>
+    <van-skeleton class="skeleton3" title avatar :row="3" :loading="loading"> </van-skeleton>
   </div>
 </template>
 
@@ -163,8 +165,8 @@ export default {
         //规格选择弹层的缩略图
         picture: ""
       },
-      selected: "" //已经选好的规格展示
-      // like: false //判断当前商品是否收藏
+      selected: "", //已经选好的规格展示
+      old_id: 0 //用于识别当前页面是否需要刷新。
     };
   },
   computed: {
@@ -192,12 +194,19 @@ export default {
       }
     }
   },
-  async beforeMount() {
-    await this.getGood();
-    this.chumbs = {
-      picture: this.good.pic[0]
-    };
-    this.loading = false;
+  async activated() {
+    this.id = this.$store.state.see_good_id;
+    if (this.id != this.old_id) {
+      this.loading = true;
+      this.old_id = this.id;
+      this.current = 0; //初始化
+      this.selected = ""; //初始化
+      await this.getGood(); //初始化
+      this.chumbs = {
+        picture: this.good.pic[0]
+      };
+      this.loading = false;
+    }
   },
   beforeRouteLeave(to, from, next) {
     if (to.path == "/Login" && sessionStorage.getItem("Authorization") != null)
@@ -435,5 +444,15 @@ img {
   line-height: 28px;
   font: 700;
   font-size: 15px;
+}
+
+.skeleton1 .van-skeleton__row {
+  height: 300px;
+  width: 100% !important;
+}
+.skeleton2 .van-skeleton__row {
+  height: 40px;
+  width: 100% !important;
+  margin: 10px 0px;
 }
 </style>
