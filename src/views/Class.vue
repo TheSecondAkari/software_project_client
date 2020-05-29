@@ -59,6 +59,7 @@ export default {
     }
   },
   activated() {
+    this.search = "";
     this.active = "Class";
   },
   methods: {
