@@ -8,31 +8,31 @@
   >
     <div class="container" ref="content">
       <div class="col" ref="list1">
-        <lazy-component>
-          <div
-            class="card"
-            v-for="item in goodsList1"
-            :key="item.id"
-            v-on:click="reDirect(item,$event)"
-            :id="item.id"
-          >
-            <van-image :src="item.pic[0]" lazy-load style="width: 100%; display: block" />
-            <div class="detail">
-              <div class="title">{{item.name}}</div>
-              <div style="padding-top: 2.5%;">
-                <van-tag plain style="margin-left: 5%;">{{item.category.name}}</van-tag>
-              </div>
-              <div class="other">
-                <div class="line" style="font-size: 12px; color: red">￥</div>
-                <div class="line" style="font-size: 22px; color: red">{{item.price}}</div>
-                <div
-                  class="line"
-                  style="position: absolute; right: 10px; font-size: 12px;"
-                >{{item.view}}人浏览</div>
-              </div>
+        <!-- <lazy-component> -->
+        <div
+          class="card"
+          v-for="item in goodsList1"
+          :key="item.id"
+          v-on:click="reDirect(item,$event)"
+          :id="item.id"
+        >
+          <van-image :src="item.pic[0]" lazy-load style="width: 100%; display: block" />
+          <div class="detail">
+            <div class="title">{{item.name}}</div>
+            <div style="padding-top: 2.5%;">
+              <van-tag plain style="margin-left: 5%;">{{item.category.name}}</van-tag>
+            </div>
+            <div class="other">
+              <div class="line" style="font-size: 12px; color: red">￥</div>
+              <div class="line" style="font-size: 22px; color: red">{{item.price}}</div>
+              <div
+                class="line"
+                style="position: absolute; right: 10px; font-size: 12px;"
+              >{{item.view}}人浏览</div>
             </div>
           </div>
-        </lazy-component>
+        </div>
+        <!-- </lazy-component> -->
       </div>
       <div class="col" ref="list2">
         <lazy-component>
@@ -91,20 +91,6 @@ export default {
           this.loading = false;
           this.finished = true;
         }
-
-        // // 现有数据全部加载完成
-        // if (this.mainList.length == this.imgs.length) {
-        //   let res = await this.api.get();
-        //   if (res.data.data.items.length == 0) {
-        //     this.loading = false;
-        //     this.finished = true;
-        //   } else {
-        //     this.imgs = this.imgs.concat(res.data.data.items);
-        //     this.page = this.page + 1;
-        //     this.getImagelist();
-        //     this.loading = false;
-        //   }
-        // }
       }, 100);
     },
 
@@ -126,17 +112,25 @@ export default {
     },
 
     getImagelist() {
-      var mainList = this.imgs.slice(0, 25);
-      var mid = Math.ceil(mainList.length / 2);
+      var mainList = this.imgs.slice(0, 20); //一页20个商品
+      var mid = Math.floor(mainList.length / 2);
+
+      let list1H = this.$refs.list1.offsetHeight;
+      let list2H = this.$refs.list2.offsetHeight;
+      if (
+        (Math.abs(list1H - list2H) >= 200 && mainList.length > 0) ||
+        mainList.length == 1
+      )
+        mid += 1;
       var goodsList1 = mainList.slice(0, mid);
       var goodsList2 = mainList.slice(mid, mainList.length);
       this.mainList = this.mainList.concat(mainList);
-      if (this.$refs.list1.offsetHeight <= this.$refs.list2.offsetHeight) {
-        this.goodsList1 = this.goodsList1.concat(goodsList2);
-        this.goodsList2 = this.goodsList2.concat(goodsList1);
-      } else {
+      if (list1H <= list2H) {
         this.goodsList1 = this.goodsList1.concat(goodsList1);
         this.goodsList2 = this.goodsList2.concat(goodsList2);
+      } else {
+        this.goodsList1 = this.goodsList1.concat(goodsList2);
+        this.goodsList2 = this.goodsList2.concat(goodsList1);
       }
     },
     async reDirect(item) {
@@ -152,6 +146,7 @@ export default {
   margin-top: 10px;
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
 }
 .title {
   width: 70%;

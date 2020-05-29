@@ -101,7 +101,7 @@ h3 {
   border-radius: 4px;
 }
 p {
-  margin-top: 50%;
+  margin-top: 40%;
   font-size: 12px;
   text-align: center;
   color: red;

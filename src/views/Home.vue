@@ -31,12 +31,22 @@
       </van-tabs>
     </div>
     <!-- 商品列表展示 -->
+    <div class="skeleton" v-show="loading">
+      <van-skeleton :row="3"></van-skeleton>
+      <van-skeleton :row="3"></van-skeleton>
+    </div>
     <waterfall
-      class="goodList"
+      class="goodlist"
       :imgsArr="goodList"
       :category="category_id"
-      v-if="goodList.length > 0"
+      v-if="goodList.length > 0 && loading == false"
     />
+    <div class="tips" v-else>
+      <strong>
+        该分类目前没有商品
+        <br />请浏览其他分类。
+      </strong>
+    </div>
     <!-- <div style="height: 2.5em" /> -->
     <van-tabbar
       v-model="active"
@@ -68,15 +78,16 @@ export default {
       category: [],
       active: "Home",
       activeName: "全部",
-      loading: false,
-      finished: false,
+      loading: false, //骨架屏是否展示
       category_id: 0
     };
   },
-  mounted() {
+  async mounted() {
+    this.loading = true;
     this.getClass();
     this.getSwipe();
-    this.getGoods();
+    await this.getGoods();
+    this.loading = false;
   },
   activated() {
     this.active = "Home";
@@ -116,13 +127,17 @@ export default {
       this.$router.push("Good");
     },
     async getGoods(categoryid = 0) {
+      this.goodList = [];
+      this.loading = true;
       let res;
       if (categoryid == 0) res = await this.api.get("/goods");
       else {
         res = await this.api.get("/goods?category_id=" + categoryid);
       }
       let data = res.data.data;
+      this.category_id = categoryid;
       this.goodList = data.items;
+      this.loading = false;
     }
   }
 };
@@ -132,6 +147,7 @@ export default {
 <style scoped>
 .background {
   background-color: #f5f5f5;
+  height: 100vh;
 }
 .top_half {
   position: relative;
@@ -195,5 +211,23 @@ export default {
 .goodlist {
   margin-top: 25px;
   margin-bottom: 9%;
+}
+.skeleton {
+  background-color: burlywood;
+  display: flex;
+  justify-content: space-around;
+}
+.van-skeleton {
+  padding: 0;
+  width: 47%;
+}
+.van-skeleton .van-skeleton__row {
+  height: 200px;
+  width: 100% !important;
+  margin: 15px 0px;
+}
+.tips {
+  margin: 30%;
+  text-align: center;
 }
 </style>
