@@ -413,16 +413,17 @@ img {
 }
 
 /* 轮播图标签 */
-.custom-back {
+/* .custom-back {
+  因为共用，被移到了app.vue
   position: absolute;
-  left: 10px;
+  left: 10px;app.vue
   top: 10px;
   height: 30px;
   width: 30px;
   color: #fff;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.1);
-}
+} */
 .custom-indicator {
   position: absolute;
   right: 10px;

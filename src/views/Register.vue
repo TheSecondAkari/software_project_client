@@ -1,5 +1,8 @@
 <template>
   <div id="register">
+    <div class="custom-back" slot="indicator" @click="back">
+      <van-icon name="arrow-left" size="20px" style="margin:5px 0 5px 2.5px;" />
+    </div>
     <h3>欢迎注册天东易宝</h3>
     <div class="avatar">
       <van-uploader :after-read="afterRead" v-model="imgs" :max-count="1" />
@@ -105,6 +108,9 @@ export default {
           this.$router.push("/login");
         }
       }
+    },
+    back(){
+      this.$router.back(-1);
     }
   }
 };
@@ -112,11 +118,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-#register {
-  margin-top: 25%;
-}
-
 h3 {
+  margin-top: 25%;
   text-align: center;
   color: rgb(252, 72, 72);
 }
