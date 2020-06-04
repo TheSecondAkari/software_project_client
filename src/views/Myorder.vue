@@ -315,11 +315,11 @@ export default {
         this.reason_select = 1;
         this.cancel_show = false;
       }
-      location.reload();
     },
     async checkorder(id) {
+      console.log(id);
       await this.api.post("/order/" + id + "/recv");
-      location.reload();
+      console.log("成功");
     }
   }
 };
