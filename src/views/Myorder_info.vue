@@ -120,12 +120,8 @@ export default {
       comment_show: false,
       comment_id: "",
       orderInfoStatus: this.$route.query.status,
-      orderInfo: this.$route.query.data,
+      orderInfo: this.$store.getters.OrderInfo,
     };
-  },
-  mounted() {
-    console.log(this.orderInfo);
-    console.log(this.orderInfoStatus);
   },
   methods: {
     toGood(id) {
@@ -185,11 +181,9 @@ p {
 .order_panel {
   margin: 10% 0 10% 0;
 }
-/* .good_images {
-  position: relative;
-  width: 50%;
-  margin: 0;
-} */
+.remark > .van-cell__title{
+  flex: 0.5;
+}
 .good_image {
   margin: 5% 0 5% 2%;
 }

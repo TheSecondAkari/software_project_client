@@ -1,22 +1,103 @@
 import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router'
-import Vant from 'vant'
-import { Lazyload } from 'vant';//引入懒加载
-import 'vant/lib/index.css' //将vant组件全引入，会增加代码包体积，暂且用于开发，之后改成自动按需引入
 import axios from 'axios';
 import Routers from './router/index.js'
 import store from './store/index.js'
+import { Lazyload } from 'vant';//引入懒加载
+import { Button } from 'vant';
+import { Cell, CellGroup } from 'vant';
+import { Icon } from 'vant';
+import { Image as VanImage } from 'vant';
+import { Col, Row } from 'vant';
+import { Popup } from 'vant';
+import { Checkbox } from 'vant';
+import { Field } from 'vant';
+import { Picker } from 'vant';
+import { RadioGroup, Radio } from 'vant';
+import { Search } from 'vant';
+import { Stepper } from 'vant';
+import { Uploader } from 'vant';
+import { Dialog } from 'vant';
+import { Loading } from 'vant';
+import { Notify } from 'vant';
+import { SwipeCell } from 'vant';
+import { Toast } from 'vant';
+import { List } from 'vant';
+import { Panel } from 'vant';
+import { Skeleton } from 'vant';
+import { Swipe, SwipeItem } from 'vant';
+import { Tag } from 'vant';
+import { Grid, GridItem } from 'vant';
+import { NavBar } from 'vant';
+import { Sidebar, SidebarItem } from 'vant';
+import { Tab, Tabs } from 'vant';
+import { Tabbar, TabbarItem } from 'vant';
+import { AddressEdit } from 'vant';
+import { AddressList } from 'vant';
+import { Area } from 'vant';
+import { Card } from 'vant';
+import { GoodsAction, GoodsActionIcon, GoodsActionButton } from 'vant';
+import { SubmitBar } from 'vant';
+import { Sku } from 'vant';
 
-Vue.config.productionTip = false
-Vue.use(Vant);
-Vue.use(VueRouter);
+//vant按需引入
+Vue.use(Sku);
+Vue.use(SubmitBar);
+Vue.use(GoodsAction);
+Vue.use(GoodsActionButton);
+Vue.use(GoodsActionIcon);
+Vue.use(Card);
+Vue.use(Area);
+Vue.use(AddressList);
+Vue.use(AddressEdit);
+Vue.use(Tabbar);
+Vue.use(TabbarItem);
+Vue.use(Tab);
+Vue.use(Tabs);
+Vue.use(Sidebar);
+Vue.use(SidebarItem);
+Vue.use(NavBar);
+Vue.use(Grid);
+Vue.use(GridItem);
+Vue.use(Tag);
+Vue.use(Swipe);
+Vue.use(SwipeItem);
+Vue.use(Skeleton);
+Vue.use(Panel);
+Vue.use(List);
+Vue.use(Toast);
+Vue.use(SwipeCell);
+Vue.use(Notify);
+Vue.use(Loading);
+Vue.use(Dialog);
+Vue.use(Uploader);
+Vue.use(Stepper);
+Vue.use(Search);
+Vue.use(Radio);
+Vue.use(RadioGroup);
+Vue.use(Picker);
+Vue.use(Field);
+Vue.use(Checkbox);
+Vue.use(Popup);
+Vue.use(Col);
+Vue.use(Row);
+Vue.use(VanImage);
+Vue.use(Icon);
+Vue.use(Cell);
+Vue.use(CellGroup);
+Vue.use(Button);
 Vue.use(Lazyload, {
   lazyComponent: true,//开启组件懒加载
 });//使用懒加载
 
+
+Vue.config.productionTip = false
+Vue.use(VueRouter);
+
+
 const RouterConfig = {
-  mode: 'history',//之后产品打包的时候，要把这句注释掉
+  // mode: 'history',//之后产品打包的时候，要把这句注释掉
   routes: Routers,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {

@@ -5,7 +5,7 @@
         <van-icon name="arrow-left" size="18" color="rgb(201, 37, 25)" @click="back()" />
       </template>
     </van-nav-bar>
-    <van-tabs v-model="active" >
+    <van-tabs v-model="active">
       <van-tab title="待发货">
         <van-panel
           v-for="order in orderlist_pre"
@@ -255,10 +255,6 @@ export default {
   data() {
     return {
       index: "",
-      orderlist_pre: this.$store.getters.OrderListPre,
-      orderlist_snd: this.$store.getters.OrderListSnd,
-      orderlist_com: this.$store.getters.OrderListCom,
-      orderlist_ref: this.$store.getters.OrderListRef,
       active: this.$route.query.status,
       cancel_id: "",
       cancel_show: false,
@@ -266,26 +262,32 @@ export default {
       reason_detail: ""
     };
   },
-  mounted() {
-    // console.log(this.active);
-    // this.$store.dispatch("getOrderList");
+  computed: {
+    orderlist_pre() {
+      return this.$store.getters.OrderListPre;
+    },
+    orderlist_snd() {
+      return this.$store.getters.OrderListSnd;
+    },
+    orderlist_com() {
+      return this.$store.getters.OrderListCom;
+    },
+    orderlist_ref() {
+      return this.$store.getters.OrderListRef;
+    }
   },
   methods: {
     back() {
-      this.$router.push("/Myinfo");
+      this.$router.back(-1);
     },
     getInfo(order) {
-      // this.$store.commit("getOrderInfoId", id);
-      console.log(order);
+      this.$store.commit("setOrderInfo", order);
       this.$router.push({
         path: "/Myorder_info",
         query: {
-          data: order,
           status: this.active
         }
       });
-
-      // this.$router.push("/Myorder_info");
     },
     cancel() {
       this.reason_select = 1;
@@ -296,27 +298,24 @@ export default {
       this.cancel_id = id;
       this.cancel_show = true;
     },
-    async Cancelorder(
-      id //确认取消
-    ) {
+    async Cancelorder(id) {
+      //确认取消
       if (this.reason_select == 1) this.reason_detail = "拍多/拍错/不想要";
       else if (this.reason_select == 2) this.reason_detail = "与商家协商退款";
       else if (this.reason_select == 3) this.reason_detail = "商家无法发货";
-      console.log(this.reason_detail);
-
       let res = await this.api.post("/order/" + id + "/refund", {
         reason: this.reason_detail
       });
-      if (res.status >= 200 && res.status < 300) console.log("成功");
-      await this.$store.dispatch("getOrderList");
-      this.reason_detail = "";
-      this.reason_select = 1;
-      this.cancel_show = false;
+      if (res.status >= 200 && res.status <= 300) {
+        await this.$store.dispatch("getOrderList");
+        this.reason_detail = "";
+        this.reason_select = 1;
+        this.cancel_show = false;
+      }
       location.reload();
     },
     async checkorder(id) {
-      let res = await this.api.post("/order/" + id + "/recv");
-      if (res.status >= 200 && res.status < 300) console.log("成功");
+      await this.api.post("/order/" + id + "/recv");
       location.reload();
     }
   }
@@ -332,11 +331,6 @@ export default {
 .order_panel {
   margin: 10% 0 10% 0;
 }
-/* .good_images {
-  position: relative;
-  width: 50%;
-  margin: 0;
-} */
 .good_image {
   margin: 5% 0 5% 2%;
 }
@@ -353,7 +347,6 @@ export default {
   font-size: 14px;
   color: rgb(85, 85, 85);
 }
-
 .more_info {
   margin-bottom: 5%;
 }

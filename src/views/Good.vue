@@ -17,7 +17,7 @@
 
         <!-- 商品价格+我的收藏 -->
         <div style="margin-top:1%">
-          <div style="float:right;margin-right:4%;" @click="Love()" :disabled="isClick">
+          <div style="float:right;margin-right:4%;" @click="Love()" :class="{notclick:noClick}">
             <div v-if="this.like">
               <van-icon name="like" size="24" class="loved" />
               <p style="padding:0;margin:0;font-size:12px;color:red;">已收藏</p>
@@ -140,7 +140,7 @@ export default {
   data() {
     return {
       loading: true, //骨架屏动画是否开启
-      isClick: false, //收藏，取消收藏是否禁用
+      noClick: false, //收藏，取消收藏是否禁用
       id: this.$store.state.see_good_id, //商品的获取
       current: 0, //轮播图计数
       //样例商品
@@ -163,9 +163,19 @@ export default {
         //规格选择弹层的缩略图
         picture: ""
       },
-      selected: "", //已经选好的规格展示
-      like: false //判断当前商品是否收藏
+      selected: "" //已经选好的规格展示
+      // like: false //判断当前商品是否收藏
     };
+  },
+  computed: {
+    like() {
+      //判断当前商品是否在收藏中
+      for (let v of this.$store.getters.Collection)
+        if (v.goods.id == this.good.id) {
+          return true;
+        }
+      return false;
+    }
   },
   watch: {
     show(newvalue) {
@@ -189,13 +199,18 @@ export default {
     };
     this.loading = false;
   },
+  beforeRouteLeave(to, from, next) {
+    if (to.path == "/Login" && sessionStorage.getItem("Authorization") != null)
+      next({ path: "/" });
+    else next();
+  },
   methods: {
     //通过商品id获取商品详情
     async getGood() {
       console.log("get", this.id);
       let res = await this.api.get("/goods/" + this.id);
       if (res.status >= 200 && res.status < 300) this.good = res.data.data;
-      //富文本图片之间的空行处理,图片列表（行内元素）发父元素，font-size：0
+      //富文本图片之间的空行处理,图片列表（行内元素）的父元素，font-size：0
       this.good.description = this.good.description.replace(
         /<p><img/gi,
         '<p style="font-size:0;"><img'
@@ -212,45 +227,6 @@ export default {
           (this.good.list = []),
           (this.good.none_sku = true);
       }
-      //判断当前商品是否在收藏中
-      for (let v of this.$store.getters.Collection)
-        if (v.goods.id == this.good.id) {
-          this.like = true;
-        }
-      // 暂时给商品添加评论，调整页面样式
-      // this.good.comment = [
-      //   {
-      //     id: 1,
-      //     user: {
-      //       avatar:
-      //         "https://www.cbfgo.cn/tdyb/20200410/ccba2881-58fe-4def-8f04-425b8aacae15.jpg",
-      //       name: "张三"
-      //     },
-      //     content:
-      //       "不好吃！图片都是骗人的！！！！谁买谁后悔!!!不好吃！图片都是骗人的！！！！谁买谁后悔",
-      //     creat_at: "2020-05-19"
-      //   },
-      //   {
-      //     id: 2,
-      //     user: {
-      //       avatar:
-      //         "https://www.cbfgo.cn/tdyb/20200410/ccba2881-58fe-4def-8f04-425b8aacae15.jpg",
-      //       name: "李四"
-      //     },
-      //     content: "好吃！我是过来刷单的(两块一",
-      //     creat_at: "2020-05-16"
-      //   },
-      //   {
-      //     id: 3,
-      //     user: {
-      //       avatar:
-      //         "https://www.cbfgo.cn/tdyb/20200410/ccba2881-58fe-4def-8f04-425b8aacae15.jpg",
-      //       name: "常五"
-      //     },
-      //     content: "反正我亏死了！不能买啊！！！！",
-      //     creat_at: "2020-05-12"
-      //   }
-      // ];
     },
 
     //轮播图自动触发事件
@@ -265,7 +241,8 @@ export default {
 
     //添加或删除收藏
     async Love() {
-      this.isClick = true;
+      console.log("asd");
+      this.noClick = true;
       if (this.like) {
         let loved_id = -1;
         for (let v of this.$store.getters.Collection)
@@ -275,21 +252,21 @@ export default {
           }
         let res = await this.api.delete("/collections/" + loved_id);
         if (res.status >= 200 && res.status < 300) {
+          // this.like = false;
+          await this.$store.dispatch("getMyCollection");
           this.$toast(res.data.errmsg);
-          this.like = false;
-          this.$store.dispatch("getMyCollection");
         }
       } else {
         let res = await this.api.post("/collections", {
           goods_id: this.good.id
         });
         if (res.status >= 200 && res.status < 300) {
+          // this.like = true;
+          await this.$store.dispatch("getMyCollection");
           this.$toast(res.data.errmsg);
-          this.like = true;
-          this.$store.dispatch("getMyCollection");
         }
       }
-      this.isClick = false;
+      this.noClick = false;
     },
 
     //查看更多评价
@@ -398,7 +375,9 @@ img {
   height: auto !important;
   -ms-interpolation-mode: bicubic;
 }
-
+.notclick {
+  pointer-events: none;
+}
 /* 收藏图标样式 */
 .loved {
   margin-left: 6px;

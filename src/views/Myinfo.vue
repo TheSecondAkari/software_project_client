@@ -8,7 +8,7 @@
         width="60px"
         height="60px"
         :src="user.avatar"
-        style="float:left;"
+        style="float:left;margin-top:20%;"
       />
       <div class="account">
         <p class="username">{{user.name}}</p>
@@ -23,7 +23,7 @@
         width="60px"
         height="60px"
         src="https://img.yzcdn.cn/vant/cat.jpeg"
-        style="float:left;"
+        style="float:left;margin-top:20%"
       />
       <div class="account">
         <p class="plz">请登录...</p>
@@ -53,8 +53,7 @@
       class="bottom"
       v-model="active"
       active-color="rgb(221, 22, 22)"
-      inactive-color="#000"
-    >
+      inactive-color="#000">
       <van-tabbar-item name="Home" icon="wap-home-o" to="/">首页</van-tabbar-item>
       <van-tabbar-item name="Class" icon="search" to="/Class">分类</van-tabbar-item>
       <van-tabbar-item name="ShoppingCart" icon="shopping-cart-o" to="/Cart">购物车</van-tabbar-item>
@@ -136,16 +135,17 @@ export default {
 .maininfo {
   height: 20%;
   background-color: rgb(201, 37, 25);
-  display: flex;
-  align-items: center;
 }
 .icon {
   margin-left: 5%;
 }
 .account {
-  margin: 0 0 0 25%;
+  margin: 15% 0 5% 25%;
   position: fixed;
   color: aliceblue;
+}
+.account p {
+  margin-bottom: 4%;
 }
 .plz {
   font-size: 20px;
