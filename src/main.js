@@ -147,7 +147,7 @@ router.beforeEach((to, from, next) => {
 
 const request = axios.create({
   timeout: 5000,
-  baseURL: process.env.NODE_ENV === 'production' ? '' : '/api'
+  baseURL: process.env.NODE_ENV === 'production' ? '/ruangong' : '/api'//api是使用proxy跨域使用的，如果不适用proxy，可以直接在这里设置目标链接
 });
 
 request.interceptors.response.use(undefined, error => { // undefined 指的是成功时不作任何处理

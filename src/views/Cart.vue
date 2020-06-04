@@ -142,7 +142,7 @@ export default {
         goods: goods,
         type: 1
       });
-      this.$router.push("/Order");
+      this.$router.push("/Order").catch(() => {});
     },
     // 勾选单件商品
     goodSelected(index) {

@@ -99,8 +99,15 @@ export default {
     };
   },
   computed: {
-    search() {
-      return this.$store.state.search_content;
+    search: {
+      get() {
+        console.log("Search.vue")
+        return this.$store.state.search_content;
+      },
+      set(value) {
+        this.$store.commit("setSearchContent", value);
+      }
+      // return this.$store.state.search_content;
     }
   },
   async beforeMount() {
@@ -175,6 +182,7 @@ export default {
           duration: 3,
           icon: "question-o"
         });
+        this.goods = []
       } else {
         this.goods = this.goods.concat(res.data.data.items);
         if (page == Math.ceil(res.data.data.count / 25)) {
@@ -212,7 +220,7 @@ export default {
       Toast.clear();
     },
     async searching() {
-      this.$store.commit("setSearchContent", this.search);
+      // this.$store.commit("setSearchContent", this.search);
       this.page = 1;
       this.goods = [];
       await this.onLoad();

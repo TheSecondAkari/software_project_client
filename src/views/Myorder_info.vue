@@ -120,8 +120,12 @@ export default {
       comment_show: false,
       comment_id: "",
       orderInfoStatus: this.$route.query.status,
-      orderInfo: this.$store.getters.OrderInfo,
+      orderInfo: this.$store.getters.OrderInfo
     };
+  },
+  beforeRouteLeave(to, from, next) {
+    if (to.path == "/Myorder") to.query.status = this.orderInfoStatus;
+    next();
   },
   methods: {
     toGood(id) {
@@ -147,12 +151,7 @@ export default {
       this.content = "";
     },
     back() {
-      this.$router.push({
-          path: "/Myorder",
-          query: {
-            status: this.orderInfoStatus
-          }
-        });
+      this.$router.back(-1);
     }
   }
 };
@@ -178,37 +177,7 @@ p {
 .cell {
   margin-top: 2%;
 }
-.order_panel {
-  margin: 10% 0 10% 0;
-}
-.remark > .van-cell__title{
+.remark > .van-cell__title {
   flex: 0.5;
-}
-.good_image {
-  margin: 5% 0 5% 2%;
-}
-.order_info {
-  float: right;
-  position: relative;
-  margin: 5% 10% 0 0;
-}
-.total_price {
-  font-size: 20px;
-  font-weight: bold;
-}
-.total_number {
-  font-size: 14px;
-  color: rgb(85, 85, 85);
-}
-.order_button {
-  position: relative;
-  left: 50%;
-  width: 50%;
-}
-.more_info {
-  margin-bottom: 5%;
-}
-.cancel_order {
-  margin-bottom: 5%;
 }
 </style>

@@ -12,20 +12,17 @@
           :key="order.id"
           class="order_panel"
           title
-          status="待发货"
-        >
-          <!-- <div class="good_images"> -->
-
+          status="待发货">
+          
           <van-image
             class="good_image"
             width="100"
             height="100"
+            lazy-load
             v-for="pic in order.pic"
             :key="pic.id"
-            :src="pic"
-          />
-          <!-- <van-icon name="ellipsis" size="50" /> -->
-          <!-- </div> -->
+            :src="pic"/>
+          
           <div class="order_info">
             <p class="total_price">¥ {{order.price}}</p>
             <p class="total_number">共{{order.goodcount}}件</p>
@@ -122,6 +119,7 @@
             class="good_image"
             width="100"
             height="100"
+            lazy-load
             v-for="pic in order.pic"
             :key="pic.id"
             :src="pic"
@@ -174,6 +172,7 @@
             class="good_image"
             width="100"
             height="100"
+            lazy-load
             v-for="pic in order.pic"
             :key="pic.id"
             :src="pic"
@@ -217,6 +216,7 @@
             class="good_image"
             width="100"
             height="100"
+            lazy-load
             v-for="pic in order.pic"
             :key="pic.id"
             :src="pic"
@@ -254,7 +254,6 @@
 export default {
   data() {
     return {
-      index: "",
       active: this.$route.query.status,
       cancel_id: "",
       cancel_show: false,
@@ -275,6 +274,10 @@ export default {
     orderlist_ref() {
       return this.$store.getters.OrderListRef;
     }
+  },
+  activated(){
+    this.active= this.$route.query.status; //缓存的刷新
+    this.reason_select = 1;
   },
   methods: {
     back() {
@@ -329,7 +332,7 @@ export default {
   width: 100%;
 }
 .order_panel {
-  margin: 10% 0 10% 0;
+  margin: 5% 0;
 }
 .good_image {
   margin: 5% 0 5% 2%;
