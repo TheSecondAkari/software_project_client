@@ -124,12 +124,16 @@ export default {
       comment_show: false,
       comment_id: "",
       orderInfoStatus: this.$route.query.status,
-      orderInfo: this.$store.getters.OrderInfo
     };
   },
   beforeRouteLeave(to, from, next) {
     if (to.path == "/Myorder") to.query.status = this.orderInfoStatus;
     next();
+  },
+  computed:{
+    orderInfo() {
+      return this.$store.getters.OrderInfo;
+    }
   },
   methods: {
     toGood(id) {
