@@ -9,7 +9,6 @@
         width="60px"
         height="60px"
         :src="user.avatar"
-        style="float:left;margin-top:20%;"
       />
       <div class="account">
         <p class="username">{{user.name}}</p>
@@ -25,7 +24,6 @@
         width="60px"
         height="60px"
         src="https://img.yzcdn.cn/vant/cat.jpeg"
-        style="float:left;margin-top:20%"
       />
       <div class="account">
         <p class="plz">请登录...</p>
@@ -162,17 +160,15 @@ export default {
 .maininfo {
   height: 20%;
   background-color: rgb(201, 37, 25);
+  display: flex;
+  align-items: center;
 }
 .icon {
   margin-left: 5%;
 }
 .account {
-  margin: 15% 0 5% 25%;
-  position: fixed;
+  margin-left: 5%;
   color: aliceblue;
-}
-.account p {
-  margin-bottom: 4%;
 }
 .plz {
   font-size: 20px;
