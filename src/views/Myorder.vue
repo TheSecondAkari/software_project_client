@@ -261,7 +261,7 @@ export default {
       cancel_show: false,
       reason_select: 1,
       reason_detail: "",
-      isLoading:false
+      isLoading: false
     };
   },
   computed: {
@@ -286,7 +286,7 @@ export default {
     back() {
       this.$router.back(-1);
     },
-    async onRefresh(){
+    async onRefresh() {
       this.isLoading = true;
       await this.$store.dispatch("getOrderList");
       this.isLoading = false;
@@ -318,7 +318,9 @@ export default {
         reason: this.reason_detail
       });
       if (res.status >= 200 && res.status <= 300) {
-        this.$store.dispatch("getOrderList");
+        this.$store.dispatch("getOrderListPre");
+        this.$store.dispatch("getOrderListRef");
+
         this.reason_detail = "";
         this.reason_select = 1;
         this.cancel_show = false;
@@ -328,7 +330,8 @@ export default {
       let res = await this.api.post("/order/" + id + "/recv");
       if (res.status >= 200 && res.status <= 300) {
         this.$toast("收货成功");
-        this.$store.dispatch("getOrderList");
+        this.$store.dispatch("getOrderListSnd");
+        this.$store.dispatch("getOrderListCom");
       }
     }
   }
@@ -336,7 +339,7 @@ export default {
 </script>
 
 <style scoped>
-.content{
+.content {
   height: calc(100vh - 46px);
 }
 .order_contant {
