@@ -243,7 +243,7 @@
               </van-col>
             </van-row>
           </div>
-          <div></div>
+          
         </van-panel>
       </van-tab>
     </van-tabs>
@@ -315,11 +315,9 @@ export default {
         this.reason_select = 1;
         this.cancel_show = false;
       }
-      location.reload();
     },
     async checkorder(id) {
       await this.api.post("/order/" + id + "/recv");
-      location.reload();
     }
   }
 };
@@ -335,7 +333,7 @@ export default {
   margin: 5% 0;
 }
 .good_image {
-  margin: 5% 0 5% 2%;
+  margin: 5% 0 0 2%;
 }
 .order_info {
   float: right;

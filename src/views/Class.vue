@@ -2,6 +2,7 @@
   <div style="height: 100%">
     <van-search
       v-model="search"
+      class="searchbar"
       shape="round"
       background="rgb(201, 37, 25)"
       placeholder="请输入搜索关键词"
@@ -107,8 +108,11 @@ export default {
   background-color: #eeeeee;
   display: flex;
 }
+.searchbar{
+  height: 7vh;
+}
 .aside {
-  height: 100%;
+  height: 83vh;
   flex-grow: 0;
 }
 .main_content {
