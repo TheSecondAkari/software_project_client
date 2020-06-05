@@ -5,7 +5,7 @@
         <!-- 商品图片展示 -->
         <div>
           <van-swipe @change="onChange" :autoplay="3000" indicator-color="white">
-            <van-swipe-item style="height: 300px;" v-for="(image, index) in good.pic" :key="index">
+            <van-swipe-item v-for="(image, index) in good.pic" :key="index">
               <van-image :src="image" lazy-load style="width: 100%;height:auto;" />
             </van-swipe-item>
             <div class="custom-indicator" slot="indicator">{{ current + 1 }}/{{good.pic.length}}</div>
