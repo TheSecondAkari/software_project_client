@@ -93,7 +93,7 @@
     <!-- 评价弹窗 -->
     <van-dialog
       v-model="comment_show"
-      title="填写退款理由"
+      title="感谢你的评价"
       show-cancel-button
       :closeOnClickOverlay="true"
       confirmButtonText="确认评价"
@@ -101,7 +101,6 @@
       @confirm="Comment(comment_id)"
       @close="cancel()"
     >
-
       <van-field
         v-model="content"
         rows="2"
@@ -123,14 +122,14 @@ export default {
       content: "",
       comment_show: false,
       comment_id: "",
-      orderInfoStatus: this.$route.query.status,
+      orderInfoStatus: this.$route.query.status
     };
   },
   beforeRouteLeave(to, from, next) {
     if (to.path == "/Myorder") to.query.status = this.orderInfoStatus;
     next();
   },
-  computed:{
+  computed: {
     orderInfo() {
       return this.$store.getters.OrderInfo;
     }
@@ -147,12 +146,24 @@ export default {
       console.log("评论ID：" + this.comment_id);
     },
     async Comment(id) {
-      if(this.content==null)
-      this.content="好评";
+      if (this.content == "") this.content = "好评";
+      let content = this.content;
       let res = await this.api.post("/order/item/" + id + "/comment", {
-        content: this.content
+        content: content
       });
-      if (res.status >= 200 && res.status < 300) console.log("成功");
+      if (res.status >= 200 && res.status < 300) {
+        let order = JSON.parse(JSON.stringify(this.orderInfo));
+        for (let item of order.items) {
+          if (item.id == id) {
+            item.comment = { content: content };
+            break;
+          }
+        }
+        console.log(order);
+        this.$store.commit("setOrderInfo", order);
+        this.$toast("评价成功");
+        this.$store.dispatch("getOrderList");
+      }
     },
     cancel() {
       this.comment_id = 0;
