@@ -6,7 +6,7 @@
       </template>
     </van-nav-bar>
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-      <van-tabs v-model="active">
+      <van-tabs v-model="active" class="content">
         <van-tab title="待发货">
           <van-panel
             v-for="order in orderlist_pre"
@@ -336,6 +336,9 @@ export default {
 </script>
 
 <style scoped>
+.content{
+  height: calc(100vh - 46px);
+}
 .order_contant {
   background-color: rgb(248, 248, 248);
   height: 100%;
