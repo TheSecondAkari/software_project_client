@@ -41,7 +41,7 @@ export default {
 }
 /* 共用的样式 */
 .custom-back {
-  position: absolute;
+  position: fixed;
   left: 10px;
   top: 10px;
   height: 30px;
