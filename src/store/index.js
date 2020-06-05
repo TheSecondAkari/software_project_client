@@ -78,12 +78,12 @@ const store = new Vuex.Store({
         OrderListRef: state => {
             return state.orderList_ref;
         },
-
+        
 
         //...
     },
     mutations: {
-        changeuser(state, data) {
+        changeuser(state, data){
             state.user.name = data
         },
         //获取用户账号基本信息
@@ -170,7 +170,7 @@ const store = new Vuex.Store({
         },
 
         //设置搜索内容
-        setSearchContent(state, content) {
+        setSearchContent(state, content){
             state.search_content = content;
             console.log(state.search_content)
         },
@@ -201,13 +201,19 @@ const store = new Vuex.Store({
 
         //登出
         logout(state) {
-            sessionStorage.removeItem("Authorization");
-            // statec初始化
             state.user = {
                 id: 0,
-                avater: "",
                 name: "",
                 email: "",
+                collection: [],
+                cart: [],
+                addressList: [],
+                orderList_pre: [],
+                orderList_snd: [],
+                orderList_com: [],
+                orderList_ref: [],
+                defaultAddId: 0,
+
             };
             state.see_good_id = "";//当前浏览的商品的id，用于商品详情页
             state.see_class_id = -1;//当前浏览的分类的id,用于分类详情页
@@ -442,10 +448,10 @@ const store = new Vuex.Store({
             context.commit('getOrderListSnd', tempList_snd);
             context.commit('getOrderListCom', tempList_com);
             context.commit('getOrderListRef', tempList_ref);
-            console.log("待发货");
-            console.log(tempList_pre);
-            console.log("退款中");
-            console.log(tempList_ref);
+            // console.log("待发货");
+            console.log(tempList_snd);
+            // console.log("退款中");
+            // console.log(tempList_ref);
         }
 
 

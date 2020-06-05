@@ -317,7 +317,12 @@ export default {
       }
     },
     async checkorder(id) {
+      console.log(id);
       await this.api.post("/order/" + id + "/recv");
+<<<<<<< HEAD
+=======
+      console.log("成功");
+>>>>>>> 33569ef3af01688ea4b4762ea4c0fa4ec44d6f90
     }
   }
 };

@@ -9,7 +9,7 @@
         width="60px"
         height="60px"
         :src="user.avatar"
-        style="float:left;"
+        style="float:left;margin-top:20%;"
       />
       <div class="account">
         <p class="username">{{user.name}}</p>
@@ -25,7 +25,7 @@
         width="60px"
         height="60px"
         src="https://img.yzcdn.cn/vant/cat.jpeg"
-        style="float:left;"
+        style="float:left;margin-top:20%"
       />
       <div class="account">
         <p class="plz">请登录...</p>
@@ -39,9 +39,9 @@
       <van-grid-item icon="todo-list-o" text="我的订单" @click="toOrderPre()" />
     </van-grid>
     <van-cell-group class="more">
-      <van-cell title="收货地址" is-link to="Myaddress" style="margin-top:5%;padding:4%;" />
+      <van-cell title="收货地址" is-link @click="toMyAddress()" style="margin-top:5%;padding:4%;" />
       <van-cell title="我的收藏" is-link to="Mycollection" style="padding:4%;" />
-      <van-cell title="修改信息" is-link to="Updateinfo" style="padding:4%;" />
+      <van-cell title="修改信息" is-link @click="toUpdateInfo()" style="padding:4%;" />
     </van-cell-group>
     <van-cell-group>
       <van-cell class="exit" v-if="logon" style="margin-top:20%;padding:4%;" @click="logout()">
@@ -73,6 +73,9 @@ export default {
       active: "Mine"
     };
   },
+  mounted() {
+    console.log(this.user);
+  },
   computed: {
     logon() {
       var user = this.$store.getters.User;
@@ -84,38 +87,60 @@ export default {
   },
   methods: {
     async toOrderPre() {
-      this.$router
-        .push({
-          path: "/Myorder",
-          query: {
-            status: 0
-          }
-        })
-        .catch(() => {});
+      if (this.logon)
+        this.$router
+          .push({
+            path: "/Myorder",
+            query: {
+              status: 0
+            }
+          })
+          .catch(() => {});
+      else this.$router.push("/Login");
     },
     async toOrderSnd() {
-      this.$router.push({
-        path: "/Myorder",
-        query: {
-          status: 1
-        }
-      }).catch(() => {});
+      if (this.logon)
+        this.$router
+          .push({
+            path: "/Myorder",
+            query: {
+              status: 1
+            }
+          })
+          .catch(() => {});
+      else this.$router.push("/Login");
     },
     async toOrderCom() {
-      this.$router.push({
-        path: "/Myorder",
-        query: {
-          status: 2
-        }
-      }).catch(() => {});
+      if (this.logon)
+        this.$router
+          .push({
+            path: "/Myorder",
+            query: {
+              status: 2
+            }
+          })
+          .catch(() => {});
+      else this.$router.push("/Login");
     },
     async toOrderRef() {
-      this.$router.push({
-        path: "/Myorder",
-        query: {
-          status: 3
-        }
-      }).catch(() => {});
+      if (this.logon)
+        this.$router
+          .push({
+            path: "/Myorder",
+            query: {
+              status: 3
+            }
+          })
+          .catch(() => {});
+      else this.$router.push("/Login");
+    },
+    toUpdateInfo() {
+      if (this.logon) this.$router.push("/Updateinfo");
+      else this.$router.push("/Login");
+    },
+    toMyAddress() {
+      if (this.logon) this.$router.push("/Myaddress");
+      else this.$router.push("/Login");
     },
     logout() {
       this.$store.commit("logout");
@@ -137,16 +162,17 @@ export default {
 .maininfo {
   height: 20%;
   background-color: rgb(201, 37, 25);
-  display: flex;
-  align-items: center;
 }
 .icon {
   margin-left: 5%;
 }
 .account {
-  margin: 0 0 0 25%;
+  margin: 15% 0 5% 25%;
   position: fixed;
   color: aliceblue;
+}
+.account p {
+  margin-bottom: 4%;
 }
 .plz {
   font-size: 20px;
