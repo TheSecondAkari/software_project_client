@@ -40,8 +40,11 @@ import { Card } from 'vant';
 import { GoodsAction, GoodsActionIcon, GoodsActionButton } from 'vant';
 import { SubmitBar } from 'vant';
 import { Sku } from 'vant';
+import { PullRefresh } from 'vant';
+
 
 //vant按需引入
+Vue.use(PullRefresh);
 Vue.use(Sku);
 Vue.use(SubmitBar);
 Vue.use(GoodsAction);
