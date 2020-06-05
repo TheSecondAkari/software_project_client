@@ -43,6 +43,10 @@
             :thumb="good.sku.goods.pic[0]"
             @click-thumb="toGood(good.sku.goods.id)"
           >
+            <template #bottom v-if="good.comment!=null">
+              <p>评价:{{good.comment.content}}</p>
+            </template>
+
             <template #tags>
               <van-tag
                 plain
@@ -55,7 +59,7 @@
               <!-- <van-button size="small" round type="primary" color="#ee0a24" plain @click="toGood(good.sku.goods.id)">查看详情</van-button> -->
               <van-button
                 size="small"
-                v-if="orderInfoStatus==2"
+                v-if="orderInfoStatus==2&&good.comment==null"
                 round
                 type="primary"
                 color="#ee0a24"
@@ -97,7 +101,7 @@
       @confirm="Comment(comment_id)"
       @close="cancel()"
     >
-      <p>分享您的体验让更多人看到吧~</p>
+
       <van-field
         v-model="content"
         rows="2"
@@ -139,6 +143,8 @@ export default {
       console.log("评论ID：" + this.comment_id);
     },
     async Comment(id) {
+      if(this.content==null)
+      this.content="好评";
       let res = await this.api.post("/order/item/" + id + "/comment", {
         content: this.content
       });
