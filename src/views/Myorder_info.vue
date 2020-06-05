@@ -99,7 +99,7 @@
     >
       <p>分享您的体验让更多人看到吧~</p>
       <van-field
-        v-model="comment"
+        v-model="content"
         rows="2"
         autosize
         label="评价"
@@ -139,11 +139,10 @@ export default {
       console.log("评论ID：" + this.comment_id);
     },
     async Comment(id) {
-      let res = await this.api.post("/order/" + id + "/comment", {
+      let res = await this.api.post("/order/item/" + id + "/comment", {
         content: this.content
       });
       if (res.status >= 200 && res.status < 300) console.log("成功");
-      location.reload();
     },
     cancel() {
       this.comment_id = 0;
