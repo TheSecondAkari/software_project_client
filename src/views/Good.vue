@@ -71,14 +71,14 @@
 
         <!-- 商品评价 -->
         <div
-          v-if="good.comment"
-          style="background-color:rgb(226, 224, 224);padding:5px 0;color:grey;height:9px;width:100%"
+          v-if="good.comments.length != 0"
+          style="background-color:rgb(226, 224, 224);padding:5px 0;color:grey;height:8px;width:100%"
         ></div>
-        <div id="comment" v-if="good.comment">
+        <div id="comment" v-if="good.comments.length != 0">
           <van-cell is-link style="border:0;">
             <template #title>
               <span>评价</span>
-              <van-tag plain style="margin-left:2%;">{{good.comment.length}}</van-tag>
+              <!-- <van-tag plain style="margin-left:2%;">{{good.comments.length}}</van-tag> -->
             </template>
           </van-cell>
 
@@ -86,14 +86,17 @@
             <van-row>
               <van-col span="4">
                 <div class="avatar">
-                  <van-image :src="this.good.comment[0].user.avatar" lazy-load />
+                  <van-image :src="this.good.comments[0].user.avatar" lazy-load />
                 </div>
               </van-col>
-              <van-col span="8">
-                <p>{{good.comment[0].user.name}}</p>
+              <van-col span="8" class="name">
+                <p>{{good.comments[0].user.name}}</p>
+              </van-col>
+              <van-col span="12" class="time">
+                <p>{{good.comments[0].created_at}}</p>
               </van-col>
             </van-row>
-            <p style="margin:0;">{{good.comment[0].content}}</p>
+            <p class="content">{{good.comments[0].content}}</p>
           </div>
           <van-button
             round
@@ -132,7 +135,7 @@
       </div>
     </van-skeleton>
     <van-skeleton class="skeleton2" :row="7" :loading="loading"></van-skeleton>
-    <van-skeleton class="skeleton3" title avatar :row="3" :loading="loading"> </van-skeleton>
+    <van-skeleton class="skeleton3" title avatar :row="3" :loading="loading"></van-skeleton>
   </div>
 </template>
 
@@ -158,7 +161,8 @@ export default {
         sale_num: 0,
         tree: [],
         list: [],
-        pic: []
+        pic: [],
+        comments: []
       },
       show: false, //商品规格的展示
       chumbs: {
@@ -216,7 +220,6 @@ export default {
   methods: {
     //通过商品id获取商品详情
     async getGood() {
-      console.log("get", this.id);
       let res = await this.api.get("/goods/" + this.id);
       if (res.status >= 200 && res.status < 300) this.good = res.data.data;
       //富文本图片之间的空行处理,图片列表（行内元素）的父元素，font-size：0
@@ -280,7 +283,6 @@ export default {
 
     //查看更多评价
     more_comment() {
-      this.$store.commit("setSeeComments", this.good.comment);
       this.$router.push("/Comments");
     },
 
@@ -411,7 +413,19 @@ img {
   border: 1px solid rgb(255, 255, 255);
   border-radius: 50%;
 }
-
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.time {
+  color: grey;
+  text-align: right;
+  font-size: 12px;
+}
+.content{
+  margin:0 3%;
+}
 /* 轮播图标签 */
 /* .custom-back {
   因为共用，被移到了app.vue

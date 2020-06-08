@@ -116,6 +116,7 @@ const routers = [
         path: '/Comments',
         meta: {
             title: '更多评价',
+            keepAlive: true, // 需要缓存
         },
         component: (resolve) => require(['../views/Comments.vue'], resolve),
     },
