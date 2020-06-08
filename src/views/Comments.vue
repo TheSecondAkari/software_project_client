@@ -6,28 +6,34 @@
       </template>
     </van-nav-bar>
 
-    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-      <van-list>
-        <lazy-component>
-          <div class="comment" v-for="(item) in comments" :key="item.id">
-            <van-row>
-              <van-col span="4">
-                <div class="avatar">
-                  <van-image :src="item.user.avatar" lazy-load />
-                </div>
-              </van-col>
-              <van-col span="8" class="name">
-                <p>{{item.user.name}}</p>
-              </van-col>
-              <van-col span="12" class="time">
-                <p>{{item.created_at}}</p>
-              </van-col>
-            </van-row>
-            <p class="content">{{item.content}}</p>
-          </div>
-        </lazy-component>
-      </van-list>
-    </van-pull-refresh>
+    <van-skeleton title avatar :row="3" :loading="loading">
+      <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+        <van-list>
+          <lazy-component>
+            <div class="comment" v-for="(item) in comments" :key="item.id">
+              <van-row>
+                <van-col span="4">
+                  <div class="avatar">
+                    <van-image :src="item.user.avatar" lazy-load />
+                  </div>
+                </van-col>
+                <van-col span="8" class="name">
+                  <p>{{item.user.name}}</p>
+                </van-col>
+                <van-col span="12" class="time">
+                  <p>{{item.created_at}}</p>
+                </van-col>
+              </van-row>
+              <p class="content">{{item.content}}</p>
+            </div>
+          </lazy-component>
+        </van-list>
+      </van-pull-refresh>
+    </van-skeleton>
+    <van-skeleton title avatar :row="3" :loading="loading"></van-skeleton>
+    <van-skeleton title avatar :row="3" :loading="loading"></van-skeleton>
+    <van-skeleton title avatar :row="3" :loading="loading"></van-skeleton>
+    <van-skeleton title avatar :row="3" :loading="loading"></van-skeleton>
   </div>
 </template>
 
@@ -37,6 +43,7 @@ export default {
     return {
       id: this.$store.state.see_good_id,
       old_id: 0,
+      loading:true,
       isLoading: false,
       comments: []
     };
@@ -51,6 +58,7 @@ export default {
       } else {
         this.comments = [];
       }
+      this.loading = false;
     }
   },
   methods: {
@@ -72,9 +80,12 @@ export default {
 </script>
 
 <style scoped>
+.van-nav-bar{
+  height: 6vh;
+}
 .comment {
-  margin: 4%;
-  height: calc(100vh - 46px);
+  margin: 4% 4% 0 4%;
+  height: 92vh;
 }
 .name {
   overflow: hidden;
