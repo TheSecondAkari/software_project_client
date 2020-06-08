@@ -1,5 +1,5 @@
 <template>
-  <div style="background-color: #eeeeee;">
+  <div>
     <div class="topbar">
       <div class="topbar-part">
         <van-icon name="arrow-left" @click="back" />
@@ -27,43 +27,44 @@
         >按销量</van-button>
       </div>
     </div>
-
-    <div style="margin-top: 2.5%">
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        :immediate-check="false"
-        :error.sync="error"
-        error-text="请求失败，点击重新加载"
-        finished-text="没有更多了"
-        @load="onLoad"
-      >
-        <lazy-component>
-          <van-card
-            v-for="item in goods"
-            lazy-load
-            :key="item.id"
-            :title="item.name"
-            :thumb="item.pic[0]"
-            @click="toGood(item.id)"
-          >
-            <template #title>
-              <div style="font-size: 18px; font-weight: 1000;">{{item.name}}</div>
-            </template>
-            <template #desc>
-              <div style="margin-top: 5px;">已有{{item.view}}人浏览过</div>
-            </template>
-            <template #price>
-              <small style="color: red">￥</small>
-              <span style="font-size: 16px; color: red">{{item.price}}</span>
-            </template>
-            <template #num>
-              <div style="margin-top: 5px;">已销售：{{item.sale_num}} 件</div>
-            </template>
-          </van-card>
-        </lazy-component>
-      </van-list>
-    </div>
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh" class="content">
+      <div style="margin-top: 2.5%">
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          :immediate-check="false"
+          :error.sync="error"
+          error-text="请求失败，点击重新加载"
+          finished-text="没有更多了"
+          @load="onLoad"
+        >
+          <lazy-component>
+            <van-card
+              v-for="item in goods"
+              lazy-load
+              :key="item.id"
+              :title="item.name"
+              :thumb="item.pic[0]"
+              @click="toGood(item.id)"
+            >
+              <template #title>
+                <div style="font-size: 18px; font-weight: 1000;">{{item.name}}</div>
+              </template>
+              <template #desc>
+                <div style="margin-top: 5px;">已有{{item.view}}人浏览过</div>
+              </template>
+              <template #price>
+                <small style="color: red">￥</small>
+                <span style="font-size: 16px; color: red">{{item.price}}</span>
+              </template>
+              <template #num>
+                <div style="margin-top: 5px;">已销售：{{item.sale_num}} 件</div>
+              </template>
+            </van-card>
+          </lazy-component>
+        </van-list>
+      </div>
+    </van-pull-refresh>
   </div>
 </template>
 
@@ -73,6 +74,7 @@ export default {
   data() {
     return {
       showLoading: false,
+      isLoading: false,
       loading: false,
       error: false,
       finished: false,
@@ -100,6 +102,13 @@ export default {
     }
   },
   methods: {
+    async onRefresh() {
+      this.isLoading = true;
+      this.page = 1;
+      this.finished = false;
+      await this.getgoods();
+      this.isLoading = false;
+    },
     //获取商品，page改成使用参数传入，如果不传，则默认获取第一页
     async onLoad() {
       await this.getgoods(this.page);
@@ -128,7 +137,6 @@ export default {
     },
     async changeSort() {
       this.page = 1;
-      this.goods = [];
       this.finished = false;
       this.sort_type = !this.sort_type;
       if (this.sort_type) {
@@ -166,6 +174,9 @@ export default {
 .topbar-part {
   display: flex;
   align-items: center;
+}
+.content{
+  min-height: 94vh;
 }
 span {
   padding: 1px;

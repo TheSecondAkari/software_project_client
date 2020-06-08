@@ -1,118 +1,120 @@
 <template>
   <div id="good">
     <van-skeleton class="skeleton1" :row="1" :loading="loading">
-      <div id="main" style="margin-bottom: 18%;">
-        <!-- 商品图片展示 -->
-        <div>
-          <van-swipe @change="onChange" :autoplay="3000" indicator-color="white">
-            <van-swipe-item v-for="(image, index) in good.pic" :key="index">
-              <van-image :src="image" lazy-load style="width: 100%;height:auto;" />
-            </van-swipe-item>
-            <div class="custom-indicator" slot="indicator">{{ current + 1 }}/{{good.pic.length}}</div>
-            <div class="custom-back" slot="indicator" v-on:click="back">
-              <van-icon name="arrow-left" size="20px" style="margin:5px 0 5px 2.5px;" />
-            </div>
-          </van-swipe>
-        </div>
-
-        <!-- 商品价格+我的收藏 -->
-        <div style="margin-top:1%">
-          <div style="float:right;margin-right:4%;" @click="Love()" :class="{notclick:noClick}">
-            <div v-if="this.like">
-              <van-icon name="like" size="24" class="loved" />
-              <p style="padding:0;margin:0;font-size:12px;color:red;">已收藏</p>
-            </div>
-            <div v-else style="margin-right:4.5px;">
-              <van-icon name="like-o" size="24" />
-              <p style="padding:0;margin:0;font-size:12px;color:grey;">收藏</p>
-            </div>
+      <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+        <div id="main" style="margin-bottom: 18%;">
+          <!-- 商品图片展示 -->
+          <div>
+            <van-swipe @change="onChange" :autoplay="3000" indicator-color="white">
+              <van-swipe-item v-for="(image, index) in good.pic" :key="index">
+                <van-image :src="image" lazy-load style="width: 100%;height:auto;" />
+              </van-swipe-item>
+              <div class="custom-indicator" slot="indicator">{{ current + 1 }}/{{good.pic.length}}</div>
+              <div class="custom-back" slot="indicator" v-on:click="back">
+                <van-icon name="arrow-left" size="20px" style="margin:5px 0 5px 2.5px;" />
+              </div>
+            </van-swipe>
           </div>
-          <p
-            style="margin:3% 0% 2.5% 2.5%; font-size: 32px; font-weight:550;color:red;"
-          >￥{{good.price}}</p>
-        </div>
 
-        <!-- 商品名字 -->
-        <div class="good_name" style>
-          <p>{{good.name}}</p>
-        </div>
+          <!-- 商品价格+我的收藏 -->
+          <div style="margin-top:1%">
+            <div style="float:right;margin-right:4%;" @click="Love()" :class="{notclick:noClick}">
+              <div v-if="this.like">
+                <van-icon name="like" size="24" class="loved" />
+                <p style="padding:0;margin:0;font-size:12px;color:red;">已收藏</p>
+              </div>
+              <div v-else style="margin-right:4.5px;">
+                <van-icon name="like-o" size="24" />
+                <p style="padding:0;margin:0;font-size:12px;color:grey;">收藏</p>
+              </div>
+            </div>
+            <p
+              style="margin:3% 0% 2.5% 2.5%; font-size: 32px; font-weight:550;color:red;"
+            >￥{{good.price}}</p>
+          </div>
 
-        <!-- 商品基本信息 -->
-        <van-cell-group>
-          <van-cell class="good_basic">
-            <!-- 使用 title 插槽来自定义标题 -->
-            <template #title>
-              <span class="custom-title">分类</span>
-            </template>
-            <van-tag plain type="danger" size="large">{{good.category.name}}</van-tag>
-          </van-cell>
-          <van-cell class="good_basic" title="库存" :value="good.stock_num" />
-          <van-cell class="good_basic" title="销量" :value="good.sale_num" />
-          <van-cell
-            v-if="!good.none_sku"
-            title="查看/选择 规格"
-            is-link
-            :value="selected"
-            @click="showSku()"
+          <!-- 商品名字 -->
+          <div class="good_name" style>
+            <p>{{good.name}}</p>
+          </div>
+
+          <!-- 商品基本信息 -->
+          <van-cell-group>
+            <van-cell class="good_basic">
+              <!-- 使用 title 插槽来自定义标题 -->
+              <template #title>
+                <span class="custom-title">分类</span>
+              </template>
+              <van-tag plain type="danger" size="large">{{good.category.name}}</van-tag>
+            </van-cell>
+            <van-cell class="good_basic" title="库存" :value="good.stock_num" />
+            <van-cell class="good_basic" title="销量" :value="good.sale_num" />
+            <van-cell
+              v-if="!good.none_sku"
+              title="查看/选择 规格"
+              is-link
+              :value="selected"
+              @click="showSku()"
+            />
+          </van-cell-group>
+          <van-sku
+            v-model="show"
+            :sku="good"
+            :goods="chumbs"
+            :goods-id="good.id"
+            :hide-stock="false"
+            :close-on-click-overlay="true"
+            :preview-on-click-image="false"
+            ref="goodSku"
+            @buy-clicked="onBuyClicked"
+            @add-cart="onAddCartClicked"
           />
-        </van-cell-group>
-        <van-sku
-          v-model="show"
-          :sku="good"
-          :goods="chumbs"
-          :goods-id="good.id"
-          :hide-stock="false"
-          :close-on-click-overlay="true"
-          :preview-on-click-image="false"
-          ref="goodSku"
-          @buy-clicked="onBuyClicked"
-          @add-cart="onAddCartClicked"
-        />
 
-        <!-- 商品评价 -->
-        <div
-          v-if="good.comments.length != 0"
-          style="background-color:rgb(226, 224, 224);padding:5px 0;color:grey;height:8px;width:100%"
-        ></div>
-        <div id="comment" v-if="good.comments.length != 0">
-          <van-cell is-link style="border:0;">
-            <template #title>
-              <span>评价</span>
-              <!-- <van-tag plain style="margin-left:2%;">{{good.comments.length}}</van-tag> -->
-            </template>
-          </van-cell>
+          <!-- 商品评价 -->
+          <div
+            v-if="good.comments.length != 0"
+            style="background-color:rgb(226, 224, 224);padding:5px 0;color:grey;height:8px;width:100%"
+          ></div>
+          <div id="comment" v-if="good.comments.length != 0">
+            <van-cell is-link style="border:0;">
+              <template #title>
+                <span>评价</span>
+                <!-- <van-tag plain style="margin-left:2%;">{{good.comments.length}}</van-tag> -->
+              </template>
+            </van-cell>
 
-          <div class="comment">
-            <van-row>
-              <van-col span="4">
-                <div class="avatar">
-                  <van-image :src="this.good.comments[0].user.avatar" lazy-load />
-                </div>
-              </van-col>
-              <van-col span="8" class="name">
-                <p>{{good.comments[0].user.name}}</p>
-              </van-col>
-              <van-col span="12" class="time">
-                <p>{{good.comments[0].created_at}}</p>
-              </van-col>
-            </van-row>
-            <p class="content">{{good.comments[0].content}}</p>
+            <div class="comment">
+              <van-row>
+                <van-col span="4">
+                  <div class="avatar">
+                    <van-image :src="this.good.comments[0].user.avatar" lazy-load />
+                  </div>
+                </van-col>
+                <van-col span="8" class="name">
+                  <p>{{good.comments[0].user.name}}</p>
+                </van-col>
+                <van-col span="12" class="time">
+                  <p>{{good.comments[0].created_at}}</p>
+                </van-col>
+              </van-row>
+              <p class="content">{{good.comments[0].content}}</p>
+            </div>
+            <van-button
+              round
+              plain
+              @click="more_comment()"
+              color="grey"
+              style="width:50%;margin-left:25%;margin-top:5%;"
+            >查看更多评论</van-button>
           </div>
-          <van-button
-            round
-            plain
-            @click="more_comment()"
-            color="grey"
-            style="width:50%;margin-left:25%;margin-top:5%;"
-          >查看更多评论</van-button>
-        </div>
 
-        <!-- 商品详细描述 富文本 -->
-        <p
-          style="text-align:center;background-color:rgb(226, 224, 224);padding:2px 0;color:grey;font-size:12px;"
-        >————商品详情————</p>
-        <div v-html="good.description" class="Rich_text"></div>
-      </div>
+          <!-- 商品详细描述 富文本 -->
+          <p
+            style="text-align:center;background-color:rgb(226, 224, 224);padding:2px 0;color:grey;font-size:12px;"
+          >————商品详情————</p>
+          <div v-html="good.description" class="Rich_text"></div>
+        </div>
+      </van-pull-refresh>
 
       <!-- 详情页面底层导航 -->
       <div style="bottom:0;position: fixed;">
@@ -145,6 +147,7 @@ export default {
   data() {
     return {
       loading: true, //骨架屏动画是否开启
+      isLoading: false,
       noClick: false, //收藏，取消收藏是否禁用
       id: this.$store.state.see_good_id, //商品的获取
       current: 0, //轮播图计数
@@ -218,6 +221,17 @@ export default {
     else next();
   },
   methods: {
+    //下拉刷新
+    async onRefresh() {
+      this.isLoading = true;
+      this.current = 0; //初始化
+      this.selected = ""; //初始化
+      await this.getGood(); //初始化
+      this.chumbs = {
+        picture: this.good.pic[0]
+      };
+      this.isLoading = false;
+    },
     //通过商品id获取商品详情
     async getGood() {
       let res = await this.api.get("/goods/" + this.id);
@@ -423,8 +437,8 @@ img {
   text-align: right;
   font-size: 12px;
 }
-.content{
-  margin:0 3%;
+.content {
+  margin: 0 3%;
 }
 /* 轮播图标签 */
 /* .custom-back {

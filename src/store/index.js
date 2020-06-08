@@ -198,6 +198,7 @@ const store = new Vuex.Store({
 
         //登出
         logout(state) {
+            sessionStorage.removeItem("Authorization");
             state.user = {
                 id: 0,
                 name: "",

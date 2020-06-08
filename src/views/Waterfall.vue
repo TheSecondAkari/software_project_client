@@ -132,7 +132,7 @@ export default {
       let list2H = this.$refs.list2.offsetHeight;
       if (
         (Math.abs(list1H - list2H) >= 200 && mainList.length > 0) ||
-        mainList.length == 1
+        mainList.length%2 == 1 
       )
         mid += 1;
       var goodsList1 = mainList.slice(0, mid);

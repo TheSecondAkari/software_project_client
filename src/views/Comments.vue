@@ -85,7 +85,7 @@ export default {
 }
 .comment {
   margin: 4% 4% 0 4%;
-  height: 92vh;
+  min-height: 92vh;
 }
 .name {
   overflow: hidden;

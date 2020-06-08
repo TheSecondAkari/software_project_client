@@ -161,6 +161,7 @@ request.interceptors.response.use(undefined, error => { // undefined 指的是�
     });
     try {
       if (error.response.status == 401) {
+        sessionStorage.removeItem("Authorization");
         router.push("/login");
       }
     } catch (err) {

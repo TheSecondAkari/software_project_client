@@ -1,53 +1,55 @@
 <template>
   <div class="background">
-    <!-- 轮播图+搜索栏 -->
-    <div class="top_half">
-      <div class="top_background"></div>
-      <h3 class="title">天东易宝</h3>
-      <van-search
-        v-model="searchkey"
-        class="searchbar"
-        placeholder="请输入搜索关键词"
-        background="rgb(201, 37, 25)"
-        @search="onSearch"
-      />
-      <div class="roll_img">
-        <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white" width="90%">
-          <van-swipe-item
-            class="my-swipe"
-            v-for="(item) in carousel"
-            :key="item.id"
-            @click="gotoGoods(item.id)"
-          >
-            <van-image :src="item.pic[0]" lazy-load class="my-img" />
-          </van-swipe-item>
-        </van-swipe>
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+      <!-- 轮播图+搜索栏 -->
+      <div class="top_half">
+        <div class="top_background"></div>
+        <h3 class="title">天东易宝</h3>
+        <van-search
+          v-model="searchkey"
+          class="searchbar"
+          placeholder="请输入搜索关键词"
+          background="rgb(201, 37, 25)"
+          @search="onSearch"
+        />
+        <div class="roll_img">
+          <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white" width="90%">
+            <van-swipe-item
+              class="my-swipe"
+              v-for="(item) in carousel"
+              :key="item.id"
+              @click="gotoGoods(item.id)"
+            >
+              <van-image :src="item.pic[0]" lazy-load class="my-img" />
+            </van-swipe-item>
+          </van-swipe>
+        </div>
       </div>
-    </div>
-    <!-- 一级分类标签 -->
-    <div class="middle_select">
-      <van-tabs v-model="activeName" @click="chooseTab">
-        <van-tab v-for="(item) in category" :key="item.id" :title="item.title" :name="item.id"></van-tab>
-      </van-tabs>
-    </div>
-    <!-- 商品列表展示 -->
-    <div class="skeleton" v-show="loading">
-      <van-skeleton :row="3"></van-skeleton>
-      <van-skeleton :row="3"></van-skeleton>
-    </div>
-    <waterfall
-      class="goodlist"
-      :imgsArr="goodList"
-      :category="category_id"
-      v-show="goodList.length > 0 && loading == false"
-    />
-    <div class="tips" v-show="goodList.length == 0">
-      <strong>
-        该分类目前没有商品
-        <br />请浏览其他分类。
-      </strong>
-    </div>
-    <!-- <div style="height: 2.5em" /> -->
+      <!-- 一级分类标签 -->
+      <div class="middle_select">
+        <van-tabs v-model="activeName" @click="chooseTab">
+          <van-tab v-for="(item) in category" :key="item.id" :title="item.title" :name="item.id"></van-tab>
+        </van-tabs>
+      </div>
+      <!-- 商品列表展示 -->
+      <div class="skeleton" v-show="loading">
+        <van-skeleton :row="3"></van-skeleton>
+        <van-skeleton :row="3"></van-skeleton>
+      </div>
+      <waterfall
+        class="goodlist"
+        :imgsArr="goodList"
+        :category="category_id"
+        v-show="goodList.length > 0 && loading == false"
+      />
+      <div class="tips" v-show="goodList.length == 0">
+        <strong>
+          该分类目前没有商品
+          <br />请浏览其他分类。
+        </strong>
+      </div>
+    </van-pull-refresh>
+
     <van-tabbar
       v-model="active"
       class="bottom"
@@ -79,6 +81,7 @@ export default {
       active: "Home",
       activeName: "全部",
       loading: false, //骨架屏是否展示
+      isLoading: false,
       category_id: 0
     };
   },
@@ -96,6 +99,15 @@ export default {
     this.active = "Home";
   },
   methods: {
+    //下拉刷新
+    async onRefresh() {
+      this.isLoading = true;
+      this.searchkey = "";
+      this.getClass();
+      this.getSwipe();
+      await this.getGoods(this.category_id);
+      this.isLoading = false;
+    },
     async getClass() {
       let res = await this.api.get("/categories");
       if (res.status >= 200 && res.status < 300) {
