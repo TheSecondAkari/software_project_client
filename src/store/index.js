@@ -35,7 +35,7 @@ const store = new Vuex.Store({
         orderList_ref: [],//退货中
         defaultAddId: 0,//默认地址
         orderInfo: null,//用于订单详情页面的内容传值。
-        
+
         //...
     },
     getters: {
@@ -78,12 +78,12 @@ const store = new Vuex.Store({
         OrderListRef: state => {
             return state.orderList_ref;
         },
-        
+
 
         //...
     },
     mutations: {
-        changeuser(state, data){
+        changeuser(state, data) {
             state.user.name = data
         },
         //获取用户账号基本信息
@@ -167,7 +167,7 @@ const store = new Vuex.Store({
         },
 
         //设置搜索内容
-        setSearchContent(state, content){
+        setSearchContent(state, content) {
             state.search_content = content;
             console.log(state.search_content)
         },
@@ -302,7 +302,12 @@ const store = new Vuex.Store({
         },
 
         async getOrderList(context) {
-            console.log("获取订单");
+            context.dispatch("getOrderListPre");
+            context.dispatch("getOrderListSnd");
+            context.dispatch("getOrderListCom");
+            context.dispatch("getOrderListRef");
+        },
+        async getOrderListPre(context) {
             var i = 0;
             var j = 0;
             var picList = [];
@@ -339,7 +344,14 @@ const store = new Vuex.Store({
 
                 }
             }
-            res = await api.get("/orders?status=2");
+            context.commit('getOrderListPre', tempList_pre);
+        },
+        async getOrderListSnd(context) {
+
+            var i = 0;
+            var j = 0;
+            var picList = [];
+            let res = await api.get("/orders?status=2");
             if (res.status >= 200 && res.status < 300) {
                 res = res.data.data;
                 // console.log("信息");
@@ -369,9 +381,17 @@ const store = new Vuex.Store({
                         refund_remark: res[i].refund_remark,//退款备注
 
                     });
+
                 }
             }
-            res = await api.get("/orders?status=3");
+            context.commit('getOrderListSnd', tempList_snd);
+        },
+
+        async getOrderListCom(context) {
+            var i = 0;
+            var j = 0;
+            var picList = [];
+            let res = await api.get("/orders?status=3");
             if (res.status >= 200 && res.status < 300) {
                 res = res.data.data;
                 // console.log("信息");
@@ -403,14 +423,20 @@ const store = new Vuex.Store({
                     });
 
                 }
-
-
             }
-            res = await api.get("/orders?status=4");
+            context.commit('getOrderListCom', tempList_com);
+
+        },
+
+        async getOrderListRef(context) {
+            var i = 0;
+            var j = 0;
+            var picList = [];
+            let res = await api.get("/orders?status=4");
             if (res.status >= 200 && res.status < 300) {
                 res = res.data.data;
-                console.log("信息");
-                console.log(res);
+                // console.log("信息");
+                // console.log(res);
                 var tempList_ref = [];
                 for (i = 0; i < res.length; i++) {
                     picList = [];
@@ -438,18 +464,13 @@ const store = new Vuex.Store({
                     });
 
                 }
-
-
             }
-            context.commit('getOrderListPre', tempList_pre);
-            context.commit('getOrderListSnd', tempList_snd);
-            context.commit('getOrderListCom', tempList_com);
             context.commit('getOrderListRef', tempList_ref);
-            // console.log("待发货");
-            console.log(tempList_snd);
-            // console.log("退款中");
-            // console.log(tempList_ref);
-        }
+            console.log("退款中");
+            console.log(tempList_ref);
+
+        },
+
 
 
     }
