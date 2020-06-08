@@ -83,7 +83,7 @@
           <van-col span="4">订单信息</van-col>
         </van-row>
         <van-cell title="订单编号">{{orderInfo.order_number}}</van-cell>
-        <van-cell title="物流编号" v-if="orderInfoStatus==1">{{orderInfo.number}}</van-cell>
+        <van-cell title="物流编号" v-if="orderInfoStatus==1||orderInfoStatus==2">{{orderInfo.number}}</van-cell>
         <van-cell title="退款理由" v-if="orderInfoStatus==3">{{orderInfo.refund_remark}}</van-cell>
         <van-cell title="下单时间">{{orderInfo.created_at}}</van-cell>
         <van-cell title="更新时间">{{orderInfo.updated_at}}</van-cell>

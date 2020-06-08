@@ -49,7 +49,7 @@
             size="normal"
             plain
             @click="status=true"
-            style="margin:0 auto;"
+            style="margin:3%;"
           >修改密码</van-button>
         </div>
         <div v-if="status">
@@ -67,11 +67,11 @@
             </template>
           </van-field>
           <van-row>
-            <van-col offset="10">
-              <van-button round color="#ee0a24" size="normal" plsain @click="status=false">取消</van-button>
+            <van-col offset="10" span=4>
+              <van-button round color="#ee0a24" size="normal" plain @click="status=false"  style="margin:10% 0 5% 0;" >取消</van-button>
             </van-col>
-            <van-col offset="2">
-              <van-button round color="#ee0a24" size="normal" @click="changePassword()">确认修改密码</van-button>
+            <van-col offset="2"  span="8">
+              <van-button round color="#ee0a24" size="normal" @click="changePassword()"   style="margin:5% 0 5% 0;">确认修改密码</van-button>
             </van-col>
           </van-row>
         </div>
