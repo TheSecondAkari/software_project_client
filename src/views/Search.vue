@@ -116,12 +116,6 @@ export default {
     }
   },
   async beforeMount() {
-    // Toast.loading({
-    //   duration: 0,
-    //   forbidClick: true
-    // });
-    // await this.onLoad();
-    // Toast.clear();
     var temp = [
       {
         name: "全部分类",
@@ -145,6 +139,7 @@ export default {
     this.search = this.$store.state.search_content;
     if (this.oldsearch != this.search) {
       this.page = 1;
+      this.goods = [];
       this.oldsearch = this.search;
       Toast.loading({
         duration: 0,

@@ -121,6 +121,11 @@ export default {
           result.push(temp);
         }
         this.category = result;
+
+        var tempdata = {};
+        tempdata["categories"] = data;
+        tempdata["index"] = 0;
+        this.$store.commit("getClass", tempdata);
       }
     },
     async getSwipe() {
