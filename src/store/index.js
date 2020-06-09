@@ -83,9 +83,6 @@ const store = new Vuex.Store({
         //...
     },
     mutations: {
-        changeuser(state, data) {
-            state.user.name = data
-        },
         //获取用户账号基本信息
         getMyInfo(state, data) {
             state.user = data;
@@ -203,15 +200,6 @@ const store = new Vuex.Store({
                 id: 0,
                 name: "",
                 email: "",
-                collection: [],
-                cart: [],
-                addressList: [],
-                orderList_pre: [],
-                orderList_snd: [],
-                orderList_com: [],
-                orderList_ref: [],
-                defaultAddId: 0,
-
             };
             state.see_good_id = "";//当前浏览的商品的id，用于商品详情页
             state.see_class_id = -1;//当前浏览的分类的id,用于分类详情页
@@ -221,10 +209,6 @@ const store = new Vuex.Store({
                 address: "",//选定的收货地址
                 type: -1,//0代表立即购买，1代表从购物车中结算。-1无意义
             };
-            state.classes = {
-                categories: [],
-                index: 0,
-            }; //全部分类
             state.collection = [];//收藏的商品
             state.cart = [];//购物车商品
             state.addressList = [];//地址
