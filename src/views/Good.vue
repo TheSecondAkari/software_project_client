@@ -328,10 +328,10 @@ export default {
         this.$store.dispatch("addCart", data);
 
         this.show = false;
-        setTimeout(() => {
-          // 确保该操作发生在this.show的监视操作之后
+        // 确保该操作发生在this.show的监视操作之后
+        this.$nextTick(() => {
           this.selected = "";
-        }, 100);
+        });
       }
     },
 
@@ -368,11 +368,16 @@ export default {
             stock_num: message.selectedSkuComb.stock_num
           }
         };
+
         this.$store.commit("updateBuy", {
           goods: [data],
           type: 0
         });
-        this.$router.push("/Order").catch(() => {});
+        this.show = false;
+        this.$nextTick(() => {
+          this.selected = "";
+          this.$router.push("/Order").catch(() => {});
+        });
       }
     }
   }
