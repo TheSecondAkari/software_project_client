@@ -367,10 +367,10 @@ export default {
   color: rgb(85, 85, 85);
 }
 .more_info {
-  margin-bottom: 5%;
+  margin-bottom: 10%;
 }
 .cancel_order {
-  margin-bottom: 5%;
+  margin-bottom: 10%;
 }
 .select {
   margin: 5% 0 5% 5%;
