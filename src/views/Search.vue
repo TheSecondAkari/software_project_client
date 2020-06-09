@@ -47,7 +47,13 @@
     </div>
 
     <div style="margin-top: 2.5%">
-      <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        :immediate-check="false"
+        finished-text="没有更多了"
+        @load="onLoad"
+      >
         <lazy-component>
           <van-card
             lazy-load
@@ -101,22 +107,21 @@ export default {
   computed: {
     search: {
       get() {
-        console.log("Search.vue")
+        console.log("Search.vue");
         return this.$store.state.search_content;
       },
       set(value) {
         this.$store.commit("setSearchContent", value);
       }
-      // return this.$store.state.search_content;
     }
   },
   async beforeMount() {
-    Toast.loading({
-      duration: 0,
-      forbidClick: true
-    });
-    await this.onLoad();
-    Toast.clear();
+    // Toast.loading({
+    //   duration: 0,
+    //   forbidClick: true
+    // });
+    // await this.onLoad();
+    // Toast.clear();
     var temp = [
       {
         name: "全部分类",
@@ -182,7 +187,7 @@ export default {
           duration: 3,
           icon: "question-o"
         });
-        this.goods = []
+        this.goods = [];
       } else {
         this.goods = this.goods.concat(res.data.data.items);
         if (page == Math.ceil(res.data.data.count / 25)) {
@@ -220,10 +225,14 @@ export default {
       Toast.clear();
     },
     async searching() {
-      // this.$store.commit("setSearchContent", this.search);
       this.page = 1;
       this.goods = [];
+      Toast.loading({
+        duration: 0,
+        forbidClick: true
+      });
       await this.onLoad();
+      Toast.clear();
     },
     async research(value, index) {
       if (value[1] != undefined) {
