@@ -216,7 +216,7 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
-    if (to.path == "/Login" && sessionStorage.getItem("Authorization") != null)
+    if (to.path == "/login" && sessionStorage.getItem("Authorization") != null)
       next({ path: "/" });
     else next();
   },
@@ -235,23 +235,29 @@ export default {
     //通过商品id获取商品详情
     async getGood() {
       let res = await this.api.get("/goods/" + this.id);
-      if (res.status >= 200 && res.status < 300) this.good = res.data.data;
-      //富文本图片之间的空行处理,图片列表（行内元素）的父元素，font-size：0
-      this.good.description = this.good.description.replace(
-        /<p><img/gi,
-        '<p style="font-size:0;"><img'
-      );
-      //有规格的商品规格分支里的价格*100，因为内部分支价格单位是分
-      if (this.good.list)
-        this.good.list.forEach(v => {
-          v.price *= 100;
-        });
-      //判断商品是否有规格
-      if (this.good.tree) this.good.none_sku = false;
-      else {
-        (this.good.tree = []),
-          (this.good.list = []),
-          (this.good.none_sku = true);
+      if (res.status >= 200 && res.status < 300) {
+        this.good = res.data.data;
+        //富文本图片之间的空行处理,图片列表（行内元素）的父元素，font-size：0
+        this.good.description = this.good.description.replace(
+          /<p><img/gi,
+          '<p style="font-size:0;"><img'
+        );
+        //有规格的商品规格分支里的价格*100，因为内部分支价格单位是分
+        if (this.good.list)
+          this.good.list.forEach(v => {
+            v.price *= 100;
+          });
+        //判断商品是否有规格
+        if (this.good.tree) this.good.none_sku = false;
+        else {
+          (this.good.tree = []),
+            (this.good.list = []),
+            (this.good.none_sku = true);
+        }
+      }
+      else{
+        //因为延迟点击到下架商品，导致的请求数据出错。
+        this.$router.back(-1);
       }
     },
 

@@ -54,7 +54,7 @@
         </div>
         <div v-if="status">
           <van-field v-model="password" center clearable label="新密码" placeholder="请输入新密码" />
-          <van-field v-model="code" center clearable label="短信验证码" placeholder="请输入短信验证码">
+          <van-field v-model="code" center clearable label="验证码" placeholder="请输入验证码">
             <template #button>
               <van-button
                 round
@@ -63,7 +63,7 @@
                 plain
                 type="primary"
                 @click="send_code()"
-              >发送验证码</van-button>
+              >获取验证码</van-button>
             </template>
           </van-field>
           <van-row>

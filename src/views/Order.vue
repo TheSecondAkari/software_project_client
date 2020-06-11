@@ -144,9 +144,13 @@ export default {
         this.$toast(res.data.errmsg);
         this.isClick = false; //解除按钮禁用
         if (this.type == 1) this.$store.dispatch("getCart");
-        this.$store.dispatch("getOrderListPre");//更新读取待发货
+        this.$store.dispatch("getOrderListPre"); //更新读取待发货
         this.$router.push("/"); //支付成功后，跳转首页。
-      } else this.isClick = false; //解除按钮禁用
+      } else {
+        this.isClick = false; //解除按钮禁用
+        if (this.type == 1) this.$store.dispatch("getCart");
+        this.$router.back(-1);
+      }
     }
   }
 };

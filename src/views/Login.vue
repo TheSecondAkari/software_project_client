@@ -53,6 +53,14 @@ export default {
       }
     };
   },
+  beforeRouteEnter(to, from, next) {
+    if (to.query.redirect) next();
+    else if (from.fullPath == "/good") {
+      next(vm => {
+        vm.$route.query.redirect = from.fullPath;
+      });
+    } else next();
+  },
   //离开当前页面，会注销键盘监听事件
   beforeRouteLeave(to, from, next) {
     document.onkeydown = null;
@@ -82,7 +90,7 @@ export default {
         }
       }
     },
-    back(){
+    back() {
       this.$router.back(-1);
     }
   }
