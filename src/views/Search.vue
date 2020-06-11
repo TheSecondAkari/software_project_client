@@ -107,7 +107,6 @@ export default {
   computed: {
     search: {
       get() {
-        console.log("Search.vue");
         return this.$store.state.search_content;
       },
       set(value) {
@@ -140,6 +139,8 @@ export default {
     if (this.oldsearch != this.search) {
       this.page = 1;
       this.goods = [];
+      this.finished = false;
+      this.loading = false;
       this.oldsearch = this.search;
       Toast.loading({
         duration: 0,
@@ -152,6 +153,7 @@ export default {
   methods: {
     async onLoad() {
       this.loading = true;
+      if (this.oldsearch != this.search) this.oldsearch = this.search;
       let key = this.search;
       let page = this.page;
       let sort = this.sort;
@@ -177,15 +179,10 @@ export default {
       if (res.data.data.items.length == 0) {
         this.loading = false;
         this.finished = true;
-        Toast({
-          message: "查无此类结果！",
-          duration: 3,
-          icon: "question-o"
-        });
-        this.goods = [];
+        if (page == 1) this.goods = [];
       } else {
         this.goods = this.goods.concat(res.data.data.items);
-        if (page == Math.ceil(res.data.data.count / 25)) {
+        if (page == Math.ceil(res.data.data.count / 20)) {
           this.loading = false;
           this.finished = true;
         }
@@ -203,6 +200,8 @@ export default {
       } else {
         this.sort = 1;
       }
+      this.finished = false;
+      this.loading = false;
       Toast.loading({
         duration: 0,
         forbidClick: true
@@ -222,6 +221,8 @@ export default {
     async searching() {
       this.page = 1;
       this.goods = [];
+      this.finished = false;
+      this.loading = false;
       Toast.loading({
         duration: 0,
         forbidClick: true
@@ -241,6 +242,8 @@ export default {
       this.page = 1;
       this.goods = [];
       this.show = false;
+      this.finished = false;
+      this.loading = false;
       await this.onLoad();
     }
   }

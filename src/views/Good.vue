@@ -76,7 +76,7 @@
             style="background-color:rgb(226, 224, 224);padding:5px 0;color:grey;height:8px;width:100%"
           ></div>
           <div id="comment" v-if="good.comments.length != 0">
-            <van-cell is-link style="border:0;">
+            <van-cell is-link to="/Comments" style="border:0;">
               <template #title>
                 <span>评价</span>
                 <!-- <van-tag plain style="margin-left:2%;">{{good.comments.length}}</van-tag> -->

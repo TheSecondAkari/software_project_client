@@ -32,7 +32,7 @@
     <van-grid column-num="5" style="margin-top:5%;">
       <van-grid-item icon="send-gift-o" text="待发货" @click="toOrderPre()" />
       <van-grid-item icon="logistics" text="已发货" @click="toOrderSnd()" />
-      <van-grid-item icon="comment-o" text="待评价" @click="toOrderCom()" />
+      <van-grid-item icon="comment-o" text="已收货" @click="toOrderCom()" />
       <van-grid-item icon="refund-o" text="退款中" @click="toOrderRef()" />
       <van-grid-item icon="todo-list-o" text="我的订单" @click="toOrderPre()" />
     </van-grid>

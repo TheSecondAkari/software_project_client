@@ -167,7 +167,7 @@
             :key="order.id"
             class="order_panel"
             title
-            status="待评价"
+            status="已收货"
           >
             <!-- <div class="good_images"> -->
             <van-image
