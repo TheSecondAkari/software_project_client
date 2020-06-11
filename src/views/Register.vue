@@ -80,11 +80,15 @@ export default {
       this.avatar = res.data.url[0];
     },
     async send_code() {
-      let res = await this.api.post("/users/verify", {
-        email: this.email
-      });
-      if (res.status >= 200 && res.status < 300)
-        this.$notify({ type: "success", message: res.data.errmsg });
+      if (this.email == "")
+        this.$notify({ type: "warning", message: "邮箱输入不能为空" });
+      else {
+        let res = await this.api.post("/users/verify", {
+          email: this.email
+        });
+        if (res.status >= 200 && res.status < 300)
+          this.$notify({ type: "success", message: res.data.errmsg });
+      }
     },
     async register() {
       if (
@@ -109,7 +113,7 @@ export default {
         }
       }
     },
-    back(){
+    back() {
       this.$router.back(-1);
     }
   }

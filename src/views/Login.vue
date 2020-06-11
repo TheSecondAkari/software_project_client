@@ -69,7 +69,7 @@ export default {
   methods: {
     async login() {
       if (this.email == "" || this.password == "")
-        this.$notify({ type: "warning", message: "请正确输出账号密码" });
+        this.$notify({ type: "warning", message: "请正确输入账号密码" });
       else {
         let res = await this.api.post("/auth", {
           email: this.email,
