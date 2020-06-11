@@ -17,9 +17,16 @@
                 :thumb="item.goods.pic[0]"
                 class="goods-card"
                 @click="goToGood(item.goods.id)"
+                :class="{notclick:item.goods.deleted_at != null}"
               >
                 <template #tags>
                   <van-tag plain type="danger" style="margin:2%;">{{item.goods.category.name}}</van-tag>
+                  <van-tag
+                    v-if="item.goods.deleted_at != null"
+                    plain
+                    type="danger"
+                    style="margin:2%;"
+                  >已下架</van-tag>
                 </template>
               </van-card>
               <template #right>
@@ -56,9 +63,9 @@ export default {
     }
   },
   methods: {
-    async onRefresh(){
+    async onRefresh() {
       this.isLoading = true;
-      this.$store.dispatch("getMyCollection");
+      await this.$store.dispatch("getMyCollection");
       this.isLoading = false;
     },
     async deleteLove(id) {
@@ -88,8 +95,21 @@ export default {
   background-color: white;
   font-size: 14px;
 }
-
+.goods-card >>> .van-card__price{
+  color: red;
+}
 .delete-button {
   height: 100%;
+}
+.notclick {
+  pointer-events: none;
+
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  -ms-filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+
+  filter: grayscale(100%);
+  filter: gray;
 }
 </style>

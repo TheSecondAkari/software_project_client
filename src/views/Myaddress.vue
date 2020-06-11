@@ -4089,20 +4089,23 @@ export default {
       },
       defaultAddId: this.$store.getters.DefaultAddId,
       addresslist: this.$store.getters.AddressList,
-      list: []
+      list: [],
+      notEdit: true
     };
   },
-  mounted() {
-    console.log(this.addresslist);
+  watch: {
+    editshow(newvalue) {
+      if (newvalue == false) this.notEdit = true;
+    }
   },
   methods: {
     back() {
-      this.$router.go(-1);
+      this.$router.back(-1);
     },
     clickItem(item) {
-      if (this.$route.query.selectAddress) {
+      if (this.$route.query.selectAddress && this.notEdit) {
         this.$store.commit("setBuyAddress", item);
-        this.$router.go(-1);
+        this.$router.back(-1);
       }
     },
     onAdd() {
@@ -4111,6 +4114,7 @@ export default {
       // Toast("新增地址");
     },
     onEdit(item) {
+      this.notEdit = false;
       this.editshow = true;
       this.oldAddress = item;
       this.isdefault = item.isDefault;

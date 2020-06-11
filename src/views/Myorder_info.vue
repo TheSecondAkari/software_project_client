@@ -36,6 +36,7 @@
         <div class="goods">
           <van-card
             v-for="good in orderInfo.items"
+            :class="{notclick:good.sku.goods.deleted_at != null}"
             :key="good.id"
             :num="good.num"
             :price="good.price"
@@ -54,6 +55,12 @@
                 v-for="option in good.sku.options"
                 :key="option.id"
               >{{option.name}}</van-tag>
+              <van-tag
+                v-if="good.sku.goods.deleted_at != null"
+                plain
+                type="danger"
+                style="margin:2%;"
+              >已下架</van-tag>
             </template>
             <template #footer>
               <!-- <van-button size="small" round type="primary" color="#ee0a24" plain @click="toGood(good.sku.goods.id)">查看详情</van-button> -->
@@ -134,6 +141,9 @@ export default {
       return this.$store.getters.OrderInfo;
     }
   },
+  mounted() {
+    console.log(this.orderInfo);
+  },
   methods: {
     toGood(id) {
       this.$store.commit("setSeeId", id);
@@ -193,6 +203,17 @@ p {
 .address_icon {
   position: relative;
   padding-top: 50%;
+}
+.notclick {
+  pointer-events: none;
+
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  -ms-filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+
+  filter: grayscale(100%);
+  filter: gray;
 }
 .cell {
   margin-top: 2%;

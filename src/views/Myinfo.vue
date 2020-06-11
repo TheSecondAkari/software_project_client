@@ -37,9 +37,9 @@
       <van-grid-item icon="todo-list-o" text="我的订单" @click="toOrderPre()" />
     </van-grid>
     <van-cell-group class="more">
-      <van-cell title="收货地址" is-link @click="toMyAddress()" style="margin-top:5%;padding:4%;" />
+      <van-cell title="收货地址" is-link to="MyAddress" style="margin-top:5%;padding:4%;" />
       <van-cell title="我的收藏" is-link to="Mycollection" style="padding:4%;" />
-      <van-cell title="修改信息" is-link @click="toUpdateInfo()" style="padding:4%;" />
+      <van-cell title="修改信息" is-link to="Updateinfo" style="padding:4%;" />
     </van-cell-group>
     <van-cell-group>
       <van-cell class="exit" v-if="logon" style="margin-top:20%;padding:4%;" @click="logout()">
@@ -71,9 +71,7 @@ export default {
       active: "Mine"
     };
   },
-  mounted() {
-    console.log(this.user);
-  },
+
   computed: {
     logon() {
       var user = this.$store.getters.User;
@@ -85,60 +83,44 @@ export default {
   },
   methods: {
     async toOrderPre() {
-      if (this.logon)
-        this.$router
-          .push({
-            path: "/Myorder",
-            query: {
-              status: 0
-            }
-          })
-          .catch(() => {});
-      else this.$router.push("/Login");
+      this.$router
+        .push({
+          path: "/Myorder",
+          query: {
+            status: 0
+          }
+        })
+        .catch(() => {});
     },
     async toOrderSnd() {
-      if (this.logon)
-        this.$router
-          .push({
-            path: "/Myorder",
-            query: {
-              status: 1
-            }
-          })
-          .catch(() => {});
-      else this.$router.push("/Login");
+      this.$router
+        .push({
+          path: "/Myorder",
+          query: {
+            status: 1
+          }
+        })
+        .catch(() => {});
     },
     async toOrderCom() {
-      if (this.logon)
-        this.$router
-          .push({
-            path: "/Myorder",
-            query: {
-              status: 2
-            }
-          })
-          .catch(() => {});
-      else this.$router.push("/Login");
+      this.$router
+        .push({
+          path: "/Myorder",
+          query: {
+            status: 2
+          }
+        })
+        .catch(() => {});
     },
     async toOrderRef() {
-      if (this.logon)
-        this.$router
-          .push({
-            path: "/Myorder",
-            query: {
-              status: 3
-            }
-          })
-          .catch(() => {});
-      else this.$router.push("/Login");
-    },
-    toUpdateInfo() {
-      if (this.logon) this.$router.push("/Updateinfo");
-      else this.$router.push("/Login");
-    },
-    toMyAddress() {
-      if (this.logon) this.$router.push("/Myaddress");
-      else this.$router.push("/Login");
+      this.$router
+        .push({
+          path: "/Myorder",
+          query: {
+            status: 3
+          }
+        })
+        .catch(() => {});
     },
     logout() {
       this.$store.commit("logout");

@@ -101,7 +101,18 @@ const store = new Vuex.Store({
 
         getAddresses(state, data) {
             state.addressList = data;
-            console.log(state.addressList)
+
+            let judge = false;
+            for (let v of state.addressList) {
+                if (v.isDefault) {
+                    state.buy.address = v;
+                    judge = true;
+                    break;
+                }
+            }
+            //如果没有默认地址，并且有收货地址，则选第一个
+            if (judge == false && state.addressList.length > 0)
+                state.buy.address = state.addressList[0];
         },
         getOrderListPre(state, data) {
             state.orderList_pre = data;
@@ -157,7 +168,7 @@ const store = new Vuex.Store({
         setSeeId(state, id) {
             state.see_good_id = id;
         },
-        
+
         //设置浏览分类详情页面的分类的id
         setClassId(state, id) {
             state.see_class_id = id;
@@ -174,23 +185,21 @@ const store = new Vuex.Store({
             state.buy.goods = buy.goods;
             state.buy.type = buy.type;
             //选择默认地址
-            let judge = false;
-            for (let v of state.addressList) {
-                if (v.isDefault) {
-                    state.buy.address = v;
-                    judge = true;
-                    break;
-                }
-            }
-            //如果没有默认地址，并且有收货地址，则选第一个
-            if (judge == false && state.addressList.length > 0)
-                state.buy.address = state.addressList[0];
-            console.log(state.buy)
+            // let judge = false;
+            // for (let v of state.addressList) {
+            //     if (v.isDefault) {
+            //         state.buy.address = v;
+            //         judge = true;
+            //         break;
+            //     }
+            // }
+            // //如果没有默认地址，并且有收货地址，则选第一个
+            // if (judge == false && state.addressList.length > 0)
+            //     state.buy.address = state.addressList[0];
         },
         //更新购买行为收货地址
         setBuyAddress(state, address) {
             state.buy.address = address;
-            console.log(state.buy)
         },
 
         //登出
@@ -232,19 +241,22 @@ const store = new Vuex.Store({
         },
         async getCart(context) {
             let res = await api.get('/carts');
-            res.data.data.forEach((v) => {
-                v.selected = false;
-            });
-            context.commit('updateCart', res.data.data);
+            if (res.status >= 200 && res.status <= 300) {
+                res.data.data.forEach((v) => {
+                    v.selected = false;
+                });
+                context.commit('updateCart', res.data.data);
+            }
         },
         async addCart(context, data) {
-            await api.post('/carts', data);
-            Vue.prototype.$toast.success("添加购物车成功");
-            context.dispatch('getCart');
+            let res = await api.post('/carts', data);
+            if (res.status >= 200 && res.status <= 300) {
+                Vue.prototype.$toast.success("添加购物车成功");
+                context.dispatch('getCart');
+            }
         },
         async getAddresses(context) {
             let data = await api.get("/addresses");
-            console.log(data);
             if (data.status >= 200 && data.status < 300) {
                 data = data.data.data;
                 var tempList = [];
@@ -275,11 +287,7 @@ const store = new Vuex.Store({
                         isDefault: data[i].default
                     });
                 }
-                // if (def == false && tempList.length > 0) {//如果没有默认地址且长度大于一就把第一条设为默认地址
-                //     tempList[0].default = true;
-                //     defaultId = tempList[0].id;
-                // }
-
+                
                 context.commit('getAddresses', tempList);
                 console.log("默认id：" + defaultId);
                 context.commit('getDefaultAddId', defaultId);
