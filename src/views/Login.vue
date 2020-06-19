@@ -55,7 +55,7 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     if (to.query.redirect) next();
-    else if (from.fullPath == "/good") {
+    else if (from.fullPath == "/good" || from.fullPath == "/Good") {
       next(vm => {
         vm.$route.query.redirect = from.fullPath;
       });

@@ -123,8 +123,8 @@ export default {
         if (page == 1) this.goods = res.data.data.items;
         else this.goods = this.goods.concat(res.data.data.items); //把新商品拼接到当前内容后面
         if (
-          page == Math.ceil(res.data.data.count / 25) ||
-          Math.ceil(res.data.data.count / 25) == 0
+          page == Math.ceil(res.data.data.count / 20) ||
+          Math.ceil(res.data.data.count / 20) == 0
         ) {
           this.finished = true;
         }

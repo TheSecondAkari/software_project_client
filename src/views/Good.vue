@@ -216,7 +216,10 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
-    if (to.path == "/login" && sessionStorage.getItem("Authorization") != null)
+    if (
+      (to.path == "/login" || to.path == "/Login") &&
+      sessionStorage.getItem("Authorization") != null
+    )
       next({ path: "/" });
     else next();
   },
@@ -254,8 +257,7 @@ export default {
             (this.good.list = []),
             (this.good.none_sku = true);
         }
-      }
-      else{
+      } else {
         //因为延迟点击到下架商品，导致的请求数据出错。
         this.$router.back(-1);
       }
